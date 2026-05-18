@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SeoAuditRouteImport } from './routes/seo-audit'
+import { Route as SearchConsoleRouteImport } from './routes/search-console'
 import { Route as IndexRouteImport } from './routes/index'
 
 const SeoAuditRoute = SeoAuditRouteImport.update({
   id: '/seo-audit',
   path: '/seo-audit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchConsoleRoute = SearchConsoleRouteImport.update({
+  id: '/search-console',
+  path: '/search-console',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,27 +31,31 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/search-console': typeof SearchConsoleRoute
   '/seo-audit': typeof SeoAuditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/search-console': typeof SearchConsoleRoute
   '/seo-audit': typeof SeoAuditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/search-console': typeof SearchConsoleRoute
   '/seo-audit': typeof SeoAuditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/seo-audit'
+  fullPaths: '/' | '/search-console' | '/seo-audit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/seo-audit'
-  id: '__root__' | '/' | '/seo-audit'
+  to: '/' | '/search-console' | '/seo-audit'
+  id: '__root__' | '/' | '/search-console' | '/seo-audit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SearchConsoleRoute: typeof SearchConsoleRoute
   SeoAuditRoute: typeof SeoAuditRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/seo-audit'
       fullPath: '/seo-audit'
       preLoaderRoute: typeof SeoAuditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search-console': {
+      id: '/search-console'
+      path: '/search-console'
+      fullPath: '/search-console'
+      preLoaderRoute: typeof SearchConsoleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SearchConsoleRoute: SearchConsoleRoute,
   SeoAuditRoute: SeoAuditRoute,
 }
 export const routeTree = rootRouteImport
