@@ -42,9 +42,12 @@ function Index() {
             </a>
           </div>
         </div>
-        <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-5 py-2 text-xs font-bold uppercase tracking-widest rounded-sm transition-all">
+        <Link
+          to="/seo-audit"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground px-5 py-2 text-xs font-bold uppercase tracking-widest rounded-sm transition-all"
+        >
           Launch Console
-        </button>
+        </Link>
       </nav>
 
       {/* Hero */}
