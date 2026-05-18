@@ -166,6 +166,16 @@ function GscPage() {
               ))}
             </div>
 
+            {/* Trend chart */}
+            <section className="mb-10">
+              <h2 className="font-display text-2xl tracking-tighter mb-4">Trend</h2>
+              <div className="border border-border/60 rounded-md bg-card p-4">
+                <TrendChart rows={reportQuery.data.byDate} />
+              </div>
+            </section>
+
+
+
             {/* Top queries */}
             <section className="mb-10">
               <h2 className="font-display text-2xl tracking-tighter mb-4">Top Queries</h2>
