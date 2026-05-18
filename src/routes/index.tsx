@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import attributionChart from "@/assets/attribution-chart.jpg";
 
 export const Route = createFileRoute("/")({
