@@ -106,13 +106,20 @@ function Index() {
             </div>
           </div>
 
-          {/* SEO Sentinel */}
-          <div className="md:col-span-5 md:row-span-3 bg-surface/40 border border-border rounded-lg p-6 flex flex-col animate-reveal [animation-delay:400ms]">
-            <div className="mb-6">
-              <h3 className="font-display text-lg uppercase">SEO Sentinel</h3>
-              <p className="text-muted-foreground text-xs uppercase tracking-tighter">
-                Live SERP Monitoring
-              </p>
+          <Link
+            to="/seo-audit"
+            className="md:col-span-5 md:row-span-3 bg-surface/40 border border-border rounded-lg p-6 flex flex-col animate-reveal [animation-delay:400ms] hover:border-primary/60 transition-colors group"
+          >
+            <div className="mb-6 flex items-start justify-between">
+              <div>
+                <h3 className="font-display text-lg uppercase">SEO Sentinel</h3>
+                <p className="text-muted-foreground text-xs uppercase tracking-tighter">
+                  Live SERP Monitoring
+                </p>
+              </div>
+              <span className="font-mono text-[10px] uppercase tracking-widest text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                Run →
+              </span>
             </div>
             <div className="space-y-3 flex-1">
               {[
@@ -136,7 +143,7 @@ function Index() {
                 </div>
               ))}
             </div>
-          </div>
+          </Link>
 
           {/* AI Synthesizer */}
           <div className="md:col-span-5 md:row-span-1 bg-primary border border-primary/20 rounded-lg p-8 text-primary-foreground flex flex-col justify-end animate-reveal [animation-delay:500ms]">
