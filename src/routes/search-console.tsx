@@ -3,6 +3,16 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { getGscSites, getGscReport } from "@/lib/gsc.functions";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+  Legend,
+} from "recharts";
 
 export const Route = createFileRoute("/search-console")({
   head: () => ({
@@ -156,6 +166,16 @@ function GscPage() {
               ))}
             </div>
 
+            {/* Trend chart */}
+            <section className="mb-10">
+              <h2 className="font-display text-2xl tracking-tighter mb-4">Trend</h2>
+              <div className="border border-border/60 rounded-md bg-card p-4">
+                <TrendChart rows={reportQuery.data.byDate} />
+              </div>
+            </section>
+
+
+
             {/* Top queries */}
             <section className="mb-10">
               <h2 className="font-display text-2xl tracking-tighter mb-4">Top Queries</h2>
@@ -239,6 +259,68 @@ function GscPage() {
           </>
         )}
       </main>
+    </div>
+  );
+}
+
+type ByDateRow = { keys: string[]; clicks: number; impressions: number; ctr: number; position: number };
+
+function TrendChart({ rows }: { rows: ByDateRow[] }) {
+  const data = rows
+    .slice()
+    .sort((a, b) => a.keys[0].localeCompare(b.keys[0]))
+    .map((r) => ({
+      date: r.keys[0].slice(5),
+      clicks: r.clicks,
+      impressions: r.impressions,
+      ctr: +(r.ctr * 100).toFixed(2),
+      position: +r.position.toFixed(2),
+    }));
+
+  if (!data.length) {
+    return <div className="text-sm text-muted-foreground py-8 text-center">No trend data.</div>;
+  }
+
+  const axis = { stroke: "hsl(var(--muted-foreground))", fontSize: 11 };
+
+  return (
+    <div className="space-y-6">
+      <ResponsiveContainer width="100%" height={220}>
+        <LineChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
+          <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" vertical={false} />
+          <XAxis dataKey="date" {...axis} />
+          <YAxis yAxisId="left" {...axis} />
+          <YAxis yAxisId="right" orientation="right" {...axis} />
+          <Tooltip
+            contentStyle={{
+              background: "hsl(var(--card))",
+              border: "1px solid hsl(var(--border))",
+              fontSize: 12,
+            }}
+          />
+          <Legend wrapperStyle={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.1em" }} />
+          <Line yAxisId="left" type="monotone" dataKey="clicks" stroke="oklch(0.7 0.18 275)" strokeWidth={2} dot={false} />
+          <Line yAxisId="right" type="monotone" dataKey="impressions" stroke="oklch(0.75 0.15 200)" strokeWidth={2} dot={false} />
+        </LineChart>
+      </ResponsiveContainer>
+      <ResponsiveContainer width="100%" height={220}>
+        <LineChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
+          <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" vertical={false} />
+          <XAxis dataKey="date" {...axis} />
+          <YAxis yAxisId="left" {...axis} unit="%" />
+          <YAxis yAxisId="right" orientation="right" reversed {...axis} />
+          <Tooltip
+            contentStyle={{
+              background: "hsl(var(--card))",
+              border: "1px solid hsl(var(--border))",
+              fontSize: 12,
+            }}
+          />
+          <Legend wrapperStyle={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.1em" }} />
+          <Line yAxisId="left" type="monotone" dataKey="ctr" name="CTR %" stroke="oklch(0.8 0.18 145)" strokeWidth={2} dot={false} />
+          <Line yAxisId="right" type="monotone" dataKey="position" name="Avg. Position" stroke="oklch(0.75 0.18 40)" strokeWidth={2} dot={false} />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   );
 }
