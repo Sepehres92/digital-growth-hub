@@ -3,6 +3,16 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { getGscSites, getGscReport } from "@/lib/gsc.functions";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+  Legend,
+} from "recharts";
 
 export const Route = createFileRoute("/search-console")({
   head: () => ({
