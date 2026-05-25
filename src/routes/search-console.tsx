@@ -138,6 +138,9 @@ function GscPage() {
           <Link to="/semrush" className="text-muted-foreground hover:text-primary">
             Semrush
           </Link>
+          <Link to="/social" className="text-muted-foreground hover:text-primary">
+            Social
+          </Link>
         </div>
       </nav>
 
