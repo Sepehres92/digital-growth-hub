@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SocialRouteImport } from './routes/social'
 import { Route as SeoAuditRouteImport } from './routes/seo-audit'
 import { Route as SemrushRouteImport } from './routes/semrush'
 import { Route as SearchConsoleRouteImport } from './routes/search-console'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SocialRoute = SocialRouteImport.update({
+  id: '/social',
+  path: '/social',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SeoAuditRoute = SeoAuditRouteImport.update({
   id: '/seo-audit',
   path: '/seo-audit',
@@ -40,12 +46,14 @@ export interface FileRoutesByFullPath {
   '/search-console': typeof SearchConsoleRoute
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
+  '/social': typeof SocialRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/search-console': typeof SearchConsoleRoute
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
+  '/social': typeof SocialRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,20 @@ export interface FileRoutesById {
   '/search-console': typeof SearchConsoleRoute
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
+  '/social': typeof SocialRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/search-console' | '/semrush' | '/seo-audit'
+  fullPaths: '/' | '/search-console' | '/semrush' | '/seo-audit' | '/social'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/search-console' | '/semrush' | '/seo-audit'
-  id: '__root__' | '/' | '/search-console' | '/semrush' | '/seo-audit'
+  to: '/' | '/search-console' | '/semrush' | '/seo-audit' | '/social'
+  id:
+    | '__root__'
+    | '/'
+    | '/search-console'
+    | '/semrush'
+    | '/seo-audit'
+    | '/social'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,10 +82,18 @@ export interface RootRouteChildren {
   SearchConsoleRoute: typeof SearchConsoleRoute
   SemrushRoute: typeof SemrushRoute
   SeoAuditRoute: typeof SeoAuditRoute
+  SocialRoute: typeof SocialRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/social': {
+      id: '/social'
+      path: '/social'
+      fullPath: '/social'
+      preLoaderRoute: typeof SocialRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/seo-audit': {
       id: '/seo-audit'
       path: '/seo-audit'
@@ -107,17 +130,8 @@ const rootRouteChildren: RootRouteChildren = {
   SearchConsoleRoute: SearchConsoleRoute,
   SemrushRoute: SemrushRoute,
   SeoAuditRoute: SeoAuditRoute,
+  SocialRoute: SocialRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
