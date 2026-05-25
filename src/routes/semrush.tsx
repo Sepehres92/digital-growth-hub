@@ -110,6 +110,9 @@ function SemrushPage() {
             Search Console
           </Link>
           <span className="text-primary">Semrush</span>
+          <Link to="/social" className="text-muted-foreground hover:text-primary">
+            Social
+          </Link>
         </div>
       </nav>
 
