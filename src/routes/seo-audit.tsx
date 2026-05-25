@@ -55,12 +55,17 @@ function SeoAuditPage() {
         <Link to="/" className="font-display text-xl tracking-tighter uppercase">
           Vektra
         </Link>
-        <Link
-          to="/"
-          className="text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors"
-        >
-          ← Back
-        </Link>
+        <div className="flex gap-4 text-xs font-bold uppercase tracking-widest">
+          <Link to="/search-console" className="text-muted-foreground hover:text-primary">
+            Search Console
+          </Link>
+          <Link to="/semrush" className="text-muted-foreground hover:text-primary">
+            Semrush
+          </Link>
+          <Link to="/" className="text-muted-foreground hover:text-primary">
+            ← Back
+          </Link>
+        </div>
       </nav>
 
       {/* Hero / form */}

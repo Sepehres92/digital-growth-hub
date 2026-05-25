@@ -135,6 +135,9 @@ function GscPage() {
             SEO Audit
           </Link>
           <span className="text-primary">Search Console</span>
+          <Link to="/semrush" className="text-muted-foreground hover:text-primary">
+            Semrush
+          </Link>
         </div>
       </nav>
 
