@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SeoAuditRouteImport } from './routes/seo-audit'
+import { Route as SemrushRouteImport } from './routes/semrush'
 import { Route as SearchConsoleRouteImport } from './routes/search-console'
 import { Route as IndexRouteImport } from './routes/index'
 
 const SeoAuditRoute = SeoAuditRouteImport.update({
   id: '/seo-audit',
   path: '/seo-audit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SemrushRoute = SemrushRouteImport.update({
+  id: '/semrush',
+  path: '/semrush',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchConsoleRoute = SearchConsoleRouteImport.update({
@@ -32,30 +38,34 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/search-console': typeof SearchConsoleRoute
+  '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/search-console': typeof SearchConsoleRoute
+  '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/search-console': typeof SearchConsoleRoute
+  '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/search-console' | '/seo-audit'
+  fullPaths: '/' | '/search-console' | '/semrush' | '/seo-audit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/search-console' | '/seo-audit'
-  id: '__root__' | '/' | '/search-console' | '/seo-audit'
+  to: '/' | '/search-console' | '/semrush' | '/seo-audit'
+  id: '__root__' | '/' | '/search-console' | '/semrush' | '/seo-audit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SearchConsoleRoute: typeof SearchConsoleRoute
+  SemrushRoute: typeof SemrushRoute
   SeoAuditRoute: typeof SeoAuditRoute
 }
 
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/seo-audit'
       fullPath: '/seo-audit'
       preLoaderRoute: typeof SeoAuditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/semrush': {
+      id: '/semrush'
+      path: '/semrush'
+      fullPath: '/semrush'
+      preLoaderRoute: typeof SemrushRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search-console': {
@@ -88,18 +105,9 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SearchConsoleRoute: SearchConsoleRoute,
+  SemrushRoute: SemrushRoute,
   SeoAuditRoute: SeoAuditRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
