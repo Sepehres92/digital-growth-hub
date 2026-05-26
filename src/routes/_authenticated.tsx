@@ -37,7 +37,11 @@ function AuthedLayout() {
   const nav = [
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { to: "/leads", label: "Leads", icon: Users },
-  ];
+    { to: "/clients", label: "Clients", icon: Briefcase },
+    { to: "/campaigns", label: "Campaigns", icon: Megaphone },
+    { to: "/tasks", label: "Tasks", icon: KanbanSquare },
+    { to: "/settings", label: "Settings", icon: SettingsIcon },
+  ] as const;
 
   const SidebarContent = () => (
     <>
