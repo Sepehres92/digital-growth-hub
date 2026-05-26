@@ -1,6 +1,61 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import {
+  RightsAckSchema,
+  PublishAckSchema,
+  type AuditAction,
+  type AuditResourceType,
+} from "@/lib/video-safety";
+
+async function logAudit(
+  supabase: any,
+  userId: string,
+  args: {
+    action: AuditAction;
+    resourceType: AuditResourceType;
+    resourceId?: string | null;
+    videoProjectId?: string | null;
+    details?: Record<string, unknown>;
+  },
+) {
+  try {
+    await supabase.from("video_audit_log").insert({
+      user_id: userId,
+      action: args.action,
+      resource_type: args.resourceType,
+      resource_id: args.resourceId ?? null,
+      video_project_id: args.videoProjectId ?? null,
+      details: args.details ?? {},
+    });
+  } catch {
+    // Never fail the primary action because of audit logging.
+  }
+}
+
+async function recordAck(
+  supabase: any,
+  userId: string,
+  args: {
+    resourceType: AuditResourceType | "publish";
+    resourceRef: string;
+    ack: z.infer<typeof RightsAckSchema>;
+  },
+) {
+  await supabase.from("content_rights_acknowledgements").insert({
+    user_id: userId,
+    resource_type: args.resourceType,
+    resource_ref: args.resourceRef,
+    owns_rights: args.ack.ownsRights,
+    music_licensed: args.ack.musicLicensed,
+    no_celebrity_likeness: args.ack.noCelebrityLikeness,
+    no_fake_endorsement: args.ack.noFakeEndorsement,
+    no_misleading_claims: args.ack.noMisleadingClaims,
+    human_reviewed: args.ack.humanReviewed,
+    notes: args.ack.notes,
+  });
+}
+
 
 const AI_GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const AI_MODEL = "google/gemini-2.5-flash";
