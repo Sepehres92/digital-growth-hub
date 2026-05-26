@@ -157,12 +157,6 @@ const AuthenticatedAccountPrivacyRoute =
     path: '/account-privacy',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
-const AuthenticatedAutoCampaignRoute =
-  AuthenticatedAutoCampaignRouteImport.update({
-    id: '/auto-campaign',
-    path: '/auto-campaign',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -177,6 +171,7 @@ export interface FileRoutesByFullPath {
   '/social': typeof SocialRoute
   '/terms': typeof TermsRoute
   '/account-privacy': typeof AuthenticatedAccountPrivacyRoute
+  '/auto-campaign': typeof AuthenticatedAutoCampaignRoute
   '/ai-studio': typeof AuthenticatedAiStudioRoute
   '/ai-writer': typeof AuthenticatedAiWriterRoute
   '/auto-campaign': typeof AuthenticatedAutoCampaignRoute
