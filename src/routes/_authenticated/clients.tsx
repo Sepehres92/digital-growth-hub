@@ -184,6 +184,13 @@ function ClientsPage() {
               <div><Label>Monthly budget ($)</Label><Input type="number" min="0" step="0.01" className="mt-1.5" value={form.monthly_budget} onChange={(e) => setForm({ ...form, monthly_budget: e.target.value })} /></div>
               <div><Label>Status</Label><Input className="mt-1.5" value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} placeholder="active / paused" /></div>
               <div className="sm:col-span-2"><Label>Services purchased</Label><Input className="mt-1.5" value={form.services} onChange={(e) => setForm({ ...form, services: e.target.value })} placeholder="SEO, PPC, Website…" /></div>
+              <div className="sm:col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Brand profile (used by AI Writer)</div>
+              <div className="sm:col-span-2"><Label>Brand voice</Label><Textarea rows={2} className="mt-1.5" value={form.brand_voice} onChange={(e) => setForm({ ...form, brand_voice: e.target.value })} placeholder="Confident, warm, expert…" /></div>
+              <div><Label>Brand colors</Label><Input className="mt-1.5" value={form.brand_colors} onChange={(e) => setForm({ ...form, brand_colors: e.target.value })} placeholder="#0F172A, #3B82F6" /></div>
+              <div><Label>Preferred tone</Label><Input className="mt-1.5" value={form.preferred_tone} onChange={(e) => setForm({ ...form, preferred_tone: e.target.value })} placeholder="Professional, playful…" /></div>
+              <div className="sm:col-span-2"><Label>Target audience</Label><Input className="mt-1.5" value={form.target_audience} onChange={(e) => setForm({ ...form, target_audience: e.target.value })} placeholder="SMB founders in the US…" /></div>
+              <div><Label>Keywords</Label><Input className="mt-1.5" value={form.keywords} onChange={(e) => setForm({ ...form, keywords: e.target.value })} placeholder="Comma separated" /></div>
+              <div><Label>Competitors</Label><Input className="mt-1.5" value={form.competitors} onChange={(e) => setForm({ ...form, competitors: e.target.value })} placeholder="Comma separated" /></div>
               <div className="sm:col-span-2"><Label>Notes</Label><Textarea rows={3} className="mt-1.5" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></div>
             </div>
             <DialogFooter>
