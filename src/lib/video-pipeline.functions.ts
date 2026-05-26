@@ -420,6 +420,28 @@ export const renderVideoTemplate = createServerFn({ method: "POST" })
       .select()
       .single();
     if (error) throw new Error(error.message);
+
+    await recordAck(supabase, userId, {
+      resourceType: "ai_generation",
+      resourceRef: render.id,
+      ack: data.ack,
+    });
+    await logAudit(supabase, userId, {
+      action: "render",
+      resourceType: "render",
+      resourceId: render.id,
+      videoProjectId: data.videoProjectId,
+      details: {
+        template: data.template,
+        format: data.format,
+        mediaCount: data.media.length,
+        hasMusic: !!data.musicUrl,
+        hasLogo: !!data.logoUrl,
+        overlayCount: data.textOverlays.length,
+        subtitleCount: data.subtitles.length,
+      },
+    });
+
     return { renderId: render.id, taskId: task.id, status: "processing" as const };
   });
 
