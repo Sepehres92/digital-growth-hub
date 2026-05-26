@@ -23,7 +23,7 @@ export async function logAudit(params: {
       action: params.action,
       resource_type: params.resourceType ?? null,
       resource_id: params.resourceId ?? null,
-      metadata: params.metadata ?? null,
+      metadata: (params.metadata ?? null) as never,
       ip_address: params.ip ?? null,
     });
   } catch (err) {
@@ -31,3 +31,4 @@ export async function logAudit(params: {
     console.error("[audit] insert failed", err);
   }
 }
+

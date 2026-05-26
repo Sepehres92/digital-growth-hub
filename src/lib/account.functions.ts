@@ -3,50 +3,44 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { logAudit } from "./audit.server";
 
-const USER_TABLES = [
-  "clients",
-  "campaigns",
-  "tasks",
-  "leads",
-  "ai_copies",
-  "ai_images",
-  "generated_images",
-  "client_images",
-  "creative_projects",
-  "profiles",
-  "audit_logs",
-] as const;
-
 export const exportMyData = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-
-    const result: Record<string, unknown> = {
+    const out: Record<string, unknown> = {
       exported_at: new Date().toISOString(),
       user_id: userId,
     };
 
-    for (const table of USER_TABLES) {
-      const userCol = table === "profiles" ? "id" : "user_id";
-      const { data, error } = await supabase
-        .from(table)
+    const userOwned = [
+      "clients",
+      "campaigns",
+      "tasks",
+      "leads",
+      "ai_copies",
+      "ai_images",
+      "generated_images",
+      "client_images",
+      "creative_projects",
+      "audit_logs",
+    ] as const;
+
+    for (const t of userOwned) {
+      const { data, error } = await (supabase.from(t) as any)
         .select("*")
-        .eq(userCol, userId);
-      if (error) {
-        result[table] = { error: error.message };
-      } else {
-        result[table] = data;
-      }
+        .eq("user_id", userId);
+      out[t] = error ? { error: error.message } : data;
     }
 
-    await logAudit({
-      userId,
-      action: "data.export",
-      metadata: { tables: USER_TABLES.length },
-    });
+    const { data: profile, error: pErr } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", userId);
+    out.profiles = pErr ? { error: pErr.message } : profile;
 
-    return result;
+    await logAudit({ userId, action: "data.export" });
+
+    return out as unknown as Record<string, unknown>;
   });
 
 export const deleteMyAccount = createServerFn({ method: "POST" })
@@ -54,15 +48,9 @@ export const deleteMyAccount = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     const { userId } = context;
 
-    // Audit BEFORE deletion so the row references a still-existing user.
-    await logAudit({
-      userId,
-      action: "account.delete",
-    });
+    await logAudit({ userId, action: "account.delete" });
 
-    // Best-effort cleanup. RLS doesn't apply to supabaseAdmin.
-    // Most tables also cascade via auth.users FK / ON DELETE CASCADE in storage.
-    for (const table of [
+    const userOwned = [
       "ai_copies",
       "ai_images",
       "generated_images",
@@ -72,13 +60,13 @@ export const deleteMyAccount = createServerFn({ method: "POST" })
       "leads",
       "campaigns",
       "clients",
-      "profiles",
-    ] as const) {
-      const userCol = table === "profiles" ? "id" : "user_id";
-      await supabaseAdmin.from(table).delete().eq(userCol, userId);
-    }
+    ] as const;
 
-    // Delete the auth user. This invalidates all sessions.
+    for (const t of userOwned) {
+      await (supabaseAdmin.from(t) as any).delete().eq("user_id", userId);
+    }
+    await supabaseAdmin.from("profiles").delete().eq("id", userId);
+
     const { error } = await supabaseAdmin.auth.admin.deleteUser(userId);
     if (error) throw new Error(error.message);
 
