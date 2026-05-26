@@ -22,6 +22,7 @@ function AuthPage() {
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [consent, setConsent] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -32,6 +33,10 @@ function AuthPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (mode === "signup" && !consent) {
+      toast.error("Please agree to the Terms and Privacy Policy.");
+      return;
+    }
     setLoading(true);
     try {
       if (mode === "signup") {
@@ -53,6 +58,7 @@ function AuthPage() {
       setLoading(false);
     }
   };
+
 
   const handleGoogle = async () => {
     setLoading(true);
@@ -131,6 +137,23 @@ function AuthPage() {
                 className="mt-1.5"
               />
             </div>
+            {mode === "signup" && (
+              <label className="flex items-start gap-2 text-xs text-muted-foreground">
+                <input
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
+                  className="mt-0.5 size-4 rounded border-border"
+                  required
+                />
+                <span>
+                  I agree to the{" "}
+                  <Link to="/terms" className="text-primary hover:underline">Terms</Link>{" "}
+                  and{" "}
+                  <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>.
+                </span>
+              </label>
+            )}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "..." : mode === "login" ? "Sign in" : "Create account"}
             </Button>
@@ -162,8 +185,15 @@ function AuthPage() {
               {mode === "login" ? "Create account" : "Sign in"}
             </button>
           </p>
+
+          <div className="mt-6 flex justify-center gap-4 text-xs text-muted-foreground">
+            <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
+            <Link to="/terms" className="hover:text-foreground">Terms</Link>
+            <Link to="/cookies" className="hover:text-foreground">Cookies</Link>
+          </div>
         </div>
       </div>
     </div>
   );
 }
+

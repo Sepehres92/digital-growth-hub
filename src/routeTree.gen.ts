@@ -16,10 +16,14 @@ import { Route as SearchConsoleRouteImport } from './routes/search-console'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedPrivacyRouteImport } from './routes/_authenticated/privacy'
 import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated/leads'
 import { Route as AuthenticatedGlobalDashboardRouteImport } from './routes/_authenticated/global-dashboard'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -27,6 +31,7 @@ import { Route as AuthenticatedClientsRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedCampaignsRouteImport } from './routes/_authenticated/campaigns'
 import { Route as AuthenticatedAiWriterRouteImport } from './routes/_authenticated/ai-writer'
 import { Route as AuthenticatedAiStudioRouteImport } from './routes/_authenticated/ai-studio'
+
 
 const SocialRoute = SocialRouteImport.update({
   id: '/social',
@@ -63,6 +68,21 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CookiesRoute = CookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -72,6 +92,7 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+
 const AuthenticatedTasksRoute = AuthenticatedTasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
@@ -82,6 +103,12 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedPrivacyRoute = AuthenticatedPrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
 const AuthenticatedLeadsRoute = AuthenticatedLeadsRouteImport.update({
   id: '/leads',
   path: '/leads',
@@ -123,6 +150,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRoute
+  '/cookies': typeof CookiesRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search-console': typeof SearchConsoleRoute
   '/semrush': typeof SemrushRoute
@@ -135,6 +165,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/global-dashboard': typeof AuthenticatedGlobalDashboardRoute
   '/leads': typeof AuthenticatedLeadsRoute
+  '/_authenticated/privacy': typeof AuthenticatedPrivacyRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
 }
@@ -142,6 +173,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRoute
+  '/cookies': typeof CookiesRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search-console': typeof SearchConsoleRoute
   '/semrush': typeof SemrushRoute
@@ -154,6 +188,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/global-dashboard': typeof AuthenticatedGlobalDashboardRoute
   '/leads': typeof AuthenticatedLeadsRoute
+  '/_authenticated/privacy': typeof AuthenticatedPrivacyRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
 }
@@ -163,6 +198,9 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRoute
+  '/cookies': typeof CookiesRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search-console': typeof SearchConsoleRoute
   '/semrush': typeof SemrushRoute
@@ -175,15 +213,20 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/global-dashboard': typeof AuthenticatedGlobalDashboardRoute
   '/_authenticated/leads': typeof AuthenticatedLeadsRoute
+  '/_authenticated/privacy': typeof AuthenticatedPrivacyRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
 }
+
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/auth'
     | '/blog'
+    | '/cookies'
+    | '/privacy'
+    | '/terms'
     | '/reset-password'
     | '/search-console'
     | '/semrush'
@@ -196,6 +239,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/global-dashboard'
     | '/leads'
+    | '/_authenticated/privacy'
     | '/settings'
     | '/tasks'
   fileRoutesByTo: FileRoutesByTo
@@ -203,6 +247,9 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/blog'
+    | '/cookies'
+    | '/privacy'
+    | '/terms'
     | '/reset-password'
     | '/search-console'
     | '/semrush'
@@ -215,6 +262,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/global-dashboard'
     | '/leads'
+    | '/_authenticated/privacy'
     | '/settings'
     | '/tasks'
   id:
@@ -223,6 +271,9 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/blog'
+    | '/cookies'
+    | '/privacy'
+    | '/terms'
     | '/reset-password'
     | '/search-console'
     | '/semrush'
@@ -235,6 +286,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/global-dashboard'
     | '/_authenticated/leads'
+    | '/_authenticated/privacy'
     | '/_authenticated/settings'
     | '/_authenticated/tasks'
   fileRoutesById: FileRoutesById
@@ -244,12 +296,16 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthRoute: typeof AuthRoute
   BlogRoute: typeof BlogRoute
+  CookiesRoute: typeof CookiesRoute
+  PrivacyRoute: typeof PrivacyRoute
+  TermsRoute: typeof TermsRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchConsoleRoute: typeof SearchConsoleRoute
   SemrushRoute: typeof SemrushRoute
   SeoAuditRoute: typeof SeoAuditRoute
   SocialRoute: typeof SocialRoute
 }
+
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
@@ -302,6 +358,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cookies': {
+      id: '/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof CookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -330,6 +408,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/privacy': {
+      id: '/_authenticated/privacy'
+      path: '/privacy'
+      fullPath: '/_authenticated/privacy'
+      preLoaderRoute: typeof AuthenticatedPrivacyRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+
     '/_authenticated/leads': {
       id: '/_authenticated/leads'
       path: '/leads'
