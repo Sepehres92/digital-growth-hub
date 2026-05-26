@@ -33,6 +33,7 @@ import { Route as AuthenticatedAutoCampaignRouteImport } from './routes/_authent
 import { Route as AuthenticatedAiWriterRouteImport } from './routes/_authenticated/ai-writer'
 import { Route as AuthenticatedAiStudioRouteImport } from './routes/_authenticated/ai-studio'
 import { Route as AuthenticatedAccountPrivacyRouteImport } from './routes/_authenticated/account-privacy'
+import { Route as AuthenticatedAutoCampaignRouteImport } from './routes/_authenticated/auto-campaign'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -553,13 +554,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
