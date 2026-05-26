@@ -35,6 +35,7 @@ function AuthedLayout() {
   }
 
   const nav = [
+    { to: "/global-dashboard", label: "Global Dashboard", icon: Globe, group: "Workspace" },
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, group: "Workspace" },
     { to: "/leads", label: "Leads", icon: Users, group: "Workspace" },
     { to: "/clients", label: "Clients", icon: Briefcase, group: "Workspace" },
