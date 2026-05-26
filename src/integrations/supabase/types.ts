@@ -434,6 +434,51 @@ export type Database = {
         }
         Relationships: []
       }
+      content_rights_acknowledgements: {
+        Row: {
+          created_at: string
+          human_reviewed: boolean
+          id: string
+          music_licensed: boolean
+          no_celebrity_likeness: boolean
+          no_fake_endorsement: boolean
+          no_misleading_claims: boolean
+          notes: string
+          owns_rights: boolean
+          resource_ref: string
+          resource_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          human_reviewed?: boolean
+          id?: string
+          music_licensed?: boolean
+          no_celebrity_likeness?: boolean
+          no_fake_endorsement?: boolean
+          no_misleading_claims?: boolean
+          notes?: string
+          owns_rights: boolean
+          resource_ref: string
+          resource_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          human_reviewed?: boolean
+          id?: string
+          music_licensed?: boolean
+          no_celebrity_likeness?: boolean
+          no_fake_endorsement?: boolean
+          no_misleading_claims?: boolean
+          notes?: string
+          owns_rights?: boolean
+          resource_ref?: string
+          resource_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       creative_projects: {
         Row: {
           campaign_id: string | null
@@ -1112,6 +1157,39 @@ export type Database = {
           storage_path?: string | null
           tags?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      video_audit_log: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json
+          id: string
+          resource_id: string | null
+          resource_type: string
+          user_id: string
+          video_project_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json
+          id?: string
+          resource_id?: string | null
+          resource_type: string
+          user_id: string
+          video_project_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json
+          id?: string
+          resource_id?: string | null
+          resource_type?: string
+          user_id?: string
+          video_project_id?: string | null
         }
         Relationships: []
       }
