@@ -29,6 +29,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedContentCalendarRouteImport } from './routes/_authenticated/content-calendar'
 import { Route as AuthenticatedClientsRouteImport } from './routes/_authenticated/clients'
 import { Route as AuthenticatedCampaignsRouteImport } from './routes/_authenticated/campaigns'
+import { Route as AuthenticatedAutoCampaignRouteImport } from './routes/_authenticated/auto-campaign'
 import { Route as AuthenticatedAiWriterRouteImport } from './routes/_authenticated/ai-writer'
 import { Route as AuthenticatedAiStudioRouteImport } from './routes/_authenticated/ai-studio'
 import { Route as AuthenticatedAccountPrivacyRouteImport } from './routes/_authenticated/account-privacy'
@@ -134,6 +135,12 @@ const AuthenticatedCampaignsRoute = AuthenticatedCampaignsRouteImport.update({
   path: '/campaigns',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAutoCampaignRoute =
+  AuthenticatedAutoCampaignRouteImport.update({
+    id: '/auto-campaign',
+    path: '/auto-campaign',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedAiWriterRoute = AuthenticatedAiWriterRouteImport.update({
   id: '/ai-writer',
   path: '/ai-writer',
@@ -166,6 +173,7 @@ export interface FileRoutesByFullPath {
   '/account-privacy': typeof AuthenticatedAccountPrivacyRoute
   '/ai-studio': typeof AuthenticatedAiStudioRoute
   '/ai-writer': typeof AuthenticatedAiWriterRoute
+  '/auto-campaign': typeof AuthenticatedAutoCampaignRoute
   '/campaigns': typeof AuthenticatedCampaignsRoute
   '/clients': typeof AuthenticatedClientsRoute
   '/content-calendar': typeof AuthenticatedContentCalendarRoute
@@ -190,6 +198,7 @@ export interface FileRoutesByTo {
   '/account-privacy': typeof AuthenticatedAccountPrivacyRoute
   '/ai-studio': typeof AuthenticatedAiStudioRoute
   '/ai-writer': typeof AuthenticatedAiWriterRoute
+  '/auto-campaign': typeof AuthenticatedAutoCampaignRoute
   '/campaigns': typeof AuthenticatedCampaignsRoute
   '/clients': typeof AuthenticatedClientsRoute
   '/content-calendar': typeof AuthenticatedContentCalendarRoute
@@ -216,6 +225,7 @@ export interface FileRoutesById {
   '/_authenticated/account-privacy': typeof AuthenticatedAccountPrivacyRoute
   '/_authenticated/ai-studio': typeof AuthenticatedAiStudioRoute
   '/_authenticated/ai-writer': typeof AuthenticatedAiWriterRoute
+  '/_authenticated/auto-campaign': typeof AuthenticatedAutoCampaignRoute
   '/_authenticated/campaigns': typeof AuthenticatedCampaignsRoute
   '/_authenticated/clients': typeof AuthenticatedClientsRoute
   '/_authenticated/content-calendar': typeof AuthenticatedContentCalendarRoute
@@ -242,6 +252,7 @@ export interface FileRouteTypes {
     | '/account-privacy'
     | '/ai-studio'
     | '/ai-writer'
+    | '/auto-campaign'
     | '/campaigns'
     | '/clients'
     | '/content-calendar'
@@ -266,6 +277,7 @@ export interface FileRouteTypes {
     | '/account-privacy'
     | '/ai-studio'
     | '/ai-writer'
+    | '/auto-campaign'
     | '/campaigns'
     | '/clients'
     | '/content-calendar'
@@ -291,6 +303,7 @@ export interface FileRouteTypes {
     | '/_authenticated/account-privacy'
     | '/_authenticated/ai-studio'
     | '/_authenticated/ai-writer'
+    | '/_authenticated/auto-campaign'
     | '/_authenticated/campaigns'
     | '/_authenticated/clients'
     | '/_authenticated/content-calendar'
@@ -458,6 +471,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCampaignsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/auto-campaign': {
+      id: '/_authenticated/auto-campaign'
+      path: '/auto-campaign'
+      fullPath: '/auto-campaign'
+      preLoaderRoute: typeof AuthenticatedAutoCampaignRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/ai-writer': {
       id: '/_authenticated/ai-writer'
       path: '/ai-writer'
@@ -486,6 +506,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAccountPrivacyRoute: typeof AuthenticatedAccountPrivacyRoute
   AuthenticatedAiStudioRoute: typeof AuthenticatedAiStudioRoute
   AuthenticatedAiWriterRoute: typeof AuthenticatedAiWriterRoute
+  AuthenticatedAutoCampaignRoute: typeof AuthenticatedAutoCampaignRoute
   AuthenticatedCampaignsRoute: typeof AuthenticatedCampaignsRoute
   AuthenticatedClientsRoute: typeof AuthenticatedClientsRoute
   AuthenticatedContentCalendarRoute: typeof AuthenticatedContentCalendarRoute
@@ -500,6 +521,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAccountPrivacyRoute: AuthenticatedAccountPrivacyRoute,
   AuthenticatedAiStudioRoute: AuthenticatedAiStudioRoute,
   AuthenticatedAiWriterRoute: AuthenticatedAiWriterRoute,
+  AuthenticatedAutoCampaignRoute: AuthenticatedAutoCampaignRoute,
   AuthenticatedCampaignsRoute: AuthenticatedCampaignsRoute,
   AuthenticatedClientsRoute: AuthenticatedClientsRoute,
   AuthenticatedContentCalendarRoute: AuthenticatedContentCalendarRoute,

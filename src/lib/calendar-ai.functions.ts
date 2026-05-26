@@ -143,3 +143,85 @@ Pick best posting hours for each platform (Instagram: 11, Facebook: 13, X: 9, Ti
     }));
     return { posts: out };
   });
+
+// ============= AI Auto Campaign =============
+
+const AutoCampaignInput = z.object({
+  businessType: z.string().min(2).max(200),
+  goal: z.string().min(2).max(300),
+  offer: z.string().min(2).max(400),
+  budget: z.string().max(80).default(""),
+  tone: z.string().max(40).default("Professional"),
+  audience: z.string().min(2).max(300),
+  platforms: z.array(z.enum(["instagram", "facebook", "x", "tiktok", "youtube"])).min(1).max(5),
+  postsPerWeek: z.number().int().min(3).max(21).default(7),
+  startDate: z.string().optional(),
+});
+
+export type AutoCampaignPost = {
+  date: string;
+  hour: number;
+  platform: string;
+  category: string;
+  caption: string;
+  hashtags: string;
+  cta: string;
+  image_prompt: string;
+  video_idea: string;
+};
+
+export const generateAutoCampaign = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => AutoCampaignInput.parse(d))
+  .handler(async ({ data }) => {
+    const start = data.startDate ? new Date(data.startDate) : new Date();
+    const startIso = start.toISOString().slice(0, 10);
+    const totalPosts = Math.min(data.postsPerWeek * 4, 60);
+
+    const sys = `You are an elite paid+organic social media strategist building a complete 30-day campaign. Output ONLY valid JSON matching:
+{"strategy":string,"posts":[{"date":"YYYY-MM-DD","hour":number,"platform":"instagram|facebook|x|tiktok|youtube","category":string,"caption":string,"hashtags":string,"cta":string,"image_prompt":string,"video_idea":string}]}
+Rules:
+- caption: under 220 chars, on-brand, hook in first line
+- hashtags: single line, 8-12 tags starting with #, lowercase
+- cta: max 8 words, action-oriented (e.g. "Shop the launch", "Book your free call")
+- image_prompt: detailed prompt for an AI image generator (1-2 sentences, visual style + subject + mood)
+- video_idea: short reel/TikTok concept (max 25 words)
+- strategy: 2-3 sentence overview tying everything to the goal & offer
+- Spread posts across 30 days starting at startDate. Balance platforms. Best hours: Instagram 11, Facebook 13, X 9, TikTok 19, YouTube 17.`;
+
+    const user = `Build a 30-day AI Auto Campaign.
+Business type: ${data.businessType}
+Primary goal: ${data.goal}
+Offer / promotion: ${data.offer}
+Budget: ${data.budget || "not specified"}
+Tone of voice: ${data.tone}
+Target audience: ${data.audience}
+Platforms: ${data.platforms.join(", ")}
+Total posts: ${totalPosts} (~${data.postsPerWeek}/week)
+Start date: ${startIso}`;
+
+    const raw = await callAI(sys, user, true);
+    let parsed: { strategy?: string; posts: AutoCampaignPost[] };
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      const m = raw.match(/\{[\s\S]*\}/);
+      if (!m) throw new Error("AI returned malformed campaign");
+      parsed = JSON.parse(m[0]);
+    }
+    if (!parsed?.posts?.length) throw new Error("AI returned no posts");
+
+    const allowed = ["instagram", "facebook", "x", "tiktok", "youtube"];
+    const posts: AutoCampaignPost[] = parsed.posts.slice(0, 60).map((p) => ({
+      date: String(p.date || startIso).slice(0, 10),
+      hour: Math.min(23, Math.max(0, Number(p.hour) || 12)),
+      platform: allowed.includes(p.platform) ? p.platform : data.platforms[0],
+      category: String(p.category || "General").slice(0, 60),
+      caption: String(p.caption || "").slice(0, 600),
+      hashtags: String(p.hashtags || "").slice(0, 400),
+      cta: String(p.cta || "").slice(0, 80),
+      image_prompt: String(p.image_prompt || "").slice(0, 600),
+      video_idea: String(p.video_idea || "").slice(0, 400),
+    }));
+    return { strategy: String(parsed.strategy || "").slice(0, 1000), posts };
+  });
