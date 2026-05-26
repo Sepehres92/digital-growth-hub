@@ -28,7 +28,6 @@ import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedGlobalDashboardRouteImport } from './routes/_authenticated/global-dashboard'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedContentCalendarRouteImport } from './routes/_authenticated/content-calendar'
-import { Route as AuthenticatedMeetingsRouteImport } from './routes/_authenticated/meetings'
 import { Route as AuthenticatedClientsRouteImport } from './routes/_authenticated/clients'
 import { Route as AuthenticatedCampaignsRouteImport } from './routes/_authenticated/campaigns'
 import { Route as AuthenticatedAutoCampaignRouteImport } from './routes/_authenticated/auto-campaign'
@@ -132,11 +131,6 @@ const AuthenticatedContentCalendarRoute =
     path: '/content-calendar',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
-const AuthenticatedMeetingsRoute = AuthenticatedMeetingsRouteImport.update({
-  id: '/meetings',
-  path: '/meetings',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
 const AuthenticatedClientsRoute = AuthenticatedClientsRouteImport.update({
   id: '/clients',
   path: '/clients',
@@ -459,13 +453,6 @@ declare module '@tanstack/react-router' {
       path: '/leads'
       fullPath: '/leads'
       preLoaderRoute: typeof AuthenticatedLeadsRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/meetings': {
-      id: '/_authenticated/meetings'
-      path: '/meetings'
-      fullPath: '/meetings'
-      preLoaderRoute: typeof AuthenticatedMeetingsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/global-dashboard': {
