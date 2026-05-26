@@ -57,6 +57,8 @@ const emptyForm = {
   email: "",
   phone: "",
   company: "",
+  service_interest: "",
+  source: "",
   status: "new" as Status,
   value: "",
   notes: "",
