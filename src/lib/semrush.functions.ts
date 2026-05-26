@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import {
   domainOverview,
   domainOrganicKeywords,
@@ -20,6 +21,7 @@ const CompareInput = z.object({
 });
 
 export const getSemrushKeywords = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((i) => DomainInput.parse(i))
   .handler(async ({ data }) => {
     const [overview, keywords] = await Promise.all([
@@ -30,6 +32,7 @@ export const getSemrushKeywords = createServerFn({ method: "POST" })
   });
 
 export const getSemrushBacklinks = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((i) => DomainInput.parse(i))
   .handler(async ({ data }) => {
     const [overview, refDomains, anchors] = await Promise.all([
@@ -41,12 +44,14 @@ export const getSemrushBacklinks = createServerFn({ method: "POST" })
   });
 
 export const getSemrushCompetitors = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((i) => DomainInput.parse(i))
   .handler(async ({ data }) => {
     return { competitors: await competitors(data.domain, data.database, 20) };
   });
 
 export const compareSemrushDomains = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((i) => CompareInput.parse(i))
   .handler(async ({ data }) => {
     const results = await Promise.all(
