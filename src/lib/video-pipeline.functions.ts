@@ -211,6 +211,20 @@ export const generateVideoFromPrompt = createServerFn({ method: "POST" })
       .select()
       .single();
     if (error) throw new Error(error.message);
+
+    await recordAck(supabase, userId, {
+      resourceType: "ai_generation",
+      resourceRef: render.id,
+      ack: data.ack,
+    });
+    await logAudit(supabase, userId, {
+      action: "generate",
+      resourceType: "ai_generation",
+      resourceId: render.id,
+      videoProjectId: data.videoProjectId,
+      details: { taskId: task.id, prompt: data.prompt.slice(0, 200), style: data.style, format: data.format },
+    });
+
     return { renderId: render.id, taskId: task.id, status: "processing" as const };
   });
 
