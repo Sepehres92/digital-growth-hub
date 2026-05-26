@@ -201,8 +201,8 @@ function LeadsPage() {
                       <td className="px-4 py-3 text-muted-foreground">{l.company ?? "—"}</td>
                       <td className="px-4 py-3 text-muted-foreground">{l.email ?? "—"}</td>
                       <td className="px-4 py-3">
-                        <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium capitalize text-primary">
-                          {l.status}
+                        <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                          {STATUS_LABEL[l.status]}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-right tabular-nums">
