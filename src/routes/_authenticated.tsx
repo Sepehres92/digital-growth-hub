@@ -55,7 +55,6 @@ function AuthedLayout() {
         <div className="size-7 rounded-md bg-primary" />
         <span className="font-semibold">Agency OS</span>
       </div>
-      <nav className="flex-1 space-y-1 p-4">
       <nav className="flex-1 space-y-4 overflow-y-auto p-4">
         {groups.map((group) => (
           <div key={group} className="space-y-1">
