@@ -357,8 +357,8 @@ function LeadsPage() {
                   </SelectTrigger>
                   <SelectContent>
                     {STATUSES.map((s) => (
-                      <SelectItem key={s} value={s} className="capitalize">
-                        {s}
+                      <SelectItem key={s} value={s}>
+                        {STATUS_LABEL[s]}
                       </SelectItem>
                     ))}
                   </SelectContent>
