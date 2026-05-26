@@ -40,7 +40,7 @@ export const exportMyData = createServerFn({ method: "POST" })
 
     await logAudit({ userId, action: "data.export" });
 
-    return out as unknown as Record<string, unknown>;
+    return { json: JSON.stringify(out) };
   });
 
 export const deleteMyAccount = createServerFn({ method: "POST" })
