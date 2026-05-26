@@ -61,6 +61,12 @@ function ClientsPage() {
         services: form.services.trim() || null,
         notes: form.notes.trim() || null,
         status: form.status,
+        brand_voice: form.brand_voice.trim() || null,
+        brand_colors: form.brand_colors.trim() || null,
+        target_audience: form.target_audience.trim() || null,
+        preferred_tone: form.preferred_tone.trim() || null,
+        keywords: form.keywords.trim() || null,
+        competitors: form.competitors.trim() || null,
       };
       if (editing) {
         const { error } = await supabase.from("clients").update(payload).eq("id", editing.id);
