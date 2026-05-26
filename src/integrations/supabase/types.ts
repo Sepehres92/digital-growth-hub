@@ -44,6 +44,51 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_images: {
+        Row: {
+          campaign_id: string | null
+          client_id: string | null
+          created_at: string
+          id: string
+          image_url: string
+          mode: string
+          prompt: string
+          size: string | null
+          source_url: string | null
+          storage_path: string | null
+          style: string | null
+          user_id: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          image_url: string
+          mode: string
+          prompt: string
+          size?: string | null
+          source_url?: string | null
+          storage_path?: string | null
+          style?: string | null
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string
+          mode?: string
+          prompt?: string
+          size?: string | null
+          source_url?: string | null
+          storage_path?: string | null
+          style?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           author_name: string | null
