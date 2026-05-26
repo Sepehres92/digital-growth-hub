@@ -45,7 +45,21 @@ function AIWriterPage() {
     platform: "",
     goal: "",
     keywords: "",
+    clientId: "" as string,
   });
+
+  const clientsQ = useQuery({
+    queryKey: ["clients", "brand-picker"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("clients")
+        .select("id,business_name,brand_voice,brand_colors,target_audience,preferred_tone,keywords,competitors,services,industry")
+        .order("business_name");
+      if (error) throw error;
+      return data;
+    },
+  });
+  const selectedClient = clientsQ.data?.find((c) => c.id === form.clientId) ?? null;
   const [result, setResult] = useState<Record<string, string> | null>(null);
 
   const gen = useMutation({
