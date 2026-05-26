@@ -14,7 +14,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
-import { ImageIcon, Wand2, Upload, Loader2, Download, Link2, Trash2, Briefcase, Megaphone, X } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ImageIcon, Wand2, Upload, Loader2, Download, Link2, Trash2, Briefcase, Megaphone, X, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/ai-studio")({
