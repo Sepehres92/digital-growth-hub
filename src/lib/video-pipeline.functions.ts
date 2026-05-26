@@ -156,6 +156,7 @@ const PromptInput = z.object({
   duration: z.union([z.literal(5), z.literal(10)]).default(5),
   format: z.enum(["9:16", "16:9", "1:1"]).default("9:16"),
   promptImageUrl: z.string().url().optional(),
+  ack: RightsAckSchema,
 });
 
 function ratioForFormat(f: "9:16" | "16:9" | "1:1") {
