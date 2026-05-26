@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_copies: {
+        Row: {
+          content_type: string
+          created_at: string
+          id: string
+          output: string
+          prompt_inputs: Json | null
+          user_id: string
+          variation: string | null
+        }
+        Insert: {
+          content_type: string
+          created_at?: string
+          id?: string
+          output: string
+          prompt_inputs?: Json | null
+          user_id: string
+          variation?: string | null
+        }
+        Update: {
+          content_type?: string
+          created_at?: string
+          id?: string
+          output?: string
+          prompt_inputs?: Json | null
+          user_id?: string
+          variation?: string | null
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           author_name: string | null
