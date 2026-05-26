@@ -26,6 +26,8 @@ export const Route = createFileRoute("/_authenticated/clients")({
 const empty = {
   business_name: "", contact_person: "", email: "", phone: "", website: "",
   industry: "", monthly_budget: "", services: "", notes: "", status: "active",
+  brand_voice: "", brand_colors: "", target_audience: "", preferred_tone: "",
+  keywords: "", competitors: "",
 };
 
 function ClientsPage() {
