@@ -164,6 +164,11 @@ const AuthenticatedAiStudioRoute = AuthenticatedAiStudioRouteImport.update({
   path: '/ai-studio',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAiVideoStudioRoute = AuthenticatedAiVideoStudioRouteImport.update({
+  id: '/ai-video-studio',
+  path: '/ai-video-studio',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedAccountPrivacyRoute =
   AuthenticatedAccountPrivacyRouteImport.update({
     id: '/account-privacy',
