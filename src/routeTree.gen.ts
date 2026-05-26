@@ -33,7 +33,6 @@ import { Route as AuthenticatedAutoCampaignRouteImport } from './routes/_authent
 import { Route as AuthenticatedAiWriterRouteImport } from './routes/_authenticated/ai-writer'
 import { Route as AuthenticatedAiStudioRouteImport } from './routes/_authenticated/ai-studio'
 import { Route as AuthenticatedAccountPrivacyRouteImport } from './routes/_authenticated/account-privacy'
-import { Route as AuthenticatedAutoCampaignRouteImport } from './routes/_authenticated/auto-campaign'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -156,6 +155,12 @@ const AuthenticatedAccountPrivacyRoute =
   AuthenticatedAccountPrivacyRouteImport.update({
     id: '/account-privacy',
     path: '/account-privacy',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedAutoCampaignRoute =
+  AuthenticatedAutoCampaignRouteImport.update({
+    id: '/auto-campaign',
+    path: '/auto-campaign',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
