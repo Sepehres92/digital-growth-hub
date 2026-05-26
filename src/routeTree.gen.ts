@@ -171,7 +171,6 @@ export interface FileRoutesByFullPath {
   '/social': typeof SocialRoute
   '/terms': typeof TermsRoute
   '/account-privacy': typeof AuthenticatedAccountPrivacyRoute
-  '/auto-campaign': typeof AuthenticatedAutoCampaignRoute
   '/ai-studio': typeof AuthenticatedAiStudioRoute
   '/ai-writer': typeof AuthenticatedAiWriterRoute
   '/auto-campaign': typeof AuthenticatedAutoCampaignRoute
@@ -197,6 +196,7 @@ export interface FileRoutesByTo {
   '/social': typeof SocialRoute
   '/terms': typeof TermsRoute
   '/account-privacy': typeof AuthenticatedAccountPrivacyRoute
+  '/auto-campaign': typeof AuthenticatedAutoCampaignRoute
   '/ai-studio': typeof AuthenticatedAiStudioRoute
   '/ai-writer': typeof AuthenticatedAiWriterRoute
   '/auto-campaign': typeof AuthenticatedAutoCampaignRoute
