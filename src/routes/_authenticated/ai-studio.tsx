@@ -14,7 +14,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
-import { ImageIcon, Wand2, Upload, Loader2, Download, Link2, Trash2, Briefcase, Megaphone, X } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ImageIcon, Wand2, Upload, Loader2, Download, Link2, Trash2, Briefcase, Megaphone, X, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/ai-studio")({
@@ -173,6 +174,14 @@ function AIStudioPage() {
           <p className="text-sm text-muted-foreground">Generate or edit on-brand visuals in seconds.</p>
         </div>
       </div>
+
+      <Alert className="border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100">
+        <AlertTriangle className="size-4 text-amber-600 dark:text-amber-400" />
+        <AlertTitle>Content Policy</AlertTitle>
+        <AlertDescription>
+          Only upload images you own or have permission to use. Do not generate copyrighted logos, celebrity likenesses, fake documents, or misleading before-and-after claims.
+        </AlertDescription>
+      </Alert>
 
       <div className="grid gap-6 lg:grid-cols-[440px_1fr]">
         <Card>
