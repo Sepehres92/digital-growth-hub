@@ -35,13 +35,19 @@ function AuthedLayout() {
   }
 
   const nav = [
-    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { to: "/leads", label: "Leads", icon: Users },
-    { to: "/clients", label: "Clients", icon: Briefcase },
-    { to: "/campaigns", label: "Campaigns", icon: Megaphone },
-    { to: "/tasks", label: "Tasks", icon: KanbanSquare },
-    { to: "/settings", label: "Settings", icon: SettingsIcon },
+    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, group: "Workspace" },
+    { to: "/leads", label: "Leads", icon: Users, group: "Workspace" },
+    { to: "/clients", label: "Clients", icon: Briefcase, group: "Workspace" },
+    { to: "/campaigns", label: "Campaigns", icon: Megaphone, group: "Workspace" },
+    { to: "/tasks", label: "Tasks", icon: KanbanSquare, group: "Workspace" },
+    { to: "/seo-audit", label: "SEO Audit", icon: FileSearch, group: "Marketing Tools" },
+    { to: "/semrush", label: "Semrush", icon: BarChart3, group: "Marketing Tools" },
+    { to: "/search-console", label: "Search Console", icon: Search, group: "Marketing Tools" },
+    { to: "/social", label: "Social", icon: Share2, group: "Marketing Tools" },
+    { to: "/settings", label: "Settings", icon: SettingsIcon, group: "Workspace" },
   ] as const;
+
+  const groups = Array.from(new Set(nav.map((n) => n.group)));
 
   const SidebarContent = () => (
     <>
