@@ -132,49 +132,67 @@ export type Database = {
       }
       clients: {
         Row: {
+          brand_colors: string | null
+          brand_voice: string | null
           business_name: string
+          competitors: string | null
           contact_person: string | null
           created_at: string
           email: string | null
           id: string
           industry: string | null
+          keywords: string | null
           monthly_budget: number | null
           notes: string | null
           phone: string | null
+          preferred_tone: string | null
           services: string | null
           status: string
+          target_audience: string | null
           updated_at: string
           user_id: string
           website: string | null
         }
         Insert: {
+          brand_colors?: string | null
+          brand_voice?: string | null
           business_name: string
+          competitors?: string | null
           contact_person?: string | null
           created_at?: string
           email?: string | null
           id?: string
           industry?: string | null
+          keywords?: string | null
           monthly_budget?: number | null
           notes?: string | null
           phone?: string | null
+          preferred_tone?: string | null
           services?: string | null
           status?: string
+          target_audience?: string | null
           updated_at?: string
           user_id: string
           website?: string | null
         }
         Update: {
+          brand_colors?: string | null
+          brand_voice?: string | null
           business_name?: string
+          competitors?: string | null
           contact_person?: string | null
           created_at?: string
           email?: string | null
           id?: string
           industry?: string | null
+          keywords?: string | null
           monthly_budget?: number | null
           notes?: string | null
           phone?: string | null
+          preferred_tone?: string | null
           services?: string | null
           status?: string
+          target_audience?: string | null
           updated_at?: string
           user_id?: string
           website?: string | null

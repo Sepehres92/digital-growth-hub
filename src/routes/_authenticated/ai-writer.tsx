@@ -45,11 +45,25 @@ function AIWriterPage() {
     platform: "",
     goal: "",
     keywords: "",
+    clientId: "" as string,
   });
+
+  const clientsQ = useQuery({
+    queryKey: ["clients", "brand-picker"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("clients")
+        .select("id,business_name,brand_voice,brand_colors,target_audience,preferred_tone,keywords,competitors,services,industry")
+        .order("business_name");
+      if (error) throw error;
+      return data;
+    },
+  });
+  const selectedClient = clientsQ.data?.find((c) => c.id === form.clientId) ?? null;
   const [result, setResult] = useState<Record<string, string> | null>(null);
 
   const gen = useMutation({
-    mutationFn: () => callGenerate({ data: form }),
+    mutationFn: () => callGenerate({ data: { ...form, clientId: form.clientId || null } }),
     onSuccess: (d) => {
       setResult(d.variations);
       toast.success("Copy generated");
@@ -116,6 +130,22 @@ function AIWriterPage() {
             <CardTitle className="text-base">Brief</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            <div className="space-y-1.5">
+              <Label>Client brand profile</Label>
+              <Select value={form.clientId || "none"} onValueChange={(v) => set("clientId", v === "none" ? "" : v)}>
+                <SelectTrigger><SelectValue placeholder="No client (generic)" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">No client (generic)</SelectItem>
+                  {clientsQ.data?.map((c) => <SelectItem key={c.id} value={c.id}>{c.business_name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+              {selectedClient && (
+                <p className="text-xs text-muted-foreground">
+                  Using brand voice{selectedClient.preferred_tone ? `, tone: ${selectedClient.preferred_tone}` : ""}
+                  {selectedClient.target_audience ? `, audience: ${selectedClient.target_audience}` : ""}.
+                </p>
+              )}
+            </div>
             <div className="space-y-1.5">
               <Label>Content type</Label>
               <Select value={form.contentType} onValueChange={(v) => set("contentType", v)}>
