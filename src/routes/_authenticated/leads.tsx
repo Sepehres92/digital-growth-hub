@@ -37,7 +37,16 @@ import type { Database } from "@/integrations/supabase/types";
 type Lead = Database["public"]["Tables"]["leads"]["Row"];
 type Status = Database["public"]["Enums"]["lead_status"];
 
-const STATUSES: Status[] = ["new", "contacted", "qualified", "proposal", "won", "lost"];
+const STATUSES: Status[] = ["new", "contacted", "discovery_booked", "proposal", "won", "lost"];
+const STATUS_LABEL: Record<Status, string> = {
+  new: "New",
+  contacted: "Contacted",
+  discovery_booked: "Discovery Booked",
+  qualified: "Qualified",
+  proposal: "Proposal Sent",
+  won: "Won",
+  lost: "Lost",
+};
 
 export const Route = createFileRoute("/_authenticated/leads")({
   component: LeadsPage,
