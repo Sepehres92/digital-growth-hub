@@ -37,7 +37,16 @@ import type { Database } from "@/integrations/supabase/types";
 type Lead = Database["public"]["Tables"]["leads"]["Row"];
 type Status = Database["public"]["Enums"]["lead_status"];
 
-const STATUSES: Status[] = ["new", "contacted", "qualified", "proposal", "won", "lost"];
+const STATUSES: Status[] = ["new", "contacted", "discovery_booked", "proposal", "won", "lost"];
+const STATUS_LABEL: Record<Status, string> = {
+  new: "New",
+  contacted: "Contacted",
+  discovery_booked: "Discovery Booked",
+  qualified: "Qualified",
+  proposal: "Proposal Sent",
+  won: "Won",
+  lost: "Lost",
+};
 
 export const Route = createFileRoute("/_authenticated/leads")({
   component: LeadsPage,
@@ -48,6 +57,8 @@ const emptyForm = {
   email: "",
   phone: "",
   company: "",
+  service_interest: "",
+  source: "",
   status: "new" as Status,
   value: "",
   notes: "",
@@ -81,6 +92,8 @@ function LeadsPage() {
         email: form.email.trim() || null,
         phone: form.phone.trim() || null,
         company: form.company.trim() || null,
+        service_interest: form.service_interest.trim() || null,
+        source: form.source.trim() || null,
         status: form.status,
         value: form.value ? Number(form.value) : 0,
         notes: form.notes.trim() || null,
@@ -130,6 +143,8 @@ function LeadsPage() {
       email: l.email ?? "",
       phone: l.phone ?? "",
       company: l.company ?? "",
+      service_interest: l.service_interest ?? "",
+      source: l.source ?? "",
       status: l.status,
       value: l.value ? String(l.value) : "",
       notes: l.notes ?? "",
@@ -186,8 +201,8 @@ function LeadsPage() {
                       <td className="px-4 py-3 text-muted-foreground">{l.company ?? "—"}</td>
                       <td className="px-4 py-3 text-muted-foreground">{l.email ?? "—"}</td>
                       <td className="px-4 py-3">
-                        <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium capitalize text-primary">
-                          {l.status}
+                        <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                          {STATUS_LABEL[l.status]}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-right tabular-nums">
@@ -223,8 +238,8 @@ function LeadsPage() {
                         {l.company ?? l.email ?? "—"}
                       </p>
                       <div className="mt-2 flex items-center gap-2">
-                        <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium capitalize text-primary">
-                          {l.status}
+                        <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                          {STATUS_LABEL[l.status]}
                         </span>
                         <span className="text-xs text-muted-foreground tabular-nums">
                           ${Number(l.value ?? 0).toLocaleString()}
@@ -300,6 +315,26 @@ function LeadsPage() {
                 />
               </div>
               <div>
+                <Label htmlFor="service_interest">Service interest</Label>
+                <Input
+                  id="service_interest"
+                  value={form.service_interest}
+                  onChange={(e) => setForm({ ...form, service_interest: e.target.value })}
+                  placeholder="SEO, PPC, Website…"
+                  className="mt-1.5"
+                />
+              </div>
+              <div>
+                <Label htmlFor="source">Lead source</Label>
+                <Input
+                  id="source"
+                  value={form.source}
+                  onChange={(e) => setForm({ ...form, source: e.target.value })}
+                  placeholder="Referral, Google, LinkedIn…"
+                  className="mt-1.5"
+                />
+              </div>
+              <div>
                 <Label htmlFor="value">Value ($)</Label>
                 <Input
                   id="value"
@@ -322,8 +357,8 @@ function LeadsPage() {
                   </SelectTrigger>
                   <SelectContent>
                     {STATUSES.map((s) => (
-                      <SelectItem key={s} value={s} className="capitalize">
-                        {s}
+                      <SelectItem key={s} value={s}>
+                        {STATUS_LABEL[s]}
                       </SelectItem>
                     ))}
                   </SelectContent>
