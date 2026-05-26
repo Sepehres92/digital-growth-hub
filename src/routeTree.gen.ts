@@ -22,7 +22,6 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedVideoStudioRouteImport } from './routes/_authenticated/video-studio'
-import { Route as AuthenticatedVideoStudioRouteImport } from './routes/_authenticated/video-studio'
 import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedMeetingsRouteImport } from './routes/_authenticated/meetings'
@@ -102,11 +101,6 @@ const AuthenticatedVideoStudioRoute =
     path: '/video-studio',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
-const AuthenticatedVideoStudioRoute = AuthenticatedVideoStudioRouteImport.update({
-  id: '/video-studio',
-  path: '/video-studio',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
 const AuthenticatedTasksRoute = AuthenticatedTasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
@@ -288,7 +282,6 @@ export interface FileRouteTypes {
     | '/settings'
     | '/tasks'
     | '/video-studio'
-    | '/video-studio'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -315,7 +308,6 @@ export interface FileRouteTypes {
     | '/meetings'
     | '/settings'
     | '/tasks'
-    | '/video-studio'
     | '/video-studio'
   id:
     | '__root__'
@@ -344,7 +336,6 @@ export interface FileRouteTypes {
     | '/_authenticated/meetings'
     | '/_authenticated/settings'
     | '/_authenticated/tasks'
-    | '/_authenticated/video-studio'
     | '/_authenticated/video-studio'
   fileRoutesById: FileRoutesById
 }
@@ -448,13 +439,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/video-studio': {
-      id: '/_authenticated/video-studio'
-      path: '/video-studio'
-      fullPath: '/video-studio'
-      preLoaderRoute: typeof AuthenticatedVideoStudioRouteImport
-      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/video-studio': {
       id: '/_authenticated/video-studio'
