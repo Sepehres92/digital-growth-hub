@@ -315,6 +315,26 @@ function LeadsPage() {
                 />
               </div>
               <div>
+                <Label htmlFor="service_interest">Service interest</Label>
+                <Input
+                  id="service_interest"
+                  value={form.service_interest}
+                  onChange={(e) => setForm({ ...form, service_interest: e.target.value })}
+                  placeholder="SEO, PPC, Website…"
+                  className="mt-1.5"
+                />
+              </div>
+              <div>
+                <Label htmlFor="source">Lead source</Label>
+                <Input
+                  id="source"
+                  value={form.source}
+                  onChange={(e) => setForm({ ...form, source: e.target.value })}
+                  placeholder="Referral, Google, LinkedIn…"
+                  className="mt-1.5"
+                />
+              </div>
+              <div>
                 <Label htmlFor="value">Value ($)</Label>
                 <Input
                   id="value"
