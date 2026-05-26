@@ -143,6 +143,8 @@ function LeadsPage() {
       email: l.email ?? "",
       phone: l.phone ?? "",
       company: l.company ?? "",
+      service_interest: l.service_interest ?? "",
+      source: l.source ?? "",
       status: l.status,
       value: l.value ? String(l.value) : "",
       notes: l.notes ?? "",
