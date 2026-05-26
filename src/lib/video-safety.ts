@@ -7,7 +7,7 @@ import { z } from "zod";
  */
 export const RightsAckSchema = z.object({
   ownsRights: z.literal(true, {
-    errorMap: () => ({ message: "You must confirm you own or have permission to use this content." }),
+    message: "You must confirm you own or have permission to use this content.",
   }),
   musicLicensed: z.boolean().default(false),
   noCelebrityLikeness: z.boolean().default(false),
