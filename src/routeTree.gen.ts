@@ -150,6 +150,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRoute
+  '/cookies': typeof CookiesRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search-console': typeof SearchConsoleRoute
   '/semrush': typeof SemrushRoute
@@ -162,6 +165,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/global-dashboard': typeof AuthenticatedGlobalDashboardRoute
   '/leads': typeof AuthenticatedLeadsRoute
+  '/_authenticated/privacy': typeof AuthenticatedPrivacyRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
 }
@@ -169,6 +173,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRoute
+  '/cookies': typeof CookiesRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search-console': typeof SearchConsoleRoute
   '/semrush': typeof SemrushRoute
@@ -181,6 +188,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/global-dashboard': typeof AuthenticatedGlobalDashboardRoute
   '/leads': typeof AuthenticatedLeadsRoute
+  '/_authenticated/privacy': typeof AuthenticatedPrivacyRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
 }
@@ -190,6 +198,9 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRoute
+  '/cookies': typeof CookiesRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search-console': typeof SearchConsoleRoute
   '/semrush': typeof SemrushRoute
@@ -202,15 +213,20 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/global-dashboard': typeof AuthenticatedGlobalDashboardRoute
   '/_authenticated/leads': typeof AuthenticatedLeadsRoute
+  '/_authenticated/privacy': typeof AuthenticatedPrivacyRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
 }
+
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/auth'
     | '/blog'
+    | '/cookies'
+    | '/privacy'
+    | '/terms'
     | '/reset-password'
     | '/search-console'
     | '/semrush'
@@ -223,6 +239,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/global-dashboard'
     | '/leads'
+    | '/_authenticated/privacy'
     | '/settings'
     | '/tasks'
   fileRoutesByTo: FileRoutesByTo
@@ -230,6 +247,9 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/blog'
+    | '/cookies'
+    | '/privacy'
+    | '/terms'
     | '/reset-password'
     | '/search-console'
     | '/semrush'
@@ -242,6 +262,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/global-dashboard'
     | '/leads'
+    | '/_authenticated/privacy'
     | '/settings'
     | '/tasks'
   id:
@@ -250,6 +271,9 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/blog'
+    | '/cookies'
+    | '/privacy'
+    | '/terms'
     | '/reset-password'
     | '/search-console'
     | '/semrush'
@@ -262,6 +286,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/global-dashboard'
     | '/_authenticated/leads'
+    | '/_authenticated/privacy'
     | '/_authenticated/settings'
     | '/_authenticated/tasks'
   fileRoutesById: FileRoutesById
@@ -271,12 +296,16 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthRoute: typeof AuthRoute
   BlogRoute: typeof BlogRoute
+  CookiesRoute: typeof CookiesRoute
+  PrivacyRoute: typeof PrivacyRoute
+  TermsRoute: typeof TermsRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchConsoleRoute: typeof SearchConsoleRoute
   SemrushRoute: typeof SemrushRoute
   SeoAuditRoute: typeof SeoAuditRoute
   SocialRoute: typeof SocialRoute
 }
+
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
@@ -329,6 +358,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cookies': {
+      id: '/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof CookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -357,6 +408,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/privacy': {
+      id: '/_authenticated/privacy'
+      path: '/privacy'
+      fullPath: '/_authenticated/privacy'
+      preLoaderRoute: typeof AuthenticatedPrivacyRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+
     '/_authenticated/leads': {
       id: '/_authenticated/leads'
       path: '/leads'
