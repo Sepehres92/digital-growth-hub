@@ -13,6 +13,7 @@ import { Route as SocialRouteImport } from './routes/social'
 import { Route as SeoAuditRouteImport } from './routes/seo-audit'
 import { Route as SemrushRouteImport } from './routes/semrush'
 import { Route as SearchConsoleRouteImport } from './routes/search-console'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
@@ -37,6 +38,11 @@ const SemrushRoute = SemrushRouteImport.update({
 const SearchConsoleRoute = SearchConsoleRouteImport.update({
   id: '/search-console',
   path: '/search-console',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -67,6 +73,7 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/search-console': typeof SearchConsoleRoute
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
@@ -77,6 +84,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/search-console': typeof SearchConsoleRoute
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/search-console': typeof SearchConsoleRoute
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/reset-password'
     | '/search-console'
     | '/semrush'
     | '/seo-audit'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/reset-password'
     | '/search-console'
     | '/semrush'
     | '/seo-audit'
@@ -122,6 +133,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/reset-password'
     | '/search-console'
     | '/semrush'
     | '/seo-audit'
@@ -134,6 +146,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SearchConsoleRoute: typeof SearchConsoleRoute
   SemrushRoute: typeof SemrushRoute
   SeoAuditRoute: typeof SeoAuditRoute
@@ -168,6 +181,13 @@ declare module '@tanstack/react-router' {
       path: '/search-console'
       fullPath: '/search-console'
       preLoaderRoute: typeof SearchConsoleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -226,6 +246,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthRoute: AuthRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SearchConsoleRoute: SearchConsoleRoute,
   SemrushRoute: SemrushRoute,
   SeoAuditRoute: SeoAuditRoute,
@@ -234,3 +255,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
