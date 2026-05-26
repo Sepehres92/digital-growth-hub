@@ -42,6 +42,7 @@ function AuthedLayout() {
     { to: "/campaigns", label: "Campaigns", icon: Megaphone, group: "Workspace" },
     { to: "/tasks", label: "Tasks", icon: KanbanSquare, group: "Workspace" },
     { to: "/blog", label: "Daily Blog", icon: BookOpen, group: "Workspace" },
+    { to: "/auto-campaign", label: "AI Auto Campaign", icon: Wand2, group: "Marketing Tools" },
     { to: "/ai-writer", label: "AI Writer", icon: Sparkles, group: "Marketing Tools" },
     { to: "/ai-studio", label: "AI Creative Studio", icon: ImageIcon, group: "Marketing Tools" },
     { to: "/content-calendar", label: "Content Calendar", icon: CalendarDays, group: "Marketing Tools" },
