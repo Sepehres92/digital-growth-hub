@@ -345,6 +345,7 @@ const RenderTemplateInput = z.object({
     .default([]),
   musicUrl: z.string().url().optional(),
   logoUrl: z.string().url().optional(),
+  ack: RightsAckSchema,
 });
 
 export const renderVideoTemplate = createServerFn({ method: "POST" })
