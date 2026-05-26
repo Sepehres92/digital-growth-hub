@@ -1073,6 +1073,8 @@ export type Database = {
           client_id: string | null
           content: string
           created_at: string
+          duration: number | null
+          file_name: string
           file_url: string
           id: string
           name: string
@@ -1086,6 +1088,8 @@ export type Database = {
           client_id?: string | null
           content?: string
           created_at?: string
+          duration?: number | null
+          file_name?: string
           file_url?: string
           id?: string
           name?: string
@@ -1099,6 +1103,8 @@ export type Database = {
           client_id?: string | null
           content?: string
           created_at?: string
+          duration?: number | null
+          file_name?: string
           file_url?: string
           id?: string
           name?: string
@@ -1114,12 +1120,14 @@ export type Database = {
           campaign_id: string | null
           client_id: string | null
           created_at: string
+          format: string
           id: string
           inputs: Json
           output: string
           output_json: Json
           platform: string
           status: string
+          style: string
           title: string
           type: string
           updated_at: string
@@ -1129,12 +1137,14 @@ export type Database = {
           campaign_id?: string | null
           client_id?: string | null
           created_at?: string
+          format?: string
           id?: string
           inputs?: Json
           output?: string
           output_json?: Json
           platform?: string
           status?: string
+          style?: string
           title?: string
           type?: string
           updated_at?: string
@@ -1144,16 +1154,96 @@ export type Database = {
           campaign_id?: string | null
           client_id?: string | null
           created_at?: string
+          format?: string
           id?: string
           inputs?: Json
           output?: string
           output_json?: Json
           platform?: string
           status?: string
+          style?: string
           title?: string
           type?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      video_renders: {
+        Row: {
+          created_at: string
+          export_format: string
+          id: string
+          platform: string
+          render_status: string
+          render_url: string
+          user_id: string
+          video_project_id: string
+        }
+        Insert: {
+          created_at?: string
+          export_format?: string
+          id?: string
+          platform?: string
+          render_status?: string
+          render_url?: string
+          user_id: string
+          video_project_id: string
+        }
+        Update: {
+          created_at?: string
+          export_format?: string
+          id?: string
+          platform?: string
+          render_status?: string
+          render_url?: string
+          user_id?: string
+          video_project_id?: string
+        }
+        Relationships: []
+      }
+      video_scenes: {
+        Row: {
+          created_at: string
+          duration: number | null
+          id: string
+          media_url: string
+          scene_order: number
+          scene_prompt: string
+          script_text: string
+          text_overlay: string
+          transition: string
+          user_id: string
+          video_project_id: string
+          visual_description: string
+        }
+        Insert: {
+          created_at?: string
+          duration?: number | null
+          id?: string
+          media_url?: string
+          scene_order?: number
+          scene_prompt?: string
+          script_text?: string
+          text_overlay?: string
+          transition?: string
+          user_id: string
+          video_project_id: string
+          visual_description?: string
+        }
+        Update: {
+          created_at?: string
+          duration?: number | null
+          id?: string
+          media_url?: string
+          scene_order?: number
+          scene_prompt?: string
+          script_text?: string
+          text_overlay?: string
+          transition?: string
+          user_id?: string
+          video_project_id?: string
+          visual_description?: string
         }
         Relationships: []
       }
@@ -1196,6 +1286,66 @@ export type Database = {
           user_id?: string
           visual?: string
           voiceover?: string
+        }
+        Relationships: []
+      }
+      video_subtitles: {
+        Row: {
+          created_at: string
+          end_time: number
+          id: string
+          start_time: number
+          subtitle_text: string
+          user_id: string
+          video_project_id: string
+        }
+        Insert: {
+          created_at?: string
+          end_time?: number
+          id?: string
+          start_time?: number
+          subtitle_text?: string
+          user_id: string
+          video_project_id: string
+        }
+        Update: {
+          created_at?: string
+          end_time?: number
+          id?: string
+          start_time?: number
+          subtitle_text?: string
+          user_id?: string
+          video_project_id?: string
+        }
+        Relationships: []
+      }
+      video_templates: {
+        Row: {
+          category: string
+          created_at: string
+          format: string
+          id: string
+          name: string
+          platform: string
+          template_json: Json
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          format?: string
+          id?: string
+          name: string
+          platform?: string
+          template_json?: Json
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          format?: string
+          id?: string
+          name?: string
+          platform?: string
+          template_json?: Json
         }
         Relationships: []
       }
