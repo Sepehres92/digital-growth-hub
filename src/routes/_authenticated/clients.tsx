@@ -109,6 +109,12 @@ function ClientsPage() {
       services: c.services ?? "",
       notes: c.notes ?? "",
       status: c.status,
+      brand_voice: c.brand_voice ?? "",
+      brand_colors: c.brand_colors ?? "",
+      target_audience: c.target_audience ?? "",
+      preferred_tone: c.preferred_tone ?? "",
+      keywords: c.keywords ?? "",
+      competitors: c.competitors ?? "",
     });
     setOpen(true);
   };
