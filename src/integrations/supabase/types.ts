@@ -602,6 +602,8 @@ export type Database = {
           id: string
           meeting_id: string
           status: string
+          task_description: string | null
+          task_title: string
           user_id: string
         }
         Insert: {
@@ -612,6 +614,8 @@ export type Database = {
           id?: string
           meeting_id: string
           status?: string
+          task_description?: string | null
+          task_title?: string
           user_id: string
         }
         Update: {
@@ -622,6 +626,8 @@ export type Database = {
           id?: string
           meeting_id?: string
           status?: string
+          task_description?: string | null
+          task_title?: string
           user_id?: string
         }
         Relationships: [
@@ -641,6 +647,7 @@ export type Database = {
           meeting_id: string
           notes: string | null
           owner: string | null
+          owner_id: string | null
           priority: string
           sort_order: number
           time_estimate: number | null
@@ -653,6 +660,7 @@ export type Database = {
           meeting_id: string
           notes?: string | null
           owner?: string | null
+          owner_id?: string | null
           priority?: string
           sort_order?: number
           time_estimate?: number | null
@@ -665,6 +673,7 @@ export type Database = {
           meeting_id?: string
           notes?: string | null
           owner?: string | null
+          owner_id?: string | null
           priority?: string
           sort_order?: number
           time_estimate?: number | null
@@ -690,6 +699,7 @@ export type Database = {
           id: string
           meeting_id: string
           storage_path: string | null
+          uploaded_by: string | null
           user_id: string
         }
         Insert: {
@@ -700,6 +710,7 @@ export type Database = {
           id?: string
           meeting_id: string
           storage_path?: string | null
+          uploaded_by?: string | null
           user_id: string
         }
         Update: {
@@ -710,6 +721,7 @@ export type Database = {
           id?: string
           meeting_id?: string
           storage_path?: string | null
+          uploaded_by?: string | null
           user_id?: string
         }
         Relationships: [
@@ -724,6 +736,7 @@ export type Database = {
       }
       meeting_attendees: {
         Row: {
+          attendance_status: string
           created_at: string
           email: string | null
           id: string
@@ -733,6 +746,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          attendance_status?: string
           created_at?: string
           email?: string | null
           id?: string
@@ -742,6 +756,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          attendance_status?: string
           created_at?: string
           email?: string | null
           id?: string
@@ -807,6 +822,7 @@ export type Database = {
           campaign_id: string | null
           client_id: string | null
           created_at: string
+          description: string | null
           end_time: string | null
           goal: string | null
           id: string
@@ -825,6 +841,7 @@ export type Database = {
           campaign_id?: string | null
           client_id?: string | null
           created_at?: string
+          description?: string | null
           end_time?: string | null
           goal?: string | null
           id?: string
@@ -843,6 +860,7 @@ export type Database = {
           campaign_id?: string | null
           client_id?: string | null
           created_at?: string
+          description?: string | null
           end_time?: string | null
           goal?: string | null
           id?: string
@@ -1048,6 +1066,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_access_meeting: {
+        Args: { _meeting_id: string; _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
