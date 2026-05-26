@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, Megaphone, KanbanSquare, Settings as SettingsIcon } from "lucide-react";
+import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, Megaphone, KanbanSquare, Settings as SettingsIcon, Search, BarChart3, FileSearch, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -35,13 +35,19 @@ function AuthedLayout() {
   }
 
   const nav = [
-    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { to: "/leads", label: "Leads", icon: Users },
-    { to: "/clients", label: "Clients", icon: Briefcase },
-    { to: "/campaigns", label: "Campaigns", icon: Megaphone },
-    { to: "/tasks", label: "Tasks", icon: KanbanSquare },
-    { to: "/settings", label: "Settings", icon: SettingsIcon },
+    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, group: "Workspace" },
+    { to: "/leads", label: "Leads", icon: Users, group: "Workspace" },
+    { to: "/clients", label: "Clients", icon: Briefcase, group: "Workspace" },
+    { to: "/campaigns", label: "Campaigns", icon: Megaphone, group: "Workspace" },
+    { to: "/tasks", label: "Tasks", icon: KanbanSquare, group: "Workspace" },
+    { to: "/seo-audit", label: "SEO Audit", icon: FileSearch, group: "Marketing Tools" },
+    { to: "/semrush", label: "Semrush", icon: BarChart3, group: "Marketing Tools" },
+    { to: "/search-console", label: "Search Console", icon: Search, group: "Marketing Tools" },
+    { to: "/social", label: "Social", icon: Share2, group: "Marketing Tools" },
+    { to: "/settings", label: "Settings", icon: SettingsIcon, group: "Workspace" },
   ] as const;
+
+  const groups = Array.from(new Set(nav.map((n) => n.group)));
 
   const SidebarContent = () => (
     <>
@@ -49,26 +55,35 @@ function AuthedLayout() {
         <div className="size-7 rounded-md bg-primary" />
         <span className="font-semibold">Agency OS</span>
       </div>
-      <nav className="flex-1 space-y-1 p-4">
-        {nav.map((item) => {
-          const active = pathname === item.to;
-          return (
-            <Link
-              key={item.to}
-              to={item.to}
-              onClick={() => setOpen(false)}
-              className={cn(
-                "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                active
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-accent hover:text-foreground",
-              )}
-            >
-              <item.icon className="size-4" />
-              {item.label}
-            </Link>
-          );
-        })}
+      <nav className="flex-1 space-y-4 overflow-y-auto p-4">
+        {groups.map((group) => (
+          <div key={group} className="space-y-1">
+            <div className="px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+              {group}
+            </div>
+            {nav
+              .filter((n) => n.group === group)
+              .map((item) => {
+                const active = pathname === item.to;
+                return (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    onClick={() => setOpen(false)}
+                    className={cn(
+                      "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                      active
+                        ? "bg-primary/10 text-primary"
+                        : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                    )}
+                  >
+                    <item.icon className="size-4" />
+                    {item.label}
+                  </Link>
+                );
+              })}
+          </div>
+        ))}
       </nav>
       <div className="border-t border-border p-4">
         <Button
