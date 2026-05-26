@@ -26,6 +26,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedClientsRouteImport } from './routes/_authenticated/clients'
 import { Route as AuthenticatedCampaignsRouteImport } from './routes/_authenticated/campaigns'
 import { Route as AuthenticatedAiWriterRouteImport } from './routes/_authenticated/ai-writer'
+import { Route as AuthenticatedAiStudioRouteImport } from './routes/_authenticated/ai-studio'
 
 const SocialRoute = SocialRouteImport.update({
   id: '/social',
@@ -112,6 +113,11 @@ const AuthenticatedAiWriterRoute = AuthenticatedAiWriterRouteImport.update({
   path: '/ai-writer',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAiStudioRoute = AuthenticatedAiStudioRouteImport.update({
+  id: '/ai-studio',
+  path: '/ai-studio',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
   '/social': typeof SocialRoute
+  '/ai-studio': typeof AuthenticatedAiStudioRoute
   '/ai-writer': typeof AuthenticatedAiWriterRoute
   '/campaigns': typeof AuthenticatedCampaignsRoute
   '/clients': typeof AuthenticatedClientsRoute
@@ -140,6 +147,7 @@ export interface FileRoutesByTo {
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
   '/social': typeof SocialRoute
+  '/ai-studio': typeof AuthenticatedAiStudioRoute
   '/ai-writer': typeof AuthenticatedAiWriterRoute
   '/campaigns': typeof AuthenticatedCampaignsRoute
   '/clients': typeof AuthenticatedClientsRoute
@@ -160,6 +168,7 @@ export interface FileRoutesById {
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
   '/social': typeof SocialRoute
+  '/_authenticated/ai-studio': typeof AuthenticatedAiStudioRoute
   '/_authenticated/ai-writer': typeof AuthenticatedAiWriterRoute
   '/_authenticated/campaigns': typeof AuthenticatedCampaignsRoute
   '/_authenticated/clients': typeof AuthenticatedClientsRoute
@@ -180,6 +189,7 @@ export interface FileRouteTypes {
     | '/semrush'
     | '/seo-audit'
     | '/social'
+    | '/ai-studio'
     | '/ai-writer'
     | '/campaigns'
     | '/clients'
@@ -198,6 +208,7 @@ export interface FileRouteTypes {
     | '/semrush'
     | '/seo-audit'
     | '/social'
+    | '/ai-studio'
     | '/ai-writer'
     | '/campaigns'
     | '/clients'
@@ -217,6 +228,7 @@ export interface FileRouteTypes {
     | '/semrush'
     | '/seo-audit'
     | '/social'
+    | '/_authenticated/ai-studio'
     | '/_authenticated/ai-writer'
     | '/_authenticated/campaigns'
     | '/_authenticated/clients'
@@ -360,10 +372,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAiWriterRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/ai-studio': {
+      id: '/_authenticated/ai-studio'
+      path: '/ai-studio'
+      fullPath: '/ai-studio'
+      preLoaderRoute: typeof AuthenticatedAiStudioRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedAiStudioRoute: typeof AuthenticatedAiStudioRoute
   AuthenticatedAiWriterRoute: typeof AuthenticatedAiWriterRoute
   AuthenticatedCampaignsRoute: typeof AuthenticatedCampaignsRoute
   AuthenticatedClientsRoute: typeof AuthenticatedClientsRoute
@@ -375,6 +395,7 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAiStudioRoute: AuthenticatedAiStudioRoute,
   AuthenticatedAiWriterRoute: AuthenticatedAiWriterRoute,
   AuthenticatedCampaignsRoute: AuthenticatedCampaignsRoute,
   AuthenticatedClientsRoute: AuthenticatedClientsRoute,
@@ -403,3 +424,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
