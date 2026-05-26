@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { exportMyData, deleteMyAccount } from "@/lib/account.functions";
 import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/_authenticated/privacy")({
+export const Route = createFileRoute("/_authenticated/account-privacy")({
   component: PrivacyAndDataPage,
 });
 
