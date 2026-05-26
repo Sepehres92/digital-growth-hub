@@ -301,7 +301,6 @@ export interface FileRouteTypes {
     | '/social'
     | '/terms'
     | '/_authenticated/account-privacy'
-    | '/_authenticated/auto-campaign'
     | '/_authenticated/ai-studio'
     | '/_authenticated/ai-writer'
     | '/_authenticated/auto-campaign'
