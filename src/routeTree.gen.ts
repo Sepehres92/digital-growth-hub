@@ -9,31 +9,35 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SocialRouteImport } from './routes/social'
 import { Route as SeoAuditRouteImport } from './routes/seo-audit'
 import { Route as SemrushRouteImport } from './routes/semrush'
 import { Route as SearchConsoleRouteImport } from './routes/search-console'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as TermsRouteImport } from './routes/terms'
-import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
-import { Route as AuthenticatedPrivacyRouteImport } from './routes/_authenticated/privacy'
 import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated/leads'
 import { Route as AuthenticatedGlobalDashboardRouteImport } from './routes/_authenticated/global-dashboard'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedContentCalendarRouteImport } from './routes/_authenticated/content-calendar'
 import { Route as AuthenticatedClientsRouteImport } from './routes/_authenticated/clients'
 import { Route as AuthenticatedCampaignsRouteImport } from './routes/_authenticated/campaigns'
 import { Route as AuthenticatedAiWriterRouteImport } from './routes/_authenticated/ai-writer'
 import { Route as AuthenticatedAiStudioRouteImport } from './routes/_authenticated/ai-studio'
-import { Route as AuthenticatedContentCalendarRouteImport } from './routes/_authenticated/content-calendar'
+import { Route as AuthenticatedAccountPrivacyRouteImport } from './routes/_authenticated/account-privacy'
 
-
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SocialRoute = SocialRouteImport.update({
   id: '/social',
   path: '/social',
@@ -59,6 +63,16 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CookiesRoute = CookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogRoute = BlogRouteImport.update({
   id: '/blog',
   path: '/blog',
@@ -67,21 +81,6 @@ const BlogRoute = BlogRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TermsRoute = TermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CookiesRoute = CookiesRouteImport.update({
-  id: '/cookies',
-  path: '/cookies',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -93,12 +92,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-
-const AuthenticatedContentCalendarRoute = AuthenticatedContentCalendarRouteImport.update({
-  id: '/content-calendar',
-  path: '/content-calendar',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
 const AuthenticatedTasksRoute = AuthenticatedTasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
@@ -109,12 +102,6 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
-const AuthenticatedPrivacyRoute = AuthenticatedPrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-
 const AuthenticatedLeadsRoute = AuthenticatedLeadsRouteImport.update({
   id: '/leads',
   path: '/leads',
@@ -131,6 +118,12 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedContentCalendarRoute =
+  AuthenticatedContentCalendarRouteImport.update({
+    id: '/content-calendar',
+    path: '/content-calendar',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedClientsRoute = AuthenticatedClientsRouteImport.update({
   id: '/clients',
   path: '/clients',
@@ -151,6 +144,12 @@ const AuthenticatedAiStudioRoute = AuthenticatedAiStudioRouteImport.update({
   path: '/ai-studio',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAccountPrivacyRoute =
+  AuthenticatedAccountPrivacyRouteImport.update({
+    id: '/account-privacy',
+    path: '/account-privacy',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -158,20 +157,21 @@ export interface FileRoutesByFullPath {
   '/blog': typeof BlogRoute
   '/cookies': typeof CookiesRoute
   '/privacy': typeof PrivacyRoute
-  '/terms': typeof TermsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search-console': typeof SearchConsoleRoute
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
   '/social': typeof SocialRoute
+  '/terms': typeof TermsRoute
+  '/account-privacy': typeof AuthenticatedAccountPrivacyRoute
   '/ai-studio': typeof AuthenticatedAiStudioRoute
   '/ai-writer': typeof AuthenticatedAiWriterRoute
   '/campaigns': typeof AuthenticatedCampaignsRoute
   '/clients': typeof AuthenticatedClientsRoute
+  '/content-calendar': typeof AuthenticatedContentCalendarRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/global-dashboard': typeof AuthenticatedGlobalDashboardRoute
   '/leads': typeof AuthenticatedLeadsRoute
-  '/_authenticated/privacy': typeof AuthenticatedPrivacyRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
 }
@@ -181,20 +181,21 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogRoute
   '/cookies': typeof CookiesRoute
   '/privacy': typeof PrivacyRoute
-  '/terms': typeof TermsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search-console': typeof SearchConsoleRoute
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
   '/social': typeof SocialRoute
+  '/terms': typeof TermsRoute
+  '/account-privacy': typeof AuthenticatedAccountPrivacyRoute
   '/ai-studio': typeof AuthenticatedAiStudioRoute
   '/ai-writer': typeof AuthenticatedAiWriterRoute
   '/campaigns': typeof AuthenticatedCampaignsRoute
   '/clients': typeof AuthenticatedClientsRoute
+  '/content-calendar': typeof AuthenticatedContentCalendarRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/global-dashboard': typeof AuthenticatedGlobalDashboardRoute
   '/leads': typeof AuthenticatedLeadsRoute
-  '/_authenticated/privacy': typeof AuthenticatedPrivacyRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
 }
@@ -206,24 +207,24 @@ export interface FileRoutesById {
   '/blog': typeof BlogRoute
   '/cookies': typeof CookiesRoute
   '/privacy': typeof PrivacyRoute
-  '/terms': typeof TermsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search-console': typeof SearchConsoleRoute
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
   '/social': typeof SocialRoute
+  '/terms': typeof TermsRoute
+  '/_authenticated/account-privacy': typeof AuthenticatedAccountPrivacyRoute
   '/_authenticated/ai-studio': typeof AuthenticatedAiStudioRoute
   '/_authenticated/ai-writer': typeof AuthenticatedAiWriterRoute
   '/_authenticated/campaigns': typeof AuthenticatedCampaignsRoute
   '/_authenticated/clients': typeof AuthenticatedClientsRoute
+  '/_authenticated/content-calendar': typeof AuthenticatedContentCalendarRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/global-dashboard': typeof AuthenticatedGlobalDashboardRoute
   '/_authenticated/leads': typeof AuthenticatedLeadsRoute
-  '/_authenticated/privacy': typeof AuthenticatedPrivacyRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
 }
-
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
@@ -232,20 +233,21 @@ export interface FileRouteTypes {
     | '/blog'
     | '/cookies'
     | '/privacy'
-    | '/terms'
     | '/reset-password'
     | '/search-console'
     | '/semrush'
     | '/seo-audit'
     | '/social'
+    | '/terms'
+    | '/account-privacy'
     | '/ai-studio'
     | '/ai-writer'
     | '/campaigns'
     | '/clients'
+    | '/content-calendar'
     | '/dashboard'
     | '/global-dashboard'
     | '/leads'
-    | '/_authenticated/privacy'
     | '/settings'
     | '/tasks'
   fileRoutesByTo: FileRoutesByTo
@@ -255,20 +257,21 @@ export interface FileRouteTypes {
     | '/blog'
     | '/cookies'
     | '/privacy'
-    | '/terms'
     | '/reset-password'
     | '/search-console'
     | '/semrush'
     | '/seo-audit'
     | '/social'
+    | '/terms'
+    | '/account-privacy'
     | '/ai-studio'
     | '/ai-writer'
     | '/campaigns'
     | '/clients'
+    | '/content-calendar'
     | '/dashboard'
     | '/global-dashboard'
     | '/leads'
-    | '/_authenticated/privacy'
     | '/settings'
     | '/tasks'
   id:
@@ -279,20 +282,21 @@ export interface FileRouteTypes {
     | '/blog'
     | '/cookies'
     | '/privacy'
-    | '/terms'
     | '/reset-password'
     | '/search-console'
     | '/semrush'
     | '/seo-audit'
     | '/social'
+    | '/terms'
+    | '/_authenticated/account-privacy'
     | '/_authenticated/ai-studio'
     | '/_authenticated/ai-writer'
     | '/_authenticated/campaigns'
     | '/_authenticated/clients'
+    | '/_authenticated/content-calendar'
     | '/_authenticated/dashboard'
     | '/_authenticated/global-dashboard'
     | '/_authenticated/leads'
-    | '/_authenticated/privacy'
     | '/_authenticated/settings'
     | '/_authenticated/tasks'
   fileRoutesById: FileRoutesById
@@ -304,17 +308,23 @@ export interface RootRouteChildren {
   BlogRoute: typeof BlogRoute
   CookiesRoute: typeof CookiesRoute
   PrivacyRoute: typeof PrivacyRoute
-  TermsRoute: typeof TermsRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchConsoleRoute: typeof SearchConsoleRoute
   SemrushRoute: typeof SemrushRoute
   SeoAuditRoute: typeof SeoAuditRoute
   SocialRoute: typeof SocialRoute
+  TermsRoute: typeof TermsRoute
 }
-
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/social': {
       id: '/social'
       path: '/social'
@@ -350,6 +360,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cookies': {
+      id: '/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof CookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog': {
       id: '/blog'
       path: '/blog'
@@ -364,28 +388,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/terms': {
-      id: '/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof TermsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cookies': {
-      id: '/cookies'
-      path: '/cookies'
-      fullPath: '/cookies'
-      preLoaderRoute: typeof CookiesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -414,14 +416,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/privacy': {
-      id: '/_authenticated/privacy'
-      path: '/privacy'
-      fullPath: '/_authenticated/privacy'
-      preLoaderRoute: typeof AuthenticatedPrivacyRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-
     '/_authenticated/leads': {
       id: '/_authenticated/leads'
       path: '/leads'
@@ -441,6 +435,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/content-calendar': {
+      id: '/_authenticated/content-calendar'
+      path: '/content-calendar'
+      fullPath: '/content-calendar'
+      preLoaderRoute: typeof AuthenticatedContentCalendarRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/clients': {
@@ -471,14 +472,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAiStudioRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/account-privacy': {
+      id: '/_authenticated/account-privacy'
+      path: '/account-privacy'
+      fullPath: '/account-privacy'
+      preLoaderRoute: typeof AuthenticatedAccountPrivacyRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedAccountPrivacyRoute: typeof AuthenticatedAccountPrivacyRoute
   AuthenticatedAiStudioRoute: typeof AuthenticatedAiStudioRoute
   AuthenticatedAiWriterRoute: typeof AuthenticatedAiWriterRoute
   AuthenticatedCampaignsRoute: typeof AuthenticatedCampaignsRoute
   AuthenticatedClientsRoute: typeof AuthenticatedClientsRoute
+  AuthenticatedContentCalendarRoute: typeof AuthenticatedContentCalendarRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedGlobalDashboardRoute: typeof AuthenticatedGlobalDashboardRoute
   AuthenticatedLeadsRoute: typeof AuthenticatedLeadsRoute
@@ -487,10 +497,12 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAccountPrivacyRoute: AuthenticatedAccountPrivacyRoute,
   AuthenticatedAiStudioRoute: AuthenticatedAiStudioRoute,
   AuthenticatedAiWriterRoute: AuthenticatedAiWriterRoute,
   AuthenticatedCampaignsRoute: AuthenticatedCampaignsRoute,
   AuthenticatedClientsRoute: AuthenticatedClientsRoute,
+  AuthenticatedContentCalendarRoute: AuthenticatedContentCalendarRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedGlobalDashboardRoute: AuthenticatedGlobalDashboardRoute,
   AuthenticatedLeadsRoute: AuthenticatedLeadsRoute,
@@ -507,11 +519,14 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthRoute: AuthRoute,
   BlogRoute: BlogRoute,
+  CookiesRoute: CookiesRoute,
+  PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SearchConsoleRoute: SearchConsoleRoute,
   SemrushRoute: SemrushRoute,
   SeoAuditRoute: SeoAuditRoute,
   SocialRoute: SocialRoute,
+  TermsRoute: TermsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
