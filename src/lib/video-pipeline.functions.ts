@@ -521,6 +521,7 @@ const PublishInput = z.object({
   caption: z.string().max(2200).default(""),
   scheduledFor: z.string().datetime().optional(),
   calendarEntryId: z.string().uuid().optional(),
+  ack: PublishAckSchema,
 });
 
 export const publishVideoPost = createServerFn({ method: "POST" })
@@ -544,6 +545,12 @@ export const publishVideoPost = createServerFn({ method: "POST" })
       }
     }
 
+    await recordAck(supabase, userId, {
+      resourceType: "publish",
+      resourceRef: data.renderId ?? data.videoProjectId,
+      ack: data.ack,
+    });
+
     // Per-platform stub: log success; real OAuth integrations land later.
     const results = data.platforms.map((p) => ({
       platform: p,
@@ -561,10 +568,87 @@ export const publishVideoPost = createServerFn({ method: "POST" })
         .eq("user_id", userId);
     }
 
+    await logAudit(supabase, userId, {
+      action: "publish",
+      resourceType: "post",
+      resourceId: data.renderId ?? null,
+      videoProjectId: data.videoProjectId,
+      details: {
+        platforms: data.platforms,
+        scheduledFor: data.scheduledFor ?? null,
+        captionLength: data.caption.length,
+      },
+    });
+
     return {
       ok: true,
       scheduled: !!data.scheduledFor,
       scheduledFor: data.scheduledFor ?? null,
       results,
     };
+  });
+
+// ============ 6. log-media-upload (called by client after upload) ============
+
+const UploadLogInput = z.object({
+  videoProjectId: z.string().uuid().optional(),
+  resourceType: z.enum(["image", "video", "audio", "music", "logo", "voice"]),
+  resourceRef: z.string().max(2000),
+  fileName: z.string().max(255).default(""),
+  sizeBytes: z.number().int().nonnegative().optional(),
+  ack: RightsAckSchema,
+});
+
+export const logMediaUpload = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => UploadLogInput.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    if (data.resourceType === "music" && !data.ack.musicLicensed) {
+      await logAudit(supabase, userId, {
+        action: "safety_block",
+        resourceType: "music",
+        videoProjectId: data.videoProjectId,
+        details: { reason: "music_not_licensed", fileName: data.fileName },
+      });
+      throw new Error("You must confirm the music is properly licensed before uploading.");
+    }
+
+    await recordAck(supabase, userId, {
+      resourceType: data.resourceType,
+      resourceRef: data.resourceRef,
+      ack: data.ack,
+    });
+    await logAudit(supabase, userId, {
+      action: "upload",
+      resourceType: data.resourceType,
+      resourceId: data.resourceRef,
+      videoProjectId: data.videoProjectId,
+      details: { fileName: data.fileName, sizeBytes: data.sizeBytes ?? null },
+    });
+    return { ok: true };
+  });
+
+// ============ 7. log-video-export ============
+
+const ExportLogInput = z.object({
+  videoProjectId: z.string().uuid(),
+  renderId: z.string().uuid().optional(),
+  format: z.enum(["mp4", "9:16", "16:9", "1:1"]),
+});
+
+export const logVideoExport = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => ExportLogInput.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await logAudit(supabase, userId, {
+      action: "export",
+      resourceType: "render",
+      resourceId: data.renderId ?? null,
+      videoProjectId: data.videoProjectId,
+      details: { format: data.format },
+    });
+    return { ok: true };
   });
