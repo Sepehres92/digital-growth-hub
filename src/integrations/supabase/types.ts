@@ -1067,6 +1067,138 @@ export type Database = {
         }
         Relationships: []
       }
+      video_assets: {
+        Row: {
+          asset_type: string
+          client_id: string | null
+          content: string
+          created_at: string
+          file_url: string
+          id: string
+          name: string
+          project_id: string | null
+          storage_path: string | null
+          tags: string
+          user_id: string
+        }
+        Insert: {
+          asset_type?: string
+          client_id?: string | null
+          content?: string
+          created_at?: string
+          file_url?: string
+          id?: string
+          name?: string
+          project_id?: string | null
+          storage_path?: string | null
+          tags?: string
+          user_id: string
+        }
+        Update: {
+          asset_type?: string
+          client_id?: string | null
+          content?: string
+          created_at?: string
+          file_url?: string
+          id?: string
+          name?: string
+          project_id?: string | null
+          storage_path?: string | null
+          tags?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      video_projects: {
+        Row: {
+          campaign_id: string | null
+          client_id: string | null
+          created_at: string
+          id: string
+          inputs: Json
+          output: string
+          output_json: Json
+          platform: string
+          status: string
+          title: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          inputs?: Json
+          output?: string
+          output_json?: Json
+          platform?: string
+          status?: string
+          title?: string
+          type?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          inputs?: Json
+          output?: string
+          output_json?: Json
+          platform?: string
+          status?: string
+          title?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      video_storyboards: {
+        Row: {
+          asset_needed: string
+          created_at: string
+          duration_seconds: number
+          id: string
+          on_screen_text: string
+          project_id: string | null
+          scene_number: number
+          shot_type: string
+          user_id: string
+          visual: string
+          voiceover: string
+        }
+        Insert: {
+          asset_needed?: string
+          created_at?: string
+          duration_seconds?: number
+          id?: string
+          on_screen_text?: string
+          project_id?: string | null
+          scene_number?: number
+          shot_type?: string
+          user_id: string
+          visual?: string
+          voiceover?: string
+        }
+        Update: {
+          asset_needed?: string
+          created_at?: string
+          duration_seconds?: number
+          id?: string
+          on_screen_text?: string
+          project_id?: string | null
+          scene_number?: number
+          shot_type?: string
+          user_id?: string
+          visual?: string
+          voiceover?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
