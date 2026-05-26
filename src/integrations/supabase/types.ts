@@ -993,10 +993,12 @@ export type Database = {
       tasks: {
         Row: {
           assigned_to: string | null
+          campaign_id: string | null
           client_id: string | null
           created_at: string
           due_date: string | null
           id: string
+          meeting_id: string | null
           notes: string | null
           priority: Database["public"]["Enums"]["task_priority"]
           status: Database["public"]["Enums"]["task_status"]
@@ -1006,10 +1008,12 @@ export type Database = {
         }
         Insert: {
           assigned_to?: string | null
+          campaign_id?: string | null
           client_id?: string | null
           created_at?: string
           due_date?: string | null
           id?: string
+          meeting_id?: string | null
           notes?: string | null
           priority?: Database["public"]["Enums"]["task_priority"]
           status?: Database["public"]["Enums"]["task_status"]
@@ -1019,10 +1023,12 @@ export type Database = {
         }
         Update: {
           assigned_to?: string | null
+          campaign_id?: string | null
           client_id?: string | null
           created_at?: string
           due_date?: string | null
           id?: string
+          meeting_id?: string | null
           notes?: string | null
           priority?: Database["public"]["Enums"]["task_priority"]
           status?: Database["public"]["Enums"]["task_status"]
