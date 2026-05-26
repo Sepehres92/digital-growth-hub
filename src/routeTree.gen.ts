@@ -94,6 +94,11 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 
+const AuthenticatedContentCalendarRoute = AuthenticatedContentCalendarRouteImport.update({
+  id: '/content-calendar',
+  path: '/content-calendar',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedTasksRoute = AuthenticatedTasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
