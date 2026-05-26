@@ -433,6 +433,42 @@ export type Database = {
         }
         Relationships: []
       }
+      media_assets: {
+        Row: {
+          client_id: string | null
+          created_at: string
+          file_type: string
+          file_url: string
+          id: string
+          name: string
+          source: string
+          tags: string | null
+          user_id: string
+        }
+        Insert: {
+          client_id?: string | null
+          created_at?: string
+          file_type: string
+          file_url: string
+          id?: string
+          name: string
+          source?: string
+          tags?: string | null
+          user_id: string
+        }
+        Update: {
+          client_id?: string | null
+          created_at?: string
+          file_type?: string
+          file_url?: string
+          id?: string
+          name?: string
+          source?: string
+          tags?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           agency_name: string | null
@@ -457,6 +493,60 @@ export type Database = {
           id?: string
           theme?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      social_posts: {
+        Row: {
+          campaign_id: string | null
+          caption: string
+          client_id: string | null
+          created_at: string
+          cta: string | null
+          hashtags: string | null
+          id: string
+          link: string | null
+          media_url: string | null
+          notes: string | null
+          platform: string
+          scheduled_at: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          caption?: string
+          client_id?: string | null
+          created_at?: string
+          cta?: string | null
+          hashtags?: string | null
+          id?: string
+          link?: string | null
+          media_url?: string | null
+          notes?: string | null
+          platform: string
+          scheduled_at?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string | null
+          caption?: string
+          client_id?: string | null
+          created_at?: string
+          cta?: string | null
+          hashtags?: string | null
+          id?: string
+          link?: string | null
+          media_url?: string | null
+          notes?: string | null
+          platform?: string
+          scheduled_at?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

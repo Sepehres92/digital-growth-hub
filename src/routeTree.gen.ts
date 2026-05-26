@@ -31,6 +31,7 @@ import { Route as AuthenticatedClientsRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedCampaignsRouteImport } from './routes/_authenticated/campaigns'
 import { Route as AuthenticatedAiWriterRouteImport } from './routes/_authenticated/ai-writer'
 import { Route as AuthenticatedAiStudioRouteImport } from './routes/_authenticated/ai-studio'
+import { Route as AuthenticatedContentCalendarRouteImport } from './routes/_authenticated/content-calendar'
 
 
 const SocialRoute = SocialRouteImport.update({
@@ -93,6 +94,11 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 
+const AuthenticatedContentCalendarRoute = AuthenticatedContentCalendarRouteImport.update({
+  id: '/content-calendar',
+  path: '/content-calendar',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedTasksRoute = AuthenticatedTasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
