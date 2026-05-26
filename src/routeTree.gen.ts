@@ -24,6 +24,7 @@ import { Route as AuthenticatedGlobalDashboardRouteImport } from './routes/_auth
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedClientsRouteImport } from './routes/_authenticated/clients'
 import { Route as AuthenticatedCampaignsRouteImport } from './routes/_authenticated/campaigns'
+import { Route as AuthenticatedBlogRouteImport } from './routes/_authenticated/blog'
 
 const SocialRoute = SocialRouteImport.update({
   id: '/social',
@@ -100,6 +101,11 @@ const AuthenticatedCampaignsRoute = AuthenticatedCampaignsRouteImport.update({
   path: '/campaigns',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedBlogRoute = AuthenticatedBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -109,6 +115,7 @@ export interface FileRoutesByFullPath {
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
   '/social': typeof SocialRoute
+  '/blog': typeof AuthenticatedBlogRoute
   '/campaigns': typeof AuthenticatedCampaignsRoute
   '/clients': typeof AuthenticatedClientsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -125,6 +132,7 @@ export interface FileRoutesByTo {
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
   '/social': typeof SocialRoute
+  '/blog': typeof AuthenticatedBlogRoute
   '/campaigns': typeof AuthenticatedCampaignsRoute
   '/clients': typeof AuthenticatedClientsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
   '/social': typeof SocialRoute
+  '/_authenticated/blog': typeof AuthenticatedBlogRoute
   '/_authenticated/campaigns': typeof AuthenticatedCampaignsRoute
   '/_authenticated/clients': typeof AuthenticatedClientsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/semrush'
     | '/seo-audit'
     | '/social'
+    | '/blog'
     | '/campaigns'
     | '/clients'
     | '/dashboard'
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/semrush'
     | '/seo-audit'
     | '/social'
+    | '/blog'
     | '/campaigns'
     | '/clients'
     | '/dashboard'
@@ -194,6 +205,7 @@ export interface FileRouteTypes {
     | '/semrush'
     | '/seo-audit'
     | '/social'
+    | '/_authenticated/blog'
     | '/_authenticated/campaigns'
     | '/_authenticated/clients'
     | '/_authenticated/dashboard'
@@ -321,10 +333,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCampaignsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/blog': {
+      id: '/_authenticated/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof AuthenticatedBlogRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedBlogRoute: typeof AuthenticatedBlogRoute
   AuthenticatedCampaignsRoute: typeof AuthenticatedCampaignsRoute
   AuthenticatedClientsRoute: typeof AuthenticatedClientsRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
@@ -335,6 +355,7 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedBlogRoute: AuthenticatedBlogRoute,
   AuthenticatedCampaignsRoute: AuthenticatedCampaignsRoute,
   AuthenticatedClientsRoute: AuthenticatedClientsRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
