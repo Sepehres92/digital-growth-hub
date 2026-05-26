@@ -187,7 +187,7 @@ async function insertProject(payload: {
     platform: payload.platform,
     title: payload.title.slice(0, 200) || "Untitled",
     output: payload.output,
-    inputs: payload.inputs,
+    inputs: payload.inputs as never,
     client_id: payload.clientId && payload.clientId !== "__none" ? payload.clientId : null,
     campaign_id: payload.campaignId && payload.campaignId !== "__none" ? payload.campaignId : null,
     status: "draft",
