@@ -92,6 +92,8 @@ function LeadsPage() {
         email: form.email.trim() || null,
         phone: form.phone.trim() || null,
         company: form.company.trim() || null,
+        service_interest: form.service_interest.trim() || null,
+        source: form.source.trim() || null,
         status: form.status,
         value: form.value ? Number(form.value) : 0,
         notes: form.notes.trim() || null,
