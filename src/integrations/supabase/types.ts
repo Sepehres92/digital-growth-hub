@@ -175,6 +175,39 @@ export type Database = {
           },
         ]
       }
+      client_images: {
+        Row: {
+          client_id: string | null
+          created_at: string
+          file_name: string
+          file_type: string | null
+          file_url: string
+          id: string
+          storage_path: string | null
+          user_id: string
+        }
+        Insert: {
+          client_id?: string | null
+          created_at?: string
+          file_name: string
+          file_type?: string | null
+          file_url: string
+          id?: string
+          storage_path?: string | null
+          user_id: string
+        }
+        Update: {
+          client_id?: string | null
+          created_at?: string
+          file_name?: string
+          file_type?: string | null
+          file_url?: string
+          id?: string
+          storage_path?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       clients: {
         Row: {
           brand_colors: string | null
@@ -241,6 +274,81 @@ export type Database = {
           updated_at?: string
           user_id?: string
           website?: string | null
+        }
+        Relationships: []
+      }
+      creative_projects: {
+        Row: {
+          campaign_id: string | null
+          client_id: string | null
+          created_at: string
+          description: string | null
+          id: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      generated_images: {
+        Row: {
+          campaign_id: string | null
+          client_id: string | null
+          created_at: string
+          generation_type: string
+          id: string
+          image_url: string
+          prompt: string
+          size: string | null
+          source_image_id: string | null
+          storage_path: string | null
+          style: string | null
+          user_id: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          generation_type: string
+          id?: string
+          image_url: string
+          prompt: string
+          size?: string | null
+          source_image_id?: string | null
+          storage_path?: string | null
+          style?: string | null
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          generation_type?: string
+          id?: string
+          image_url?: string
+          prompt?: string
+          size?: string | null
+          source_image_id?: string | null
+          storage_path?: string | null
+          style?: string | null
+          user_id?: string
         }
         Relationships: []
       }
