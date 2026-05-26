@@ -238,8 +238,8 @@ function LeadsPage() {
                         {l.company ?? l.email ?? "—"}
                       </p>
                       <div className="mt-2 flex items-center gap-2">
-                        <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium capitalize text-primary">
-                          {l.status}
+                        <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                          {STATUS_LABEL[l.status]}
                         </span>
                         <span className="text-xs text-muted-foreground tabular-nums">
                           ${Number(l.value ?? 0).toLocaleString()}
