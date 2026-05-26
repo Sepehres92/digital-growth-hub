@@ -35,6 +35,7 @@ import { Route as AuthenticatedAiWriterRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedAiVideoStudioRouteImport } from './routes/_authenticated/ai-video-studio'
 import { Route as AuthenticatedAiStudioRouteImport } from './routes/_authenticated/ai-studio'
 import { Route as AuthenticatedAccountPrivacyRouteImport } from './routes/_authenticated/account-privacy'
+import { Route as AuthenticatedAiVideoStudioRouteImport } from './routes/_authenticated/ai-video-studio'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -168,6 +169,12 @@ const AuthenticatedAccountPrivacyRoute =
   AuthenticatedAccountPrivacyRouteImport.update({
     id: '/account-privacy',
     path: '/account-privacy',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedAiVideoStudioRoute =
+  AuthenticatedAiVideoStudioRouteImport.update({
+    id: '/ai-video-studio',
+    path: '/ai-video-studio',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
@@ -536,6 +543,13 @@ declare module '@tanstack/react-router' {
       path: '/account-privacy'
       fullPath: '/account-privacy'
       preLoaderRoute: typeof AuthenticatedAccountPrivacyRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/ai-video-studio': {
+      id: '/_authenticated/ai-video-studio'
+      path: '/ai-video-studio'
+      fullPath: '/ai-video-studio'
+      preLoaderRoute: typeof AuthenticatedAiVideoStudioRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
   }
