@@ -32,6 +32,7 @@ import { Route as AuthenticatedClientsRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedCampaignsRouteImport } from './routes/_authenticated/campaigns'
 import { Route as AuthenticatedAutoCampaignRouteImport } from './routes/_authenticated/auto-campaign'
 import { Route as AuthenticatedAiWriterRouteImport } from './routes/_authenticated/ai-writer'
+import { Route as AuthenticatedAiVideoStudioRouteImport } from './routes/_authenticated/ai-video-studio'
 import { Route as AuthenticatedAiStudioRouteImport } from './routes/_authenticated/ai-studio'
 import { Route as AuthenticatedAccountPrivacyRouteImport } from './routes/_authenticated/account-privacy'
 
@@ -152,6 +153,12 @@ const AuthenticatedAiWriterRoute = AuthenticatedAiWriterRouteImport.update({
   path: '/ai-writer',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAiVideoStudioRoute =
+  AuthenticatedAiVideoStudioRouteImport.update({
+    id: '/ai-video-studio',
+    path: '/ai-video-studio',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedAiStudioRoute = AuthenticatedAiStudioRouteImport.update({
   id: '/ai-studio',
   path: '/ai-studio',
@@ -178,6 +185,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/account-privacy': typeof AuthenticatedAccountPrivacyRoute
   '/ai-studio': typeof AuthenticatedAiStudioRoute
+  '/ai-video-studio': typeof AuthenticatedAiVideoStudioRoute
   '/ai-writer': typeof AuthenticatedAiWriterRoute
   '/auto-campaign': typeof AuthenticatedAutoCampaignRoute
   '/campaigns': typeof AuthenticatedCampaignsRoute
@@ -204,6 +212,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/account-privacy': typeof AuthenticatedAccountPrivacyRoute
   '/ai-studio': typeof AuthenticatedAiStudioRoute
+  '/ai-video-studio': typeof AuthenticatedAiVideoStudioRoute
   '/ai-writer': typeof AuthenticatedAiWriterRoute
   '/auto-campaign': typeof AuthenticatedAutoCampaignRoute
   '/campaigns': typeof AuthenticatedCampaignsRoute
@@ -232,6 +241,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/_authenticated/account-privacy': typeof AuthenticatedAccountPrivacyRoute
   '/_authenticated/ai-studio': typeof AuthenticatedAiStudioRoute
+  '/_authenticated/ai-video-studio': typeof AuthenticatedAiVideoStudioRoute
   '/_authenticated/ai-writer': typeof AuthenticatedAiWriterRoute
   '/_authenticated/auto-campaign': typeof AuthenticatedAutoCampaignRoute
   '/_authenticated/campaigns': typeof AuthenticatedCampaignsRoute
@@ -260,6 +270,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/account-privacy'
     | '/ai-studio'
+    | '/ai-video-studio'
     | '/ai-writer'
     | '/auto-campaign'
     | '/campaigns'
@@ -286,6 +297,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/account-privacy'
     | '/ai-studio'
+    | '/ai-video-studio'
     | '/ai-writer'
     | '/auto-campaign'
     | '/campaigns'
@@ -313,6 +325,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/_authenticated/account-privacy'
     | '/_authenticated/ai-studio'
+    | '/_authenticated/ai-video-studio'
     | '/_authenticated/ai-writer'
     | '/_authenticated/auto-campaign'
     | '/_authenticated/campaigns'
@@ -504,6 +517,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAiWriterRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/ai-video-studio': {
+      id: '/_authenticated/ai-video-studio'
+      path: '/ai-video-studio'
+      fullPath: '/ai-video-studio'
+      preLoaderRoute: typeof AuthenticatedAiVideoStudioRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/ai-studio': {
       id: '/_authenticated/ai-studio'
       path: '/ai-studio'
@@ -524,6 +544,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedAccountPrivacyRoute: typeof AuthenticatedAccountPrivacyRoute
   AuthenticatedAiStudioRoute: typeof AuthenticatedAiStudioRoute
+  AuthenticatedAiVideoStudioRoute: typeof AuthenticatedAiVideoStudioRoute
   AuthenticatedAiWriterRoute: typeof AuthenticatedAiWriterRoute
   AuthenticatedAutoCampaignRoute: typeof AuthenticatedAutoCampaignRoute
   AuthenticatedCampaignsRoute: typeof AuthenticatedCampaignsRoute
@@ -540,6 +561,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAccountPrivacyRoute: AuthenticatedAccountPrivacyRoute,
   AuthenticatedAiStudioRoute: AuthenticatedAiStudioRoute,
+  AuthenticatedAiVideoStudioRoute: AuthenticatedAiVideoStudioRoute,
   AuthenticatedAiWriterRoute: AuthenticatedAiWriterRoute,
   AuthenticatedAutoCampaignRoute: AuthenticatedAutoCampaignRoute,
   AuthenticatedCampaignsRoute: AuthenticatedCampaignsRoute,
@@ -574,3 +596,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
