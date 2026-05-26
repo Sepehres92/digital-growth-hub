@@ -1,6 +1,61 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import {
+  RightsAckSchema,
+  PublishAckSchema,
+  type AuditAction,
+  type AuditResourceType,
+} from "@/lib/video-safety";
+
+async function logAudit(
+  supabase: any,
+  userId: string,
+  args: {
+    action: AuditAction;
+    resourceType: AuditResourceType;
+    resourceId?: string | null;
+    videoProjectId?: string | null;
+    details?: Record<string, unknown>;
+  },
+) {
+  try {
+    await supabase.from("video_audit_log").insert({
+      user_id: userId,
+      action: args.action,
+      resource_type: args.resourceType,
+      resource_id: args.resourceId ?? null,
+      video_project_id: args.videoProjectId ?? null,
+      details: args.details ?? {},
+    });
+  } catch {
+    // Never fail the primary action because of audit logging.
+  }
+}
+
+async function recordAck(
+  supabase: any,
+  userId: string,
+  args: {
+    resourceType: AuditResourceType | "publish";
+    resourceRef: string;
+    ack: z.infer<typeof RightsAckSchema>;
+  },
+) {
+  await supabase.from("content_rights_acknowledgements").insert({
+    user_id: userId,
+    resource_type: args.resourceType,
+    resource_ref: args.resourceRef,
+    owns_rights: args.ack.ownsRights,
+    music_licensed: args.ack.musicLicensed,
+    no_celebrity_likeness: args.ack.noCelebrityLikeness,
+    no_fake_endorsement: args.ack.noFakeEndorsement,
+    no_misleading_claims: args.ack.noMisleadingClaims,
+    human_reviewed: args.ack.humanReviewed,
+    notes: args.ack.notes,
+  });
+}
+
 
 const AI_GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const AI_MODEL = "google/gemini-2.5-flash";
@@ -101,6 +156,7 @@ const PromptInput = z.object({
   duration: z.union([z.literal(5), z.literal(10)]).default(5),
   format: z.enum(["9:16", "16:9", "1:1"]).default("9:16"),
   promptImageUrl: z.string().url().optional(),
+  ack: RightsAckSchema,
 });
 
 function ratioForFormat(f: "9:16" | "16:9" | "1:1") {
@@ -155,6 +211,20 @@ export const generateVideoFromPrompt = createServerFn({ method: "POST" })
       .select()
       .single();
     if (error) throw new Error(error.message);
+
+    await recordAck(supabase, userId, {
+      resourceType: "ai_generation",
+      resourceRef: render.id,
+      ack: data.ack,
+    });
+    await logAudit(supabase, userId, {
+      action: "generate",
+      resourceType: "ai_generation",
+      resourceId: render.id,
+      videoProjectId: data.videoProjectId,
+      details: { taskId: task.id, prompt: data.prompt.slice(0, 200), style: data.style, format: data.format },
+    });
+
     return { renderId: render.id, taskId: task.id, status: "processing" as const };
   });
 
@@ -275,6 +345,7 @@ const RenderTemplateInput = z.object({
     .default([]),
   musicUrl: z.string().url().optional(),
   logoUrl: z.string().url().optional(),
+  ack: RightsAckSchema,
 });
 
 export const renderVideoTemplate = createServerFn({ method: "POST" })
@@ -284,6 +355,16 @@ export const renderVideoTemplate = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
     const apiKey = process.env.RUNWAYML_API_SECRET;
     if (!apiKey) throw new Error("RUNWAYML_API_SECRET not configured");
+
+    if (data.musicUrl && !data.ack.musicLicensed) {
+      await logAudit(supabase, userId, {
+        action: "safety_block",
+        resourceType: "music",
+        videoProjectId: data.videoProjectId,
+        details: { reason: "music_not_licensed", musicUrl: data.musicUrl },
+      });
+      throw new Error("You must confirm the background music is properly licensed.");
+    }
 
     // Runway Gen-3 is generation-based; template composition uses the first
     // media asset as a seed image plus an instruction describing overlays/music.
@@ -339,6 +420,28 @@ export const renderVideoTemplate = createServerFn({ method: "POST" })
       .select()
       .single();
     if (error) throw new Error(error.message);
+
+    await recordAck(supabase, userId, {
+      resourceType: "ai_generation",
+      resourceRef: render.id,
+      ack: data.ack,
+    });
+    await logAudit(supabase, userId, {
+      action: "render",
+      resourceType: "render",
+      resourceId: render.id,
+      videoProjectId: data.videoProjectId,
+      details: {
+        template: data.template,
+        format: data.format,
+        mediaCount: data.media.length,
+        hasMusic: !!data.musicUrl,
+        hasLogo: !!data.logoUrl,
+        overlayCount: data.textOverlays.length,
+        subtitleCount: data.subtitles.length,
+      },
+    });
+
     return { renderId: render.id, taskId: task.id, status: "processing" as const };
   });
 
@@ -418,6 +521,7 @@ const PublishInput = z.object({
   caption: z.string().max(2200).default(""),
   scheduledFor: z.string().datetime().optional(),
   calendarEntryId: z.string().uuid().optional(),
+  ack: PublishAckSchema,
 });
 
 export const publishVideoPost = createServerFn({ method: "POST" })
@@ -441,6 +545,12 @@ export const publishVideoPost = createServerFn({ method: "POST" })
       }
     }
 
+    await recordAck(supabase, userId, {
+      resourceType: "publish",
+      resourceRef: data.renderId ?? data.videoProjectId,
+      ack: data.ack,
+    });
+
     // Per-platform stub: log success; real OAuth integrations land later.
     const results = data.platforms.map((p) => ({
       platform: p,
@@ -458,10 +568,87 @@ export const publishVideoPost = createServerFn({ method: "POST" })
         .eq("user_id", userId);
     }
 
+    await logAudit(supabase, userId, {
+      action: "publish",
+      resourceType: "post",
+      resourceId: data.renderId ?? null,
+      videoProjectId: data.videoProjectId,
+      details: {
+        platforms: data.platforms,
+        scheduledFor: data.scheduledFor ?? null,
+        captionLength: data.caption.length,
+      },
+    });
+
     return {
       ok: true,
       scheduled: !!data.scheduledFor,
       scheduledFor: data.scheduledFor ?? null,
       results,
     };
+  });
+
+// ============ 6. log-media-upload (called by client after upload) ============
+
+const UploadLogInput = z.object({
+  videoProjectId: z.string().uuid().optional(),
+  resourceType: z.enum(["image", "video", "audio", "music", "logo", "voice"]),
+  resourceRef: z.string().max(2000),
+  fileName: z.string().max(255).default(""),
+  sizeBytes: z.number().int().nonnegative().optional(),
+  ack: RightsAckSchema,
+});
+
+export const logMediaUpload = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => UploadLogInput.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    if (data.resourceType === "music" && !data.ack.musicLicensed) {
+      await logAudit(supabase, userId, {
+        action: "safety_block",
+        resourceType: "music",
+        videoProjectId: data.videoProjectId,
+        details: { reason: "music_not_licensed", fileName: data.fileName },
+      });
+      throw new Error("You must confirm the music is properly licensed before uploading.");
+    }
+
+    await recordAck(supabase, userId, {
+      resourceType: data.resourceType,
+      resourceRef: data.resourceRef,
+      ack: data.ack,
+    });
+    await logAudit(supabase, userId, {
+      action: "upload",
+      resourceType: data.resourceType,
+      resourceId: data.resourceRef,
+      videoProjectId: data.videoProjectId,
+      details: { fileName: data.fileName, sizeBytes: data.sizeBytes ?? null },
+    });
+    return { ok: true };
+  });
+
+// ============ 7. log-video-export ============
+
+const ExportLogInput = z.object({
+  videoProjectId: z.string().uuid(),
+  renderId: z.string().uuid().optional(),
+  format: z.enum(["mp4", "9:16", "16:9", "1:1"]),
+});
+
+export const logVideoExport = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => ExportLogInput.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await logAudit(supabase, userId, {
+      action: "export",
+      resourceType: "render",
+      resourceId: data.renderId ?? null,
+      videoProjectId: data.videoProjectId,
+      details: { format: data.format },
+    });
+    return { ok: true };
   });
