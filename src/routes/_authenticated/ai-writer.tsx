@@ -63,7 +63,7 @@ function AIWriterPage() {
   const [result, setResult] = useState<Record<string, string> | null>(null);
 
   const gen = useMutation({
-    mutationFn: () => callGenerate({ data: form }),
+    mutationFn: () => callGenerate({ data: { ...form, clientId: form.clientId || null } }),
     onSuccess: (d) => {
       setResult(d.variations);
       toast.success("Copy generated");
