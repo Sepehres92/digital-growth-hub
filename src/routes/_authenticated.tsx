@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, Megaphone, KanbanSquare, Settings as SettingsIcon, Search, BarChart3, FileSearch, Share2, Globe, BookOpen, Sparkles, ImageIcon, CalendarDays, Wand2, Video } from "lucide-react";
+import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, Megaphone, KanbanSquare, Settings as SettingsIcon, Search, BarChart3, FileSearch, Share2, Globe, BookOpen, Sparkles, ImageIcon, CalendarDays, Wand2, Video, Film } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -46,6 +46,7 @@ function AuthedLayout() {
     { to: "/auto-campaign", label: "AI Auto Campaign", icon: Wand2, group: "Marketing Tools" },
     { to: "/ai-writer", label: "AI Writer", icon: Sparkles, group: "Marketing Tools" },
     { to: "/ai-studio", label: "AI Creative Studio", icon: ImageIcon, group: "Marketing Tools" },
+    { to: "/video-studio", label: "AI Video Studio", icon: Film, group: "Marketing Tools" },
     { to: "/content-calendar", label: "Content Calendar", icon: CalendarDays, group: "Marketing Tools" },
     { to: "/seo-audit", label: "SEO Audit", icon: FileSearch, group: "Marketing Tools" },
     { to: "/semrush", label: "Semrush", icon: BarChart3, group: "Marketing Tools" },
