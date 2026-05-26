@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, Megaphone, KanbanSquare, Settings as SettingsIcon, Search, BarChart3, FileSearch, Share2 } from "lucide-react";
+import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, Megaphone, KanbanSquare, Settings as SettingsIcon, Search, BarChart3, FileSearch, Share2, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -35,6 +35,7 @@ function AuthedLayout() {
   }
 
   const nav = [
+    { to: "/global-dashboard", label: "Global Dashboard", icon: Globe, group: "Workspace" },
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, group: "Workspace" },
     { to: "/leads", label: "Leads", icon: Users, group: "Workspace" },
     { to: "/clients", label: "Clients", icon: Briefcase, group: "Workspace" },
