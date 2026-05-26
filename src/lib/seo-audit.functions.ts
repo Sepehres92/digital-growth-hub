@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { runSeoAudit, type SeoAuditResult } from "./seo-audit.server";
 
 const InputSchema = z.object({
@@ -20,6 +21,7 @@ const InputSchema = z.object({
 });
 
 export const auditUrl = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => InputSchema.parse(input))
   .handler(async ({ data }): Promise<{ ok: true; result: SeoAuditResult } | { ok: false; error: string }> => {
     try {
