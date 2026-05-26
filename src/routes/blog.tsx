@@ -319,7 +319,7 @@ function BlogPage() {
               <CardContent>
                 <div
                   className="prose prose-sm max-w-none text-sm"
-                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(p.content) }}
+                  dangerouslySetInnerHTML={{ __html: sanitize(p.content) }}
                 />
 
               </CardContent>
