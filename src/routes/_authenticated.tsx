@@ -43,6 +43,7 @@ function AuthedLayout() {
     { to: "/tasks", label: "Tasks", icon: KanbanSquare, group: "Workspace" },
     { to: "/blog", label: "Daily Blog", icon: BookOpen, group: "Workspace" },
     { to: "/ai-writer", label: "AI Writer", icon: Sparkles, group: "Marketing Tools" },
+    { to: "/ai-studio", label: "AI Creative Studio", icon: ImageIcon, group: "Marketing Tools" },
     { to: "/seo-audit", label: "SEO Audit", icon: FileSearch, group: "Marketing Tools" },
     { to: "/semrush", label: "Semrush", icon: BarChart3, group: "Marketing Tools" },
     { to: "/search-console", label: "Search Console", icon: Search, group: "Marketing Tools" },
