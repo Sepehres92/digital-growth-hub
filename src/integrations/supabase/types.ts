@@ -310,6 +310,130 @@ export type Database = {
         }
         Relationships: []
       }
+      content_approvals: {
+        Row: {
+          approved_by: string
+          created_at: string
+          id: string
+          notes: string | null
+          post_id: string
+          status: string
+        }
+        Insert: {
+          approved_by: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          post_id: string
+          status?: string
+        }
+        Update: {
+          approved_by?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          post_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_approvals_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "content_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_calendar: {
+        Row: {
+          calendar_date: string
+          created_at: string
+          id: string
+          platform: string
+          post_id: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          calendar_date: string
+          created_at?: string
+          id?: string
+          platform: string
+          post_id?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          calendar_date?: string
+          created_at?: string
+          id?: string
+          platform?: string
+          post_id?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_calendar_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "content_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_posts: {
+        Row: {
+          ai_generated: boolean
+          campaign_id: string | null
+          caption: string
+          client_id: string | null
+          created_at: string
+          hashtags: string
+          id: string
+          media_urls: Json
+          platform: string
+          published_at: string | null
+          scheduled_for: string | null
+          status: string
+          title: string | null
+          user_id: string
+        }
+        Insert: {
+          ai_generated?: boolean
+          campaign_id?: string | null
+          caption?: string
+          client_id?: string | null
+          created_at?: string
+          hashtags?: string
+          id?: string
+          media_urls?: Json
+          platform: string
+          published_at?: string | null
+          scheduled_for?: string | null
+          status?: string
+          title?: string | null
+          user_id: string
+        }
+        Update: {
+          ai_generated?: boolean
+          campaign_id?: string | null
+          caption?: string
+          client_id?: string | null
+          created_at?: string
+          hashtags?: string
+          id?: string
+          media_urls?: Json
+          platform?: string
+          published_at?: string | null
+          scheduled_for?: string | null
+          status?: string
+          title?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       creative_projects: {
         Row: {
           campaign_id: string | null
@@ -493,6 +617,39 @@ export type Database = {
           id?: string
           theme?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      social_accounts: {
+        Row: {
+          access_token: string | null
+          account_name: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          platform: string
+          refresh_token: string | null
+          user_id: string
+        }
+        Insert: {
+          access_token?: string | null
+          account_name: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          platform: string
+          refresh_token?: string | null
+          user_id: string
+        }
+        Update: {
+          access_token?: string | null
+          account_name?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          platform?: string
+          refresh_token?: string | null
+          user_id?: string
         }
         Relationships: []
       }
