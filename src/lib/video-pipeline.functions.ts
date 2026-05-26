@@ -356,6 +356,16 @@ export const renderVideoTemplate = createServerFn({ method: "POST" })
     const apiKey = process.env.RUNWAYML_API_SECRET;
     if (!apiKey) throw new Error("RUNWAYML_API_SECRET not configured");
 
+    if (data.musicUrl && !data.ack.musicLicensed) {
+      await logAudit(supabase, userId, {
+        action: "safety_block",
+        resourceType: "music",
+        videoProjectId: data.videoProjectId,
+        details: { reason: "music_not_licensed", musicUrl: data.musicUrl },
+      });
+      throw new Error("You must confirm the background music is properly licensed.");
+    }
+
     // Runway Gen-3 is generation-based; template composition uses the first
     // media asset as a seed image plus an instruction describing overlays/music.
     const seed = data.media.find((m) => m.type === "image") ?? data.media[0];
