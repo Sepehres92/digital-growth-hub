@@ -499,6 +499,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAccountPrivacyRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/auto-campaign': {
+      id: '/_authenticated/auto-campaign'
+      path: '/auto-campaign'
+      fullPath: '/auto-campaign'
+      preLoaderRoute: typeof AuthenticatedAutoCampaignRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
