@@ -1,9 +1,10 @@
 import { createFileRoute, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, Megaphone, KanbanSquare, Settings as SettingsIcon, Search, BarChart3, FileSearch, Share2, Globe, BookOpen, Sparkles, ImageIcon, CalendarDays, Wand2, Video, Clapperboard, MessageSquare } from "lucide-react";
+import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, Megaphone, KanbanSquare, Settings as SettingsIcon, Search, BarChart3, FileSearch, Share2, Globe, BookOpen, Sparkles, ImageIcon, CalendarDays, Wand2, Video, Clapperboard, MessageSquare, Bot, LifeBuoy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ClientChatbot } from "@/components/ClientChatbot";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthedLayout,
@@ -53,6 +54,8 @@ function AuthedLayout() {
     { to: "/semrush", label: "Semrush", icon: BarChart3, group: "Marketing Tools" },
     { to: "/search-console", label: "Search Console", icon: Search, group: "Marketing Tools" },
     { to: "/social", label: "Social", icon: Share2, group: "Marketing Tools" },
+    { to: "/help-support", label: "Help & Support", icon: LifeBuoy, group: "Workspace" },
+    { to: "/chatbot-admin", label: "Chatbot Admin", icon: Bot, group: "Workspace" },
     { to: "/settings", label: "Settings", icon: SettingsIcon, group: "Workspace" },
   ] as const;
 
@@ -146,6 +149,7 @@ function AuthedLayout() {
           <Outlet />
         </main>
       </div>
+      <ClientChatbot />
     </div>
   );
 }

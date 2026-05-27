@@ -437,6 +437,141 @@ export type Database = {
           },
         ]
       }
+      chatbot_conversations: {
+        Row: {
+          client_id: string | null
+          context_page: string | null
+          created_at: string
+          id: string
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          client_id?: string | null
+          context_page?: string | null
+          created_at?: string
+          id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          client_id?: string | null
+          context_page?: string | null
+          created_at?: string
+          id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      chatbot_kb_articles: {
+        Row: {
+          body: string
+          category: string
+          created_at: string
+          id: string
+          published: boolean
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body?: string
+          category?: string
+          created_at?: string
+          id?: string
+          published?: boolean
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          category?: string
+          created_at?: string
+          id?: string
+          published?: boolean
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      chatbot_messages: {
+        Row: {
+          attachments: Json
+          content: string
+          conversation_id: string
+          created_at: string
+          flagged: boolean
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          attachments?: Json
+          content?: string
+          conversation_id: string
+          created_at?: string
+          flagged?: boolean
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          attachments?: Json
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          flagged?: boolean
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      chatbot_settings: {
+        Row: {
+          allow_scopes: Json
+          client_id: string | null
+          created_at: string
+          custom_instructions: string
+          enabled: boolean
+          id: string
+          tone: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          allow_scopes?: Json
+          client_id?: string | null
+          created_at?: string
+          custom_instructions?: string
+          enabled?: boolean
+          id?: string
+          tone?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          allow_scopes?: Json
+          client_id?: string | null
+          created_at?: string
+          custom_instructions?: string
+          enabled?: boolean
+          id?: string
+          tone?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       client_images: {
         Row: {
           client_id: string | null
@@ -1259,6 +1394,48 @@ export type Database = {
           platform?: string
           scheduled_at?: string
           status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      support_tickets: {
+        Row: {
+          body: string
+          client_id: string | null
+          conversation_id: string | null
+          created_at: string
+          id: string
+          priority: string
+          source: string
+          status: string
+          subject: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body?: string
+          client_id?: string | null
+          conversation_id?: string | null
+          created_at?: string
+          id?: string
+          priority?: string
+          source?: string
+          status?: string
+          subject: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          client_id?: string | null
+          conversation_id?: string | null
+          created_at?: string
+          id?: string
+          priority?: string
+          source?: string
+          status?: string
+          subject?: string
           updated_at?: string
           user_id?: string
         }
