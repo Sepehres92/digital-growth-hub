@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,8 +14,9 @@ import { Switch } from "@/components/ui/switch";
 import { useServerFn } from "@tanstack/react-start";
 import { chatAiAssist } from "@/lib/chat-ai.functions";
 import {
-  Plus, Hash, Lock, Send, Search, Sparkles, Paperclip, Smile, Pin, BellOff, Bell,
+  Plus, Hash, Lock, Send, Search, Sparkles, Paperclip, Pin, BellOff, Bell,
   MessageSquare, Users, Phone, Video as VideoIcon, MonitorUp, CornerDownRight, X, Loader2,
+  RotateCw, Check, CheckCheck, WifiOff,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
