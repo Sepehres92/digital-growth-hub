@@ -38,12 +38,14 @@ export const clientChatbotChat = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
 
     // Load settings (per-client overrides fall back to default)
-    const { data: settingsRow } = await supabase
+    const settingsQ = supabase
       .from("chatbot_settings")
       .select("*")
-      .eq("user_id", userId)
-      .eq("client_id", data.clientId ?? null)
-      .maybeSingle();
+      .eq("user_id", userId);
+    const { data: settingsRow } = await (data.clientId
+      ? settingsQ.eq("client_id", data.clientId)
+      : settingsQ.is("client_id", null)
+    ).maybeSingle();
     if (settingsRow && settingsRow.enabled === false) {
       throw new Error("Chatbot is disabled for this client");
     }
