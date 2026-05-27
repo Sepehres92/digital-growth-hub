@@ -308,8 +308,75 @@ Campaign focus: ${cz.campaignFocus ?? "n/a"}`;
         notes: `Category: ${p.category}\nVideo idea: ${p.video_idea}\nImage prompt: ${p.image_prompt}`,
       };
     });
-    const { error: postsErr } = await supabase.from("social_posts").insert(rows);
+    const { data: insertedPosts, error: postsErr } = await supabase
+      .from("social_posts")
+      .insert(rows)
+      .select("id, platform, scheduled_at, caption");
     if (postsErr) throw new Error(postsErr.message);
+    const postIds = insertedPosts ?? [];
+
+    // Content calendar entries (one per post)
+    if (postIds.length > 0) {
+      await supabase.from("content_calendar").insert(
+        postIds.map((p) => ({
+          user_id: userId,
+          post_id: p.id,
+          calendar_date: String(p.scheduled_at).slice(0, 10),
+          platform: p.platform,
+          status: requireApproval ? "pending_approval" : "scheduled",
+        })),
+      );
+
+      // Approval queue (only when approval required)
+      if (requireApproval) {
+        await supabase.from("content_approvals").insert(
+          postIds.map((p) => ({
+            post_id: p.id,
+            approved_by: userId,
+            status: "pending",
+            notes: "Auto-queued by AI Strategy Consultant",
+          })),
+        );
+      }
+    }
+
+    // AI image prompts → ai_images (one row per post with an image prompt)
+    const imageRows = posts
+      .filter((p) => p.image_prompt && p.image_prompt.trim().length > 0)
+      .map((p) => ({
+        user_id: userId,
+        client_id: c.client_id,
+        campaign_id: camp.id,
+        mode: "strategy_prompt",
+        prompt: p.image_prompt,
+        style: "social",
+        size: "1080x1080",
+        image_url: "",
+      }));
+    if (imageRows.length > 0) {
+      await supabase.from("ai_images").insert(imageRows);
+    }
+
+    // Video scripts → video_projects (one row per post with a video idea)
+    const videoRows = posts
+      .filter((p) => p.video_idea && p.video_idea.trim().length > 0)
+      .map((p) => ({
+        user_id: userId,
+        client_id: c.client_id,
+        campaign_id: camp.id,
+        type: "social_short",
+        format: "vertical",
+        platform: p.platform,
+        style: "auto",
+        title: `${p.category} — ${c.business_name}`,
+        status: "script_ready",
+        inputs: { source: "strategy_consultant", caption: p.caption } as never,
+        output: p.video_idea,
+        output_json: { script: p.video_idea, image_prompt: p.image_prompt } as never,
+      }));
+    if (videoRows.length > 0) {
+      await supabase.from("video_projects").insert(videoRows);
+    }
 
     // Mirror into generated_strategy_content for the strategy module's record.
     const generatedRows = posts.map((p) => {
@@ -331,6 +398,19 @@ Campaign focus: ${cz.campaignFocus ?? "n/a"}`;
       };
     });
     await supabase.from("generated_strategy_content").insert(generatedRows);
+
+    // Create a team review task when human approval is required
+    if (requireApproval) {
+      await supabase.from("tasks").insert({
+        user_id: userId,
+        client_id: c.client_id,
+        campaign_id: camp.id,
+        title: `Review ${rows.length} AI-generated posts for ${c.business_name}`,
+        notes: `Strategy consultation: ${c.id}\nCampaign: ${camp.id}\nQueued in Approval Queue + Content Calendar.`,
+        status: "todo",
+        priority: "high",
+      });
+    }
 
     await supabase
       .from("strategy_consultations")
@@ -354,16 +434,32 @@ export const requestHumanStrategist = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
+    // Load agency settings (admin gate + price + booking link)
+    const { data: settings } = await supabase
+      .from("strategy_admin_settings")
+      .select("*")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (settings && !settings.human_consultation_enabled) {
+      throw new Error("Human strategist consultations are currently disabled by your admin.");
+    }
+
+    // Block another free request while one is pending/scheduled OR already consumed
     if (data.type === "free") {
       const { data: existing } = await supabase
         .from("human_strategy_requests")
-        .select("id")
+        .select("id, free_consultation_used, request_status, price")
         .eq("user_id", userId)
-        .eq("free_consultation_used", true)
-        .limit(1);
-      if (existing && existing.length > 0) {
+        .is("price", null);
+      const conflicts = (existing ?? []).filter(
+        (r) =>
+          r.free_consultation_used ||
+          ["pending", "assigned", "scheduled"].includes(String(r.request_status)),
+      );
+      if (conflicts.length > 0) {
         throw new Error(
-          "You have already used your free one-time human strategist consultation. Please book a paid consultation instead."
+          "Your free human strategist consultation has already been requested or used. Please book a paid session.",
         );
       }
     }
@@ -374,20 +470,58 @@ export const requestHumanStrategist = createServerFn({ method: "POST" })
       .eq("id", data.consultationId)
       .single();
 
+    const price = data.type === "paid" ? Number(settings?.paid_consultation_price ?? 150) : null;
+    const durationMin = Number(settings?.free_consultation_minutes ?? 60);
+
+    // Pick a strategist (round-robin: first available)
+    const strategists = (settings?.available_strategist_ids as string[] | null) ?? [];
+    const assignedTo = strategists.length > 0 ? strategists[0] : null;
+
     const { data: req, error } = await supabase
       .from("human_strategy_requests")
       .insert({
         user_id: userId,
         client_id: c?.client_id ?? null,
         consultation_id: data.consultationId,
-        free_consultation_used: data.type === "free",
+        free_consultation_used: false, // flipped to true on meeting completion
         payment_required: data.type === "paid",
-        price: data.type === "paid" ? 150 : null,
-        request_status: "pending",
+        price,
+        assigned_to: assignedTo,
+        request_status: assignedTo ? "assigned" : "pending",
       })
       .select("id")
       .single();
     if (error) throw new Error(error.message);
+
+    // Create a meeting request placeholder
+    const meetingDate = new Date(Date.now() + 24 * 60 * 60 * 1000); // tomorrow as default
+    const endTime = new Date(meetingDate.getTime() + durationMin * 60 * 1000);
+    const fmtTime = (d: Date) =>
+      `${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}:00`;
+    const { data: meeting } = await supabase
+      .from("meetings")
+      .insert({
+        user_id: userId,
+        client_id: c?.client_id ?? null,
+        title: `Strategy session (${data.type}) — ${c?.business_name ?? "client"}`,
+        description: data.notes || "Human strategist consultation requested via AI Strategy Consultant.",
+        meeting_date: meetingDate.toISOString().slice(0, 10),
+        start_time: fmtTime(meetingDate),
+        end_time: fmtTime(endTime),
+        status: "scheduled",
+        agenda: `Strategy consultation for ${c?.business_name ?? "client"}.\nPreferred time: ${data.preferredTime || "n/a"}.\nBooking link: ${settings?.booking_link || "n/a"}.`,
+        video_link: settings?.booking_link || null,
+        notes: `Auto-created from strategy consultation ${data.consultationId}.`,
+      })
+      .select("id")
+      .single();
+
+    if (meeting?.id) {
+      await supabase
+        .from("human_strategy_requests")
+        .update({ meeting_id: meeting.id, request_status: "scheduled" })
+        .eq("id", req.id);
+    }
 
     // Mark consultation as escalated to human.
     await supabase
@@ -395,17 +529,64 @@ export const requestHumanStrategist = createServerFn({ method: "POST" })
       .update({ consultation_type: "human_requested" })
       .eq("id", data.consultationId);
 
-    // Mirror to tasks for the agency team
+    // Admin task
     await supabase.from("tasks").insert({
       user_id: userId,
       client_id: c?.client_id ?? null,
+      meeting_id: meeting?.id ?? null,
       title: `Human strategist requested (${data.type}) — ${c?.business_name ?? "client"}`,
-      notes: `Consultation: ${data.consultationId}\nPreferred time: ${data.preferredTime || "n/a"}\nNotes: ${data.notes || "n/a"}`,
+      notes: `Consultation: ${data.consultationId}\nMeeting: ${meeting?.id ?? "n/a"}\nPreferred time: ${data.preferredTime || "n/a"}\nNotes: ${data.notes || "n/a"}${price ? `\nPayment link: ${settings?.payment_link || "n/a"} (${price})` : ""}`,
       status: "todo",
       priority: "high",
     });
 
-    return { id: req.id };
+    // Team Chat notification (best-effort — only if user has any channel)
+    const { data: channel } = await supabase
+      .from("chat_channels")
+      .select("id")
+      .eq("created_by", userId)
+      .order("created_at", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    if (channel?.id) {
+      await supabase.from("chat_messages").insert({
+        channel_id: channel.id,
+        user_id: userId,
+        content: `🧠 Human strategist requested (${data.type}) for ${c?.business_name ?? "a client"}. Meeting placeholder created.`,
+        message_type: "text",
+        ai_generated: true,
+      });
+    }
+
+    return { id: req.id, meetingId: meeting?.id ?? null };
+  });
+
+// Mark meeting completed → flip free_consultation_used = true
+const CompleteInput = z.object({ requestId: z.string().uuid() });
+export const completeHumanStrategyRequest = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => CompleteInput.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: req, error } = await supabase
+      .from("human_strategy_requests")
+      .select("id, user_id, price, meeting_id")
+      .eq("id", data.requestId)
+      .single();
+    if (error || !req) throw new Error("Request not found");
+
+    // Only owner or assigned strategist or admin can complete (RLS will enforce too)
+    const wasFree = req.price === null;
+    const updates: { request_status: "completed"; free_consultation_used?: boolean } = {
+      request_status: "completed",
+    };
+    if (wasFree) updates.free_consultation_used = true;
+    await supabase.from("human_strategy_requests").update(updates).eq("id", data.requestId);
+
+    if (req.meeting_id) {
+      await supabase.from("meetings").update({ status: "completed" }).eq("id", req.meeting_id);
+    }
+    return { ok: true, freeUsed: wasFree };
   });
 
 export const getFreeConsultationStatus = createServerFn({ method: "GET" })
@@ -420,3 +601,48 @@ export const getFreeConsultationStatus = createServerFn({ method: "GET" })
       .limit(1);
     return { freeUsed: !!(data && data.length > 0) };
   });
+
+// ---------- Admin settings ----------
+const SettingsSchema = z.object({
+  human_consultation_enabled: z.boolean(),
+  free_consultation_minutes: z.number().int().min(15).max(480),
+  paid_consultation_price: z.number().min(0).max(100000),
+  available_strategist_ids: z.array(z.string().uuid()).max(50),
+  booking_link: z.string().max(500).default(""),
+  payment_link: z.string().max(500).default(""),
+});
+
+export const getStrategyAdminSettings = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { data } = await supabase
+      .from("strategy_admin_settings")
+      .select("*")
+      .eq("user_id", userId)
+      .maybeSingle();
+    return {
+      settings:
+        data ?? {
+          human_consultation_enabled: true,
+          free_consultation_minutes: 60,
+          paid_consultation_price: 150,
+          available_strategist_ids: [] as string[],
+          booking_link: "",
+          payment_link: "",
+        },
+    };
+  });
+
+export const saveStrategyAdminSettings = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => SettingsSchema.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { error } = await supabase
+      .from("strategy_admin_settings")
+      .upsert({ user_id: userId, ...data }, { onConflict: "user_id" });
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
