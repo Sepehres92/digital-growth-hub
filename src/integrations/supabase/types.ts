@@ -177,6 +177,7 @@ export type Database = {
           goal: string | null
           human_request_id: string | null
           id: string
+          is_demo: boolean
           name: string
           seo_ppc_consultation_id: string | null
           source_type: Database["public"]["Enums"]["campaign_source_type"]
@@ -196,6 +197,7 @@ export type Database = {
           goal?: string | null
           human_request_id?: string | null
           id?: string
+          is_demo?: boolean
           name: string
           seo_ppc_consultation_id?: string | null
           source_type?: Database["public"]["Enums"]["campaign_source_type"]
@@ -215,6 +217,7 @@ export type Database = {
           goal?: string | null
           human_request_id?: string | null
           id?: string
+          is_demo?: boolean
           name?: string
           seo_ppc_consultation_id?: string | null
           source_type?: Database["public"]["Enums"]["campaign_source_type"]
@@ -249,6 +252,7 @@ export type Database = {
           end_date: string | null
           goal: string | null
           id: string
+          is_demo: boolean
           monthly_budget: number | null
           name: string
           results_notes: string | null
@@ -266,6 +270,7 @@ export type Database = {
           end_date?: string | null
           goal?: string | null
           id?: string
+          is_demo?: boolean
           monthly_budget?: number | null
           name: string
           results_notes?: string | null
@@ -283,6 +288,7 @@ export type Database = {
           end_date?: string | null
           goal?: string | null
           id?: string
+          is_demo?: boolean
           monthly_budget?: number | null
           name?: string
           results_notes?: string | null
@@ -721,6 +727,7 @@ export type Database = {
           email: string | null
           id: string
           industry: string | null
+          is_demo: boolean
           keywords: string | null
           monthly_budget: number | null
           notes: string | null
@@ -743,6 +750,7 @@ export type Database = {
           email?: string | null
           id?: string
           industry?: string | null
+          is_demo?: boolean
           keywords?: string | null
           monthly_budget?: number | null
           notes?: string | null
@@ -765,6 +773,7 @@ export type Database = {
           email?: string | null
           id?: string
           industry?: string | null
+          is_demo?: boolean
           keywords?: string | null
           monthly_budget?: number | null
           notes?: string | null
@@ -929,6 +938,7 @@ export type Database = {
           created_at: string
           hashtags: string
           id: string
+          is_demo: boolean
           media_urls: Json
           platform: string
           published_at: string | null
@@ -947,6 +957,7 @@ export type Database = {
           created_at?: string
           hashtags?: string
           id?: string
+          is_demo?: boolean
           media_urls?: Json
           platform: string
           published_at?: string | null
@@ -965,6 +976,7 @@ export type Database = {
           created_at?: string
           hashtags?: string
           id?: string
+          is_demo?: boolean
           media_urls?: Json
           platform?: string
           published_at?: string | null
@@ -1358,6 +1370,129 @@ export type Database = {
           updated_at?: string
           user_id?: string
           value?: number | null
+        }
+        Relationships: []
+      }
+      marketing_profiles: {
+        Row: {
+          approval_required: boolean
+          brand_colors: Json
+          brand_tone: string | null
+          budget_range: string | null
+          business_name: string | null
+          client_id: string | null
+          client_portal_enabled: boolean
+          competitors: string | null
+          content_types: string[]
+          conversion_goal: string | null
+          created_at: string
+          creation_mode: string
+          demo_template: string | null
+          human_consultation_requested: boolean
+          id: string
+          industry: string | null
+          is_demo: boolean
+          landing_page_url: string | null
+          lead_type: string | null
+          location: string | null
+          logo_url: string | null
+          main_goal: string | null
+          media_urls: Json
+          offers: string | null
+          onboarding_completed: boolean
+          onboarding_step: number
+          platforms: string[]
+          posting_frequency: string | null
+          ppc_budget: number | null
+          seo_competitors: string | null
+          services: string | null
+          target_audience: string | null
+          target_keywords: string[]
+          target_locations: string[]
+          updated_at: string
+          user_id: string
+          usps: string | null
+          website_url: string | null
+        }
+        Insert: {
+          approval_required?: boolean
+          brand_colors?: Json
+          brand_tone?: string | null
+          budget_range?: string | null
+          business_name?: string | null
+          client_id?: string | null
+          client_portal_enabled?: boolean
+          competitors?: string | null
+          content_types?: string[]
+          conversion_goal?: string | null
+          created_at?: string
+          creation_mode?: string
+          demo_template?: string | null
+          human_consultation_requested?: boolean
+          id?: string
+          industry?: string | null
+          is_demo?: boolean
+          landing_page_url?: string | null
+          lead_type?: string | null
+          location?: string | null
+          logo_url?: string | null
+          main_goal?: string | null
+          media_urls?: Json
+          offers?: string | null
+          onboarding_completed?: boolean
+          onboarding_step?: number
+          platforms?: string[]
+          posting_frequency?: string | null
+          ppc_budget?: number | null
+          seo_competitors?: string | null
+          services?: string | null
+          target_audience?: string | null
+          target_keywords?: string[]
+          target_locations?: string[]
+          updated_at?: string
+          user_id: string
+          usps?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          approval_required?: boolean
+          brand_colors?: Json
+          brand_tone?: string | null
+          budget_range?: string | null
+          business_name?: string | null
+          client_id?: string | null
+          client_portal_enabled?: boolean
+          competitors?: string | null
+          content_types?: string[]
+          conversion_goal?: string | null
+          created_at?: string
+          creation_mode?: string
+          demo_template?: string | null
+          human_consultation_requested?: boolean
+          id?: string
+          industry?: string | null
+          is_demo?: boolean
+          landing_page_url?: string | null
+          lead_type?: string | null
+          location?: string | null
+          logo_url?: string | null
+          main_goal?: string | null
+          media_urls?: Json
+          offers?: string | null
+          onboarding_completed?: boolean
+          onboarding_step?: number
+          platforms?: string[]
+          posting_frequency?: string | null
+          ppc_budget?: number | null
+          seo_competitors?: string | null
+          services?: string | null
+          target_audience?: string | null
+          target_keywords?: string[]
+          target_locations?: string[]
+          updated_at?: string
+          user_id?: string
+          usps?: string | null
+          website_url?: string | null
         }
         Relationships: []
       }
@@ -2212,6 +2347,7 @@ export type Database = {
           cta: string | null
           hashtags: string | null
           id: string
+          is_demo: boolean
           link: string | null
           media_url: string | null
           notes: string | null
@@ -2237,6 +2373,7 @@ export type Database = {
           cta?: string | null
           hashtags?: string | null
           id?: string
+          is_demo?: boolean
           link?: string | null
           media_url?: string | null
           notes?: string | null
@@ -2262,6 +2399,7 @@ export type Database = {
           cta?: string | null
           hashtags?: string | null
           id?: string
+          is_demo?: boolean
           link?: string | null
           media_url?: string | null
           notes?: string | null
@@ -2945,6 +3083,30 @@ export type Database = {
           name?: string
           platform?: string
           template_json?: Json
+        }
+        Relationships: []
+      }
+      workspace_mode: {
+        Row: {
+          created_at: string
+          demo_template: string | null
+          mode: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          demo_template?: string | null
+          mode?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          demo_template?: string | null
+          mode?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
