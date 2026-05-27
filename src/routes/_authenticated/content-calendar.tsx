@@ -98,8 +98,20 @@ function ContentCalendarPage() {
   const [filterClient, setFilterClient] = useState<string>("all");
   const [filterPlatform, setFilterPlatform] = useState<string>("all");
   const [filterCampaign, setFilterCampaign] = useState<string>("all");
+  const [filterStatus, setFilterStatus] = useState<string>("all");
   const [tab, setTab] = useState("calendar");
   const [editing, setEditing] = useState<Partial<PostRow> | null>(null);
+
+  // Realtime sync — auto refresh when AI modules write new content
+  useEffect(() => {
+    const ch = supabase
+      .channel("calendar-sync")
+      .on("postgres_changes", { event: "*", schema: "public", table: "social_posts" }, () => {
+        qc.invalidateQueries({ queryKey: ["social-posts"] });
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [qc]);
 
   const clientsQ = useQuery({
     queryKey: ["clients-min"],
