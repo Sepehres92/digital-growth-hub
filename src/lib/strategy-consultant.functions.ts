@@ -601,3 +601,48 @@ export const getFreeConsultationStatus = createServerFn({ method: "GET" })
       .limit(1);
     return { freeUsed: !!(data && data.length > 0) };
   });
+
+// ---------- Admin settings ----------
+const SettingsSchema = z.object({
+  human_consultation_enabled: z.boolean(),
+  free_consultation_minutes: z.number().int().min(15).max(480),
+  paid_consultation_price: z.number().min(0).max(100000),
+  available_strategist_ids: z.array(z.string().uuid()).max(50),
+  booking_link: z.string().max(500).default(""),
+  payment_link: z.string().max(500).default(""),
+});
+
+export const getStrategyAdminSettings = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { data } = await supabase
+      .from("strategy_admin_settings")
+      .select("*")
+      .eq("user_id", userId)
+      .maybeSingle();
+    return {
+      settings:
+        data ?? {
+          human_consultation_enabled: true,
+          free_consultation_minutes: 60,
+          paid_consultation_price: 150,
+          available_strategist_ids: [] as string[],
+          booking_link: "",
+          payment_link: "",
+        },
+    };
+  });
+
+export const saveStrategyAdminSettings = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => SettingsSchema.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { error } = await supabase
+      .from("strategy_admin_settings")
+      .upsert({ user_id: userId, ...data }, { onConflict: "user_id" });
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
