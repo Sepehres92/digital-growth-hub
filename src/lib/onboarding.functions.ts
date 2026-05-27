@@ -402,3 +402,22 @@ export const convertDemoToReal = createServerFn({ method: "POST" })
       );
     return { ok: true };
   });
+
+/** Purge all demo data and keep workspace in demo mode (ready to re-seed). */
+export const resetDemoWorkspace = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    await supabase.from("content_posts").delete().eq("user_id", userId).eq("is_demo", true);
+    await supabase.from("campaigns").delete().eq("user_id", userId).eq("is_demo", true);
+    await supabase.from("campaign_folders").delete().eq("user_id", userId).eq("is_demo", true);
+    await supabase.from("clients").delete().eq("user_id", userId).eq("is_demo", true);
+    await supabase
+      .from("workspace_mode")
+      .upsert(
+        { user_id: userId, mode: "demo", demo_template: null },
+        { onConflict: "user_id" },
+      );
+    return { ok: true };
+  });
+

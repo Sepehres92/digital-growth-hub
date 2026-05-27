@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Link } from "@tanstack/react-router";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getWorkspaceMode, convertDemoToReal } from "@/lib/onboarding.functions";
+import { getWorkspaceMode, convertDemoToReal, resetDemoWorkspace } from "@/lib/onboarding.functions";
 import { toast } from "sonner";
+
 
 export function DemoBanner() {
   const getMode = useServerFn(getWorkspaceMode);
   const convert = useServerFn(convertDemoToReal);
+  const resetDemo = useServerFn(resetDemoWorkspace);
   const [isDemo, setIsDemo] = useState(false);
   const [busy, setBusy] = useState(false);
 
@@ -41,6 +43,26 @@ export function DemoBanner() {
           variant="outline"
           disabled={busy}
           onClick={async () => {
+            if (!confirm("Reset demo workspace? All sample clients, campaigns, and posts will be removed so you can re-seed a fresh demo.")) return;
+            setBusy(true);
+            try {
+              await resetDemo({});
+              toast.success("Demo workspace reset. Pick a template to re-seed.");
+              window.location.href = "/demo-templates";
+            } catch (e) {
+              toast.error((e as Error).message);
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
+          <RotateCcw className="mr-1 size-3" /> Reset Demo
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          disabled={busy}
+          onClick={async () => {
             setBusy(true);
             try {
               await convert({ data: { purgeDemo: false } });
@@ -59,6 +81,7 @@ export function DemoBanner() {
     </div>
   );
 }
+
 
 /** Hook for client-side demo gating (hide destructive buttons, etc). */
 export function useIsDemoMode() {
