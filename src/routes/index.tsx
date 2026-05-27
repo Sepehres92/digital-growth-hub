@@ -1121,11 +1121,26 @@ function FinalCTA() {
 // ---------------- 16. Footer ----------------
 
 function Footer() {
-  const cols = [
-    { h: "Product", l: ["Features", "AI Studio", "Pricing", "Changelog", "Roadmap"] },
-    { h: "Solutions", l: ["For Agencies", "For Real Estate", "For Contractors", "For Local Business"] },
-    { h: "Company", l: ["About", "Careers", "Press", "Contact"] },
-    { h: "Legal", l: ["Privacy Policy", "Terms of Service", "Cookie Policy", "Security"] },
+  type Item = { label: string; to?: string; href?: string };
+  const cols: { h: string; l: Item[] }[] = [
+    { h: "Product", l: [
+      { label: "Features", href: "#features" },
+      { label: "AI Studio", href: "#showcase" },
+      { label: "Pricing", href: "#pricing" },
+      { label: "Watch demo", to: "/demo" },
+      { label: "Book demo", to: "/book-demo" },
+    ]},
+    { h: "Company", l: [
+      { label: "Contact", to: "/contact" },
+      { label: "Security", to: "/security" },
+    ]},
+    { h: "Legal", l: [
+      { label: "Privacy Policy", to: "/privacy" },
+      { label: "Terms of Service", to: "/terms" },
+      { label: "Cookie Policy", to: "/cookies" },
+      { label: "AI Content Policy", to: "/ai-content-policy" },
+      { label: "Upload & Ownership", to: "/upload-ownership-policy" },
+    ]},
   ];
   return (
     <footer className="border-t border-border bg-card">
@@ -1143,9 +1158,9 @@ function Footer() {
             </p>
             <div className="mt-5 flex gap-2">
               {[Twitter, Linkedin, Github, Instagram].map((I, i) => (
-                <a key={i} href="#" className="grid size-9 place-items-center rounded-lg border border-border text-muted-foreground hover:text-foreground">
+                <Link key={i} to="/contact" aria-label="Contact us on social" className="grid size-9 place-items-center rounded-lg border border-border text-muted-foreground hover:text-foreground">
                   <I className="size-4" />
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -1154,8 +1169,12 @@ function Footer() {
               <div className="text-sm font-semibold">{c.h}</div>
               <ul className="mt-4 space-y-2">
                 {c.l.map((x) => (
-                  <li key={x}>
-                    <a href="#" className="text-sm text-muted-foreground hover:text-foreground">{x}</a>
+                  <li key={x.label}>
+                    {x.to ? (
+                      <Link to={x.to} className="text-sm text-muted-foreground hover:text-foreground">{x.label}</Link>
+                    ) : (
+                      <a href={x.href} className="text-sm text-muted-foreground hover:text-foreground">{x.label}</a>
+                    )}
                   </li>
                 ))}
               </ul>
