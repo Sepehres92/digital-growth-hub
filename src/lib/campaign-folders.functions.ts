@@ -147,3 +147,141 @@ export const updateCampaignFolderStatus = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { folder };
   });
+
+const WizardSchema = z.object({
+  clientId: z.string().uuid().nullable().optional(),
+  name: z.string().min(1).max(200),
+  campaignKind: z.enum(["social_media", "seo", "ppc", "seo_ppc", "full"]),
+  sourceType: z.enum(["ai", "human", "ai_human_review"]),
+  goal: z.string().max(2000).optional(),
+  targetAudience: z.string().max(2000).optional(),
+  monthlyBudget: z.number().min(0).max(10_000_000).optional(),
+  tone: z.string().max(200).optional(),
+  platforms: z.array(z.string().max(50)).max(20).optional(),
+  keywords: z.string().max(2000).optional(),
+  strategySummary: z.string().max(10_000).optional(),
+});
+
+/**
+ * Wizard entry point: creates a campaign (auto-spawns its folder via trigger),
+ * then updates the folder with the wizard's strategy summary, source type, and
+ * starting status. Returns the folder id so the UI can navigate to it.
+ */
+export const createCampaignFromWizard = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => WizardSchema.parse(input))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    const campaignType: "seo" | "ppc" | "social_media" | "website" =
+      data.campaignKind === "seo"
+        ? "seo"
+        : data.campaignKind === "ppc"
+        ? "ppc"
+        : data.campaignKind === "social_media"
+        ? "social_media"
+        : "website";
+
+    const folderType: "social_media" | "seo" | "ppc" | "combined" =
+      data.campaignKind === "social_media"
+        ? "social_media"
+        : data.campaignKind === "seo"
+        ? "seo"
+        : data.campaignKind === "ppc"
+        ? "ppc"
+        : "combined";
+
+    const startStatus =
+      data.sourceType === "human"
+        ? "human_review_required"
+        : data.sourceType === "ai_human_review"
+        ? "pending_human_review"
+        : "pending_client_approval";
+
+    // Insert campaign — trigger auto-creates folder
+    const { data: campaign, error: campErr } = await supabase
+      .from("campaigns")
+      .insert({
+        user_id: userId,
+        client_id: data.clientId ?? null,
+        name: data.name,
+        type: campaignType,
+        source_type: data.sourceType,
+        goal: data.goal ?? null,
+        monthly_budget: data.monthlyBudget ?? 0,
+        status: "planned",
+      })
+      .select("id, campaign_folder_id")
+      .single();
+    if (campErr) throw new Error(campErr.message);
+
+    const folderId = campaign.campaign_folder_id;
+    if (!folderId) throw new Error("Campaign folder was not auto-created");
+
+    // Patch folder with wizard details
+    const summary =
+      data.strategySummary ??
+      buildDefaultSummary({
+        kind: data.campaignKind,
+        goal: data.goal,
+        audience: data.targetAudience,
+        tone: data.tone,
+        budget: data.monthlyBudget,
+        platforms: data.platforms,
+        keywords: data.keywords,
+        source: data.sourceType,
+      });
+
+    const { data: folder, error: folderErr } = await supabase
+      .from("campaign_folders")
+      .update({
+        name: data.name,
+        folder_type: folderType,
+        source_type: data.sourceType,
+        status: startStatus,
+        strategy_summary: summary,
+        goal: data.goal ?? null,
+      })
+      .eq("id", folderId)
+      .select("*")
+      .single();
+    if (folderErr) throw new Error(folderErr.message);
+
+    // If human help requested, log a human strategy request (best-effort)
+    if (data.sourceType === "human" || data.sourceType === "ai_human_review") {
+      await supabase.from("human_strategy_requests").insert({
+        user_id: userId,
+        client_id: data.clientId ?? null,
+        campaign_folder_id: folderId,
+        request_status: "pending",
+        payment_required: false,
+      });
+    }
+
+    return { folder, campaignId: campaign.id };
+  });
+
+function buildDefaultSummary(input: {
+  kind: string;
+  goal?: string;
+  audience?: string;
+  tone?: string;
+  budget?: number;
+  platforms?: string[];
+  keywords?: string;
+  source: string;
+}): string {
+  const lines: string[] = [];
+  lines.push(`Campaign type: ${input.kind.replace(/_/g, " ")}`);
+  lines.push(`Creation method: ${input.source.replace(/_/g, " ")}`);
+  if (input.goal) lines.push(`\nBusiness goal:\n${input.goal}`);
+  if (input.audience) lines.push(`\nTarget audience:\n${input.audience}`);
+  if (input.tone) lines.push(`\nTone: ${input.tone}`);
+  if (input.budget != null) lines.push(`Monthly budget: $${input.budget}`);
+  if (input.platforms?.length) lines.push(`Platforms: ${input.platforms.join(", ")}`);
+  if (input.keywords) lines.push(`\nKeywords / focus:\n${input.keywords}`);
+  lines.push(
+    "\nRecommended next steps:\n- Approve to spin up content, tasks, and calendar entries\n- Request changes if anything looks off\n- Or escalate to a human specialist for hands-on help"
+  );
+  return lines.join("\n");
+}
