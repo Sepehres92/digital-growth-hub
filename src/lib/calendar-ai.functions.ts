@@ -245,14 +245,7 @@ Total posts: ${totalPosts} (~${data.postsPerWeek}/week)
 Start date: ${startIso}`;
 
     const raw = await callAI(sys, user, true);
-    let parsed: { strategy?: string; posts: AutoCampaignPost[] };
-    try {
-      parsed = JSON.parse(raw);
-    } catch {
-      const m = raw.match(/\{[\s\S]*\}/);
-      if (!m) throw new Error("AI returned malformed campaign");
-      parsed = JSON.parse(m[0]);
-    }
+    const parsed = extractJSON<{ strategy?: string; posts: AutoCampaignPost[] }>(raw);
     if (!parsed?.posts?.length) throw new Error("AI returned no posts");
 
     const allowed = ["instagram", "facebook", "x", "tiktok", "youtube"];
