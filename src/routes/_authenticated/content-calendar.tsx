@@ -144,7 +144,7 @@ function ContentCalendarPage() {
   }, [view, cursor]);
 
   const postsQ = useQuery({
-    queryKey: ["social-posts", range.from.toISOString(), range.to.toISOString(), filterClient, filterPlatform, filterCampaign],
+    queryKey: ["social-posts", range.from.toISOString(), range.to.toISOString(), filterClient, filterPlatform, filterCampaign, filterStatus],
     queryFn: async () => {
       let q = supabase
         .from("social_posts").select("*")
@@ -154,6 +154,7 @@ function ContentCalendarPage() {
       if (filterClient !== "all") q = q.eq("client_id", filterClient);
       if (filterPlatform !== "all") q = q.eq("platform", filterPlatform);
       if (filterCampaign !== "all") q = q.eq("campaign_id", filterCampaign);
+      if (filterStatus !== "all") q = q.eq("status", filterStatus);
       const { data, error } = await q;
       if (error) throw error;
       return (data ?? []) as PostRow[];
