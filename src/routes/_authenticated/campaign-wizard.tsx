@@ -54,7 +54,7 @@ const PLATFORMS = ["instagram", "facebook", "x", "tiktok", "youtube", "linkedin"
 
 function CampaignWizardPage() {
   const navigate = useNavigate();
-  const createFromWizard = useServerFn(createCampaignFromWizard);
+  const createFromWizard = useServerFn(createCampaignWithFolder);
 
   const [step, setStep] = useState(1);
   const [clientId, setClientId] = useState<string>("");
