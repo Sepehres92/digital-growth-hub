@@ -170,6 +170,7 @@ function AuthedLayout() {
             {nav.find((n) => n.to === pathname)?.label ?? ""}
           </h1>
         </header>
+        <DemoBanner />
         <main className="flex-1 overflow-auto p-4 md:p-8">
           <Outlet />
         </main>
