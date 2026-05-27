@@ -160,17 +160,18 @@ function Hero() {
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <Link
               to="/auth"
+              search={{ mode: "signup" }}
               className="group inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/30 hover:bg-primary/90"
             >
               Start Free
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
-            <a
-              href="#showcase"
+            <Link
+              to="/demo"
               className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/60 px-6 py-3.5 text-sm font-semibold backdrop-blur hover:bg-card"
             >
               <Play className="size-4" /> Watch Demo
-            </a>
+            </Link>
           </div>
           <p className="mt-4 text-xs text-muted-foreground">
             No credit card required • Free 14-day trial • Cancel anytime
