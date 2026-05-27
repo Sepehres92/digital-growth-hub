@@ -250,7 +250,9 @@ function DashboardMockup() {
               <div className="md:col-span-2 rounded-xl border border-border/60 bg-background/60 p-4">
                 <div className="mb-3 flex items-center justify-between text-sm">
                   <span className="font-medium">Content calendar</span>
-                  <span className="text-xs text-muted-foreground">Nov 2026</span>
+                  <span className="text-xs text-muted-foreground">
+                    {new Date().toLocaleString("en-US", { month: "short", year: "numeric" })}
+                  </span>
                 </div>
                 <div className="grid grid-cols-7 gap-1.5">
                   {Array.from({ length: 21 }).map((_, i) => (
