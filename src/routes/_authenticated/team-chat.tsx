@@ -531,11 +531,16 @@ function TeamChatPage() {
 
               <ScrollArea className="flex-1 px-4">
                 <div className="mx-auto max-w-4xl py-4">
+                  <div ref={topSentinelRef} className="flex h-6 items-center justify-center text-[10px] text-muted-foreground">
+                    {messagesQuery.isFetchingNextPage ? <><Loader2 className="size-3 animate-spin" /> Loading older…</> : messagesQuery.hasNextPage ? "Scroll up for more" : ""}
+                  </div>
                   {filteredMsgs.length === 0 && (
                     <p className="py-10 text-center text-sm text-muted-foreground">No messages yet. Say hello 👋</p>
                   )}
                   {filteredMsgs.map((m) => {
                     const pres = presenceFor(m.user_id);
+                    const isPending = m.id.startsWith("temp-");
+                    const reads = readByCount(m);
                     return (
                       <div key={m.id} className="group flex gap-3 rounded-md px-2 py-2 hover:bg-accent/40">
                         <div className="relative">
