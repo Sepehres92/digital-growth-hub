@@ -9,16 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UploadOwnershipPolicyRouteImport } from './routes/upload-ownership-policy'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SocialRouteImport } from './routes/social'
 import { Route as SeoAuditRouteImport } from './routes/seo-audit'
 import { Route as SemrushRouteImport } from './routes/semrush'
+import { Route as SecurityRouteImport } from './routes/security'
 import { Route as SearchConsoleRouteImport } from './routes/search-console'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as DemoRouteImport } from './routes/demo'
 import { Route as CookiesRouteImport } from './routes/cookies'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as BookDemoRouteImport } from './routes/book-demo'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AiContentPolicyRouteImport } from './routes/ai-content-policy'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedTeamChatRouteImport } from './routes/_authenticated/team-chat'
@@ -39,6 +45,11 @@ import { Route as AuthenticatedAiVideoStudioRouteImport } from './routes/_authen
 import { Route as AuthenticatedAiStudioRouteImport } from './routes/_authenticated/ai-studio'
 import { Route as AuthenticatedAccountPrivacyRouteImport } from './routes/_authenticated/account-privacy'
 
+const UploadOwnershipPolicyRoute = UploadOwnershipPolicyRouteImport.update({
+  id: '/upload-ownership-policy',
+  path: '/upload-ownership-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
@@ -59,6 +70,11 @@ const SemrushRoute = SemrushRouteImport.update({
   path: '/semrush',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SecurityRoute = SecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchConsoleRoute = SearchConsoleRouteImport.update({
   id: '/search-console',
   path: '/search-console',
@@ -74,9 +90,24 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DemoRoute = DemoRouteImport.update({
+  id: '/demo',
+  path: '/demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CookiesRoute = CookiesRouteImport.update({
   id: '/cookies',
   path: '/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookDemoRoute = BookDemoRouteImport.update({
+  id: '/book-demo',
+  path: '/book-demo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogRoute = BlogRouteImport.update({
@@ -87,6 +118,11 @@ const BlogRoute = BlogRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiContentPolicyRoute = AiContentPolicyRouteImport.update({
+  id: '/ai-content-policy',
+  path: '/ai-content-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -193,16 +229,22 @@ const AuthenticatedAccountPrivacyRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ai-content-policy': typeof AiContentPolicyRoute
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRoute
+  '/book-demo': typeof BookDemoRoute
+  '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
+  '/demo': typeof DemoRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search-console': typeof SearchConsoleRoute
+  '/security': typeof SecurityRoute
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
   '/social': typeof SocialRoute
   '/terms': typeof TermsRoute
+  '/upload-ownership-policy': typeof UploadOwnershipPolicyRoute
   '/account-privacy': typeof AuthenticatedAccountPrivacyRoute
   '/ai-studio': typeof AuthenticatedAiStudioRoute
   '/ai-video-studio': typeof AuthenticatedAiVideoStudioRoute
@@ -223,16 +265,22 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ai-content-policy': typeof AiContentPolicyRoute
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRoute
+  '/book-demo': typeof BookDemoRoute
+  '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
+  '/demo': typeof DemoRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search-console': typeof SearchConsoleRoute
+  '/security': typeof SecurityRoute
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
   '/social': typeof SocialRoute
   '/terms': typeof TermsRoute
+  '/upload-ownership-policy': typeof UploadOwnershipPolicyRoute
   '/account-privacy': typeof AuthenticatedAccountPrivacyRoute
   '/ai-studio': typeof AuthenticatedAiStudioRoute
   '/ai-video-studio': typeof AuthenticatedAiVideoStudioRoute
@@ -255,16 +303,22 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/ai-content-policy': typeof AiContentPolicyRoute
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRoute
+  '/book-demo': typeof BookDemoRoute
+  '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
+  '/demo': typeof DemoRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search-console': typeof SearchConsoleRoute
+  '/security': typeof SecurityRoute
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
   '/social': typeof SocialRoute
   '/terms': typeof TermsRoute
+  '/upload-ownership-policy': typeof UploadOwnershipPolicyRoute
   '/_authenticated/account-privacy': typeof AuthenticatedAccountPrivacyRoute
   '/_authenticated/ai-studio': typeof AuthenticatedAiStudioRoute
   '/_authenticated/ai-video-studio': typeof AuthenticatedAiVideoStudioRoute
@@ -287,16 +341,22 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/ai-content-policy'
     | '/auth'
     | '/blog'
+    | '/book-demo'
+    | '/contact'
     | '/cookies'
+    | '/demo'
     | '/privacy'
     | '/reset-password'
     | '/search-console'
+    | '/security'
     | '/semrush'
     | '/seo-audit'
     | '/social'
     | '/terms'
+    | '/upload-ownership-policy'
     | '/account-privacy'
     | '/ai-studio'
     | '/ai-video-studio'
@@ -317,16 +377,22 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ai-content-policy'
     | '/auth'
     | '/blog'
+    | '/book-demo'
+    | '/contact'
     | '/cookies'
+    | '/demo'
     | '/privacy'
     | '/reset-password'
     | '/search-console'
+    | '/security'
     | '/semrush'
     | '/seo-audit'
     | '/social'
     | '/terms'
+    | '/upload-ownership-policy'
     | '/account-privacy'
     | '/ai-studio'
     | '/ai-video-studio'
@@ -348,16 +414,22 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/ai-content-policy'
     | '/auth'
     | '/blog'
+    | '/book-demo'
+    | '/contact'
     | '/cookies'
+    | '/demo'
     | '/privacy'
     | '/reset-password'
     | '/search-console'
+    | '/security'
     | '/semrush'
     | '/seo-audit'
     | '/social'
     | '/terms'
+    | '/upload-ownership-policy'
     | '/_authenticated/account-privacy'
     | '/_authenticated/ai-studio'
     | '/_authenticated/ai-video-studio'
@@ -380,20 +452,33 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  AiContentPolicyRoute: typeof AiContentPolicyRoute
   AuthRoute: typeof AuthRoute
   BlogRoute: typeof BlogRoute
+  BookDemoRoute: typeof BookDemoRoute
+  ContactRoute: typeof ContactRoute
   CookiesRoute: typeof CookiesRoute
+  DemoRoute: typeof DemoRoute
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchConsoleRoute: typeof SearchConsoleRoute
+  SecurityRoute: typeof SecurityRoute
   SemrushRoute: typeof SemrushRoute
   SeoAuditRoute: typeof SeoAuditRoute
   SocialRoute: typeof SocialRoute
   TermsRoute: typeof TermsRoute
+  UploadOwnershipPolicyRoute: typeof UploadOwnershipPolicyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/upload-ownership-policy': {
+      id: '/upload-ownership-policy'
+      path: '/upload-ownership-policy'
+      fullPath: '/upload-ownership-policy'
+      preLoaderRoute: typeof UploadOwnershipPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/terms': {
       id: '/terms'
       path: '/terms'
@@ -422,6 +507,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SemrushRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/security': {
+      id: '/security'
+      path: '/security'
+      fullPath: '/security'
+      preLoaderRoute: typeof SecurityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search-console': {
       id: '/search-console'
       path: '/search-console'
@@ -443,11 +535,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/demo': {
+      id: '/demo'
+      path: '/demo'
+      fullPath: '/demo'
+      preLoaderRoute: typeof DemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cookies': {
       id: '/cookies'
       path: '/cookies'
       fullPath: '/cookies'
       preLoaderRoute: typeof CookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/book-demo': {
+      id: '/book-demo'
+      path: '/book-demo'
+      fullPath: '/book-demo'
+      preLoaderRoute: typeof BookDemoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog': {
@@ -462,6 +575,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-content-policy': {
+      id: '/ai-content-policy'
+      path: '/ai-content-policy'
+      fullPath: '/ai-content-policy'
+      preLoaderRoute: typeof AiContentPolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -647,17 +767,33 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  AiContentPolicyRoute: AiContentPolicyRoute,
   AuthRoute: AuthRoute,
   BlogRoute: BlogRoute,
+  BookDemoRoute: BookDemoRoute,
+  ContactRoute: ContactRoute,
   CookiesRoute: CookiesRoute,
+  DemoRoute: DemoRoute,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SearchConsoleRoute: SearchConsoleRoute,
+  SecurityRoute: SecurityRoute,
   SemrushRoute: SemrushRoute,
   SeoAuditRoute: SeoAuditRoute,
   SocialRoute: SocialRoute,
   TermsRoute: TermsRoute,
+  UploadOwnershipPolicyRoute: UploadOwnershipPolicyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

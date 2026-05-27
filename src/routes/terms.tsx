@@ -61,10 +61,13 @@ function TermsPage() {
       <p>You may delete your account at any time from Settings → Privacy. We may suspend or terminate accounts that violate these Terms.</p>
 
       <h2>11. Governing law</h2>
-      <p>These Terms are governed by the laws of the jurisdiction in which Digital Agency OS is operated, without regard to conflict-of-laws principles.</p>
+      <p>These Terms are governed by the laws of the Province of Ontario and the federal laws of Canada applicable therein, without regard to conflict-of-laws principles. The courts located in Toronto, Ontario shall have exclusive jurisdiction over any dispute arising from or related to these Terms or the Service.</p>
 
       <h2>12. Changes</h2>
       <p>We may update these Terms. Material changes will be announced in-app. Continued use after changes constitutes acceptance.</p>
+
+      <h2>13. Contact</h2>
+      <p>For legal questions, contact <a href="mailto:legal@example.com">legal@example.com</a>. For privacy and data requests, contact <a href="mailto:privacy@example.com">privacy@example.com</a>.</p>
     </LegalLayout>
   );
 }
