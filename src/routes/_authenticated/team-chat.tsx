@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,8 +14,9 @@ import { Switch } from "@/components/ui/switch";
 import { useServerFn } from "@tanstack/react-start";
 import { chatAiAssist } from "@/lib/chat-ai.functions";
 import {
-  Plus, Hash, Lock, Send, Search, Sparkles, Paperclip, Smile, Pin, BellOff, Bell,
+  Plus, Hash, Lock, Send, Search, Sparkles, Paperclip, Pin, BellOff, Bell,
   MessageSquare, Users, Phone, Video as VideoIcon, MonitorUp, CornerDownRight, X, Loader2,
+  RotateCw, Check, CheckCheck, WifiOff,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -56,6 +57,16 @@ function TeamChatPage() {
   const [soundOn, setSoundOn] = useState(true);
   const fileRef = useRef<HTMLInputElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
+  const topSentinelRef = useRef<HTMLDivElement>(null);
+  const [typingUsers, setTypingUsers] = useState<string[]>([]);
+  const [pendingMessages, setPendingMessages] = useState<Message[]>([]);
+  const [failedMessages, setFailedMessages] = useState<Array<{ tempId: string; content: string; parentId: string | null; attachments?: Message["attachments"]; type?: string }>>([]);
+  const [connState, setConnState] = useState<"connecting" | "connected" | "reconnecting">("connecting");
+  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+  const lastSentTypingRef = useRef<number>(0);
+  const notifEnabledRef = useRef(false);
+  const activeChannelNameRef = useRef<string>("");
+  const PAGE = 30;
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setMe(data.user?.id ?? null));
@@ -124,19 +135,48 @@ function TeamChatPage() {
 
   useEffect(() => { if (!activeId && sorted.length) setActiveId(sorted[0].id); }, [sorted, activeId]);
 
-  const { data: messages = [] } = useQuery({
+  // Infinite scroll: load PAGE newest first, fetch older as user scrolls up.
+  const messagesQuery = useInfiniteQuery({
     queryKey: ["chat-messages", activeId],
-    queryFn: async () => {
-      const { data, error } = await (supabase.from("chat_messages") as any)
+    enabled: !!activeId,
+    initialPageParam: null as string | null,
+    queryFn: async ({ pageParam }) => {
+      let q = (supabase.from("chat_messages") as any)
         .select("*")
         .eq("channel_id", activeId!)
         .is("parent_id", null)
-        .order("created_at", { ascending: true })
-        .limit(200);
+        .order("created_at", { ascending: false })
+        .limit(PAGE);
+      if (pageParam) q = q.lt("created_at", pageParam);
+      const { data, error } = await q;
       if (error) throw error;
       return data as Message[];
     },
+    getNextPageParam: (lastPage) =>
+      lastPage.length < PAGE ? undefined : lastPage[lastPage.length - 1].created_at,
+  });
+
+  const serverMessages = useMemo(() => {
+    const flat = messagesQuery.data?.pages.flat() ?? [];
+    return [...flat].sort((a, b) => a.created_at.localeCompare(b.created_at));
+  }, [messagesQuery.data]);
+
+  const messages = useMemo(() => {
+    const seen = new Set(serverMessages.map((m) => m.id));
+    return [...serverMessages, ...pendingMessages.filter((p) => !seen.has(p.id))];
+  }, [serverMessages, pendingMessages]);
+
+  // All members of the active channel (for read receipts)
+  const { data: channelMembers = [] } = useQuery({
+    queryKey: ["chat-channel-members", activeId],
     enabled: !!activeId,
+    queryFn: async () => {
+      const { data, error } = await (supabase.from("chat_channel_members") as any)
+        .select("user_id,last_read_at").eq("channel_id", activeId!);
+      if (error) throw error;
+      return (data ?? []) as Array<{ user_id: string; last_read_at: string }>;
+    },
+    refetchInterval: 15000,
   });
 
   const { data: threadMsgs = [] } = useQuery({
@@ -152,20 +192,71 @@ function TeamChatPage() {
     enabled: !!threadParent,
   });
 
-  // Realtime
+  // Notification permission
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof Notification === "undefined") return;
+    if (Notification.permission === "granted") notifEnabledRef.current = true;
+    else if (Notification.permission === "default") {
+      Notification.requestPermission().then((p) => { notifEnabledRef.current = p === "granted"; }).catch(() => {});
+    }
+  }, []);
+
+  // Realtime: messages + typing broadcasts + reconnect state
   useEffect(() => {
     if (!activeId) return;
+    setConnState("connecting");
     const ch = supabase
-      .channel(`chat-${activeId}`)
+      .channel(`chat-${activeId}`, { config: { broadcast: { self: false } } })
       .on("postgres_changes", { event: "*", schema: "public", table: "chat_messages", filter: `channel_id=eq.${activeId}` },
-        () => {
+        (payload: any) => {
           qc.invalidateQueries({ queryKey: ["chat-messages", activeId] });
           if (threadParent) qc.invalidateQueries({ queryKey: ["chat-thread", threadParent.id] });
-          if (soundOn) try { new Audio("data:audio/wav;base64,UklGRhwAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=").play().catch(() => {}); } catch {}
+          if (payload?.eventType === "INSERT" && payload?.new?.user_id !== me) {
+            if (document.hidden && notifEnabledRef.current) {
+              try { new Notification(`New message in #${activeChannelNameRef.current || "channel"}`, { body: String(payload.new.content ?? "").slice(0, 140) }); } catch {}
+            }
+            if (soundOn) try { new Audio("data:audio/wav;base64,UklGRhwAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=").play().catch(() => {}); } catch {}
+          }
         })
-      .subscribe();
-    return () => { supabase.removeChannel(ch); };
-  }, [activeId, qc, threadParent, soundOn]);
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "chat_channel_members", filter: `channel_id=eq.${activeId}` },
+        () => qc.invalidateQueries({ queryKey: ["chat-channel-members", activeId] }))
+      .on("broadcast", { event: "typing" }, ({ payload }: { payload: { user_id: string } }) => {
+        if (!payload?.user_id || payload.user_id === me) return;
+        setTypingUsers((prev) => (prev.includes(payload.user_id) ? prev : [...prev, payload.user_id]));
+        window.setTimeout(() => setTypingUsers((prev) => prev.filter((u) => u !== payload.user_id)), 4000);
+      })
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") setConnState("connected");
+        else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") setConnState("reconnecting");
+      });
+    channelRef.current = ch;
+    return () => { supabase.removeChannel(ch); channelRef.current = null; };
+  }, [activeId, qc, threadParent, soundOn, me]);
+
+  // Auto-reconnect refresh on tab visibility return
+  useEffect(() => {
+    const onVis = () => {
+      if (!document.hidden && activeId) {
+        qc.invalidateQueries({ queryKey: ["chat-messages", activeId] });
+      }
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, [activeId, qc]);
+
+  // Infinite scroll sentinel
+  useEffect(() => {
+    const el = topSentinelRef.current;
+    if (!el || !messagesQuery.hasNextPage) return;
+    const obs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !messagesQuery.isFetchingNextPage) {
+        messagesQuery.fetchNextPage();
+      }
+    }, { rootMargin: "200px" });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [messagesQuery.hasNextPage, messagesQuery.isFetchingNextPage, messagesQuery]);
+
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages.length, activeId]);
 
@@ -198,8 +289,10 @@ function TeamChatPage() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["chat-members", me] }),
   });
 
+  type SendVars = { content: string; parentId?: string | null; attachments?: Message["attachments"]; type?: string; tempId?: string };
+
   const sendMessage = useMutation({
-    mutationFn: async (v: { content: string; parentId?: string | null; attachments?: Message["attachments"]; type?: string }) => {
+    mutationFn: async (v: SendVars) => {
       if (!me || !activeId) throw new Error("no channel");
       const mentions = Array.from(v.content.matchAll(/@([0-9a-f-]{8,})/g)).map((m) => m[1]);
       const { error } = await (supabase.from("chat_messages") as any).insert({
@@ -210,8 +303,46 @@ function TeamChatPage() {
       if (error) throw error;
       await (supabase.from("chat_audit_log") as any).insert({ user_id: me, channel_id: activeId, action: "message.send" });
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onMutate: async (v) => {
+      if (!me || !activeId || v.parentId) return { tempId: v.tempId };
+      const tempId = v.tempId ?? `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const optimistic: Message = {
+        id: tempId, channel_id: activeId, user_id: me, parent_id: null,
+        content: v.content.trim(), message_type: v.type ?? "text",
+        attachments: v.attachments ?? [], mentions: [], ai_generated: false, edited: false,
+        created_at: new Date().toISOString(),
+      };
+      setPendingMessages((prev) => [...prev, optimistic]);
+      setFailedMessages((prev) => prev.filter((f) => f.tempId !== tempId));
+      return { tempId };
+    },
+    onSuccess: (_d, _v, ctx) => {
+      if (ctx?.tempId) setPendingMessages((prev) => prev.filter((p) => p.id !== ctx.tempId));
+      qc.invalidateQueries({ queryKey: ["chat-messages", activeId] });
+    },
+    onError: (e, v, ctx) => {
+      if (ctx?.tempId) {
+        setPendingMessages((prev) => prev.filter((p) => p.id !== ctx.tempId));
+        setFailedMessages((prev) => [...prev, { tempId: ctx.tempId!, content: v.content, parentId: v.parentId ?? null, attachments: v.attachments, type: v.type }]);
+      }
+      toast.error(e instanceof Error ? e.message : "Send failed — tap retry");
+    },
   });
+
+  const retryFailed = (f: { tempId: string; content: string; parentId: string | null; attachments?: Message["attachments"]; type?: string }) => {
+    setFailedMessages((prev) => prev.filter((x) => x.tempId !== f.tempId));
+    sendMessage.mutate({ content: f.content, parentId: f.parentId, attachments: f.attachments, type: f.type, tempId: f.tempId });
+  };
+
+  const broadcastTyping = useCallback(() => {
+    if (!channelRef.current || !me) return;
+    const now = Date.now();
+    if (now - lastSentTypingRef.current < 2000) return;
+    lastSentTypingRef.current = now;
+    channelRef.current.send({ type: "broadcast", event: "typing", payload: { user_id: me } });
+  }, [me]);
+
+
 
   const deleteMessage = useMutation({
     mutationFn: async (id: string) => {
@@ -305,14 +436,23 @@ function TeamChatPage() {
   const presenceFor = (uid: string) => presence.find((p) => p.user_id === uid);
   const activeChannel = channels.find((c) => c.id === activeId);
   const activeMember = members.find((m) => m.channel_id === activeId);
+
+  useEffect(() => { activeChannelNameRef.current = activeChannel?.name ?? ""; }, [activeChannel]);
+
   const unreadCount = (cid: string) => {
     const mem = members.find((m) => m.channel_id === cid);
     if (!mem) return 0;
-    // approximate
     return messages.filter((m) => m.channel_id === cid && new Date(m.created_at) > new Date(mem.last_read_at) && m.user_id !== me).length;
   };
 
+  // Read receipts: how many OTHER members have last_read_at >= message.created_at
+  const readByCount = (m: Message) => {
+    if (m.user_id !== me) return 0;
+    return channelMembers.filter((cm) => cm.user_id !== me && new Date(cm.last_read_at) >= new Date(m.created_at)).length;
+  };
+
   useEffect(() => { if (activeId && myChannelIds.has(activeId)) markRead.mutate(activeId); /* eslint-disable-next-line */ }, [activeId, messages.length]);
+
 
   const filteredMsgs = useMemo(() => {
     if (!search || !activeChannel) return messages;
@@ -369,6 +509,11 @@ function TeamChatPage() {
                   {activeChannel.channel_type === "private" ? <Lock className="size-4" /> : <Hash className="size-4" />}
                   <h2 className="truncate font-semibold">{activeChannel.name}</h2>
                   <span className="hidden truncate text-xs text-muted-foreground md:inline">{activeChannel.description}</span>
+                  {connState !== "connected" && (
+                    <span className="ml-1 inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-medium text-amber-600">
+                      <WifiOff className="size-3" /> {connState === "reconnecting" ? "Reconnecting…" : "Connecting…"}
+                    </span>
+                  )}
                 </div>
                 <div className="ml-auto flex items-center gap-1">
                   <Button size="icon" variant="ghost" disabled title="Voice call (coming soon)"><Phone className="size-4" /></Button>
@@ -386,13 +531,18 @@ function TeamChatPage() {
 
               <ScrollArea className="flex-1 px-4">
                 <div className="mx-auto max-w-4xl py-4">
+                  <div ref={topSentinelRef} className="flex h-6 items-center justify-center text-[10px] text-muted-foreground">
+                    {messagesQuery.isFetchingNextPage ? <><Loader2 className="size-3 animate-spin" /> Loading older…</> : messagesQuery.hasNextPage ? "Scroll up for more" : ""}
+                  </div>
                   {filteredMsgs.length === 0 && (
                     <p className="py-10 text-center text-sm text-muted-foreground">No messages yet. Say hello 👋</p>
                   )}
                   {filteredMsgs.map((m) => {
                     const pres = presenceFor(m.user_id);
+                    const isPending = m.id.startsWith("temp-");
+                    const reads = readByCount(m);
                     return (
-                      <div key={m.id} className="group flex gap-3 rounded-md px-2 py-2 hover:bg-accent/40">
+                      <div key={m.id} className={cn("group flex gap-3 rounded-md px-2 py-2 hover:bg-accent/40", isPending && "opacity-60")}>
                         <div className="relative">
                           <div className="grid size-9 place-items-center rounded-md bg-primary/15 text-xs font-medium text-primary">
                             {m.user_id.slice(0, 2).toUpperCase()}
@@ -406,6 +556,7 @@ function TeamChatPage() {
                             <span className="text-muted-foreground">{new Date(m.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
                             {m.ai_generated && <span className="rounded bg-primary/10 px-1.5 text-[10px] text-primary">AI</span>}
                             {m.edited && <span className="text-[10px] text-muted-foreground">(edited)</span>}
+                            {isPending && <Loader2 className="size-3 animate-spin text-muted-foreground" />}
                           </div>
                           <div className="mt-0.5 whitespace-pre-wrap break-words text-sm">{m.content}</div>
                           {m.attachments?.map((a, i) => (
@@ -430,13 +581,42 @@ function TeamChatPage() {
                               <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" onClick={() => hideForMe.mutate(m)}>Hide</Button>
                             )}
                           </div>
+                          {m.user_id === me && !isPending && reads > 0 && (
+                            <div className="mt-1 flex items-center gap-1 text-[10px] text-muted-foreground">
+                              <CheckCheck className="size-3 text-primary" /> Seen by {reads}
+                            </div>
+                          )}
+                          {m.user_id === me && !isPending && reads === 0 && (
+                            <div className="mt-1 flex items-center gap-1 text-[10px] text-muted-foreground">
+                              <Check className="size-3" /> Sent
+                            </div>
+                          )}
                         </div>
                       </div>
                     );
                   })}
+                  {failedMessages.map((f) => (
+                    <div key={f.tempId} className="mx-2 mt-1 flex items-center gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-2 py-1.5 text-xs">
+                      <span className="flex-1 truncate text-destructive">Failed: {f.content}</span>
+                      <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" onClick={() => retryFailed(f)}>
+                        <RotateCw className="size-3" /> Retry
+                      </Button>
+                      <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" onClick={() => setFailedMessages((p) => p.filter((x) => x.tempId !== f.tempId))}>
+                        <X className="size-3" />
+                      </Button>
+                    </div>
+                  ))}
+                  {typingUsers.length > 0 && (
+                    <div className="mt-2 px-2 text-xs italic text-muted-foreground">
+                      {typingUsers.length === 1
+                        ? `${typingUsers[0].slice(0, 8)} is typing…`
+                        : `${typingUsers.length} people are typing…`}
+                    </div>
+                  )}
                   <div ref={endRef} />
                 </div>
               </ScrollArea>
+
 
               <div className="border-t border-border bg-card p-3">
                 <div className="mx-auto flex max-w-4xl items-end gap-2">
@@ -447,7 +627,7 @@ function TeamChatPage() {
                       placeholder={`Message #${activeChannel.name}  •  Use @ to mention, /ai for assistant`}
                       rows={1}
                       value={draft}
-                      onChange={(e) => setDraft(e.target.value)}
+                      onChange={(e) => { setDraft(e.target.value); broadcastTyping(); }}
                       onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
                       className="max-h-40 min-h-10 resize-none pr-20"
                     />
