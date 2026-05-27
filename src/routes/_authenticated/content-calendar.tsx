@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -47,6 +47,8 @@ type PostRow = {
   scheduled_at: string;
   status: "draft" | "pending" | "approved" | "scheduled" | "published" | "failed" | "rejected";
   notes: string | null;
+  ai_generated?: boolean;
+  source_module?: string | null;
 };
 
 type MediaRow = {
@@ -96,8 +98,20 @@ function ContentCalendarPage() {
   const [filterClient, setFilterClient] = useState<string>("all");
   const [filterPlatform, setFilterPlatform] = useState<string>("all");
   const [filterCampaign, setFilterCampaign] = useState<string>("all");
+  const [filterStatus, setFilterStatus] = useState<string>("all");
   const [tab, setTab] = useState("calendar");
   const [editing, setEditing] = useState<Partial<PostRow> | null>(null);
+
+  // Realtime sync — auto refresh when AI modules write new content
+  useEffect(() => {
+    const ch = supabase
+      .channel("calendar-sync")
+      .on("postgres_changes", { event: "*", schema: "public", table: "social_posts" }, () => {
+        qc.invalidateQueries({ queryKey: ["social-posts"] });
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [qc]);
 
   const clientsQ = useQuery({
     queryKey: ["clients-min"],
@@ -130,7 +144,7 @@ function ContentCalendarPage() {
   }, [view, cursor]);
 
   const postsQ = useQuery({
-    queryKey: ["social-posts", range.from.toISOString(), range.to.toISOString(), filterClient, filterPlatform, filterCampaign],
+    queryKey: ["social-posts", range.from.toISOString(), range.to.toISOString(), filterClient, filterPlatform, filterCampaign, filterStatus],
     queryFn: async () => {
       let q = supabase
         .from("social_posts").select("*")
@@ -140,6 +154,7 @@ function ContentCalendarPage() {
       if (filterClient !== "all") q = q.eq("client_id", filterClient);
       if (filterPlatform !== "all") q = q.eq("platform", filterPlatform);
       if (filterCampaign !== "all") q = q.eq("campaign_id", filterCampaign);
+      if (filterStatus !== "all") q = q.eq("status", filterStatus);
       const { data, error } = await q;
       if (error) throw error;
       return (data ?? []) as PostRow[];
@@ -301,6 +316,15 @@ function ContentCalendarPage() {
                     {(campaignsQ.data ?? []).map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
+                <Select value={filterStatus} onValueChange={setFilterStatus}>
+                  <SelectTrigger className="w-40"><SelectValue placeholder="Status" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All statuses</SelectItem>
+                    {Object.entries(STATUS_META).map(([k, m]) => (
+                      <SelectItem key={k} value={k}>{m.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </CardHeader>
             <CardContent>
@@ -459,10 +483,11 @@ function MonthGrid({
                       draggable
                       onDragStart={(e) => e.dataTransfer.setData("text/post-id", p.id)}
                       onClick={() => onClickPost(p)}
-                      className={cn("cursor-grab truncate rounded px-1.5 py-0.5 text-[11px] active:cursor-grabbing", pm.color, pm.text)}
+                      className={cn("group/post cursor-grab truncate rounded px-1.5 py-0.5 text-[11px] active:cursor-grabbing flex items-center gap-1", pm.color, pm.text)}
                       title={p.caption}
                     >
-                      {timeOf(p.scheduled_at)} · {p.caption || pm.label}
+                      {p.ai_generated && <Sparkles className="size-2.5 shrink-0 opacity-90" />}
+                      <span className="truncate">{timeOf(p.scheduled_at)} · {p.caption || pm.label}</span>
                     </div>
                   );
                 })}

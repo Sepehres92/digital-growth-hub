@@ -1953,9 +1953,12 @@ export type Database = {
       }
       social_posts: {
         Row: {
+          ai_generated: boolean
           campaign_id: string | null
+          campaign_name: string | null
           caption: string
           client_id: string | null
+          client_name: string | null
           created_at: string
           cta: string | null
           hashtags: string | null
@@ -1965,14 +1968,20 @@ export type Database = {
           notes: string | null
           platform: string
           scheduled_at: string
+          source_module: string | null
+          source_post_id: string | null
+          source_strategy_id: string | null
           status: string
           updated_at: string
           user_id: string
         }
         Insert: {
+          ai_generated?: boolean
           campaign_id?: string | null
+          campaign_name?: string | null
           caption?: string
           client_id?: string | null
+          client_name?: string | null
           created_at?: string
           cta?: string | null
           hashtags?: string | null
@@ -1982,14 +1991,20 @@ export type Database = {
           notes?: string | null
           platform: string
           scheduled_at?: string
+          source_module?: string | null
+          source_post_id?: string | null
+          source_strategy_id?: string | null
           status?: string
           updated_at?: string
           user_id: string
         }
         Update: {
+          ai_generated?: boolean
           campaign_id?: string | null
+          campaign_name?: string | null
           caption?: string
           client_id?: string | null
+          client_name?: string | null
           created_at?: string
           cta?: string | null
           hashtags?: string | null
@@ -1999,6 +2014,9 @@ export type Database = {
           notes?: string | null
           platform?: string
           scheduled_at?: string
+          source_module?: string | null
+          source_post_id?: string | null
+          source_strategy_id?: string | null
           status?: string
           updated_at?: string
           user_id?: string
