@@ -1193,7 +1193,7 @@ function Footer() {
 
 // ---------------- Page ----------------
 
-function Landing() {
+export function Landing() {
   return (
     <div className="min-h-screen scroll-smooth bg-background text-foreground">
       <AnnouncementBar />

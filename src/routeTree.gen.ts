@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as Char91indexChar93RouteImport } from './routes/[index]'
 import { Route as UploadOwnershipPolicyRouteImport } from './routes/upload-ownership-policy'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SocialRouteImport } from './routes/social'
@@ -45,6 +46,11 @@ import { Route as AuthenticatedAiVideoStudioRouteImport } from './routes/_authen
 import { Route as AuthenticatedAiStudioRouteImport } from './routes/_authenticated/ai-studio'
 import { Route as AuthenticatedAccountPrivacyRouteImport } from './routes/_authenticated/account-privacy'
 
+const Char91indexChar93Route = Char91indexChar93RouteImport.update({
+  id: '/index',
+  path: '/index',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UploadOwnershipPolicyRoute = UploadOwnershipPolicyRouteImport.update({
   id: '/upload-ownership-policy',
   path: '/upload-ownership-policy',
@@ -236,6 +242,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
   '/demo': typeof DemoRoute
+  '/index': typeof Char91indexChar93Route
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search-console': typeof SearchConsoleRoute
@@ -272,6 +279,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
   '/demo': typeof DemoRoute
+  '/index': typeof Char91indexChar93Route
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search-console': typeof SearchConsoleRoute
@@ -310,6 +318,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
   '/demo': typeof DemoRoute
+  '/index': typeof Char91indexChar93Route
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search-console': typeof SearchConsoleRoute
@@ -348,6 +357,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/cookies'
     | '/demo'
+    | '/index'
     | '/privacy'
     | '/reset-password'
     | '/search-console'
@@ -384,6 +394,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/cookies'
     | '/demo'
+    | '/index'
     | '/privacy'
     | '/reset-password'
     | '/search-console'
@@ -421,6 +432,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/cookies'
     | '/demo'
+    | '/index'
     | '/privacy'
     | '/reset-password'
     | '/search-console'
@@ -459,6 +471,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   CookiesRoute: typeof CookiesRoute
   DemoRoute: typeof DemoRoute
+  Char91indexChar93Route: typeof Char91indexChar93Route
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchConsoleRoute: typeof SearchConsoleRoute
@@ -472,6 +485,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/index': {
+      id: '/index'
+      path: '/index'
+      fullPath: '/index'
+      preLoaderRoute: typeof Char91indexChar93RouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/upload-ownership-policy': {
       id: '/upload-ownership-policy'
       path: '/upload-ownership-policy'
@@ -774,6 +794,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   CookiesRoute: CookiesRoute,
   DemoRoute: DemoRoute,
+  Char91indexChar93Route: Char91indexChar93Route,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SearchConsoleRoute: SearchConsoleRoute,
