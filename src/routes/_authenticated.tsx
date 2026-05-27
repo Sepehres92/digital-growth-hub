@@ -21,16 +21,30 @@ function AuthedLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { isAdmin } = useUserRole();
 
+  const getProfile = useServerFn(getMarketingProfile);
+
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
       if (!session) navigate({ to: "/auth" });
     });
     supabase.auth.getSession().then(({ data }) => {
-      if (!data.session) navigate({ to: "/auth" });
-      else setChecking(false);
+      if (!data.session) {
+        navigate({ to: "/auth" });
+        return;
+      }
+      setChecking(false);
+      // Auto-redirect to onboarding if profile not completed
+      if (pathname !== "/onboarding" && pathname !== "/demo-templates") {
+        getProfile({})
+          .then((r) => {
+            const completed = (r.profile as { onboarding_completed?: boolean } | null)?.onboarding_completed;
+            if (!completed) navigate({ to: "/onboarding" });
+          })
+          .catch(() => {});
+      }
     });
     return () => sub.subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, getProfile, pathname]);
 
   if (checking) {
     return (
