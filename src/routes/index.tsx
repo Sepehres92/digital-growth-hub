@@ -88,16 +88,17 @@ function AnnouncementBar() {
         <div className="flex items-center gap-2">
           <Link
             to="/auth"
+            search={{ mode: "signup" }}
             className="rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
           >
             Start Free
           </Link>
-          <a
-            href="#demo"
+          <Link
+            to="/book-demo"
             className="rounded-md border border-white/20 px-3 py-1.5 text-xs font-semibold hover:bg-white/10"
           >
             Book Demo
-          </a>
+          </Link>
         </div>
       </div>
     </div>
