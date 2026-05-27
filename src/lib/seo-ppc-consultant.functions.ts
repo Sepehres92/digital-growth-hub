@@ -207,7 +207,7 @@ Offers: ${c.offers || "n/a"}
 Primary goal: ${c.primary_goal}`;
 
     const raw = await callAI(sys, userPrompt, true);
-    const recommendations = parseJson<Record<string, unknown>>(raw);
+    const recommendations = parseJson<Json>(raw);
 
     await supabase
       .from("seo_ppc_consultations")
