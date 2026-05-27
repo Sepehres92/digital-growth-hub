@@ -189,7 +189,10 @@ function TeamChatPage() {
         toast.success("Saved to client notes");
       } else if (convertAction === "ai_campaign") {
         let ideas = "";
-        try { ideas = await aiAssist({ data: { action: "campaign_ideas", context: content } }); } catch {}
+        try {
+          const r = await aiAssist({ data: { channelId: convertMsg.channel_id, action: "campaign_ideas", extra: content } });
+          ideas = (r as any)?.reply ?? "";
+        } catch {}
         const { error } = await (supabase.from("campaigns") as any).insert({
           user_id: me, name: title, type: "seo", status: "planned",
           goal: content, results_notes: ideas || "",
