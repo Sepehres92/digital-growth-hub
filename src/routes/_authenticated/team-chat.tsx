@@ -627,7 +627,7 @@ function TeamChatPage() {
                       placeholder={`Message #${activeChannel.name}  •  Use @ to mention, /ai for assistant`}
                       rows={1}
                       value={draft}
-                      onChange={(e) => setDraft(e.target.value)}
+                      onChange={(e) => { setDraft(e.target.value); broadcastTyping(); }}
                       onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
                       className="max-h-40 min-h-10 resize-none pr-20"
                     />
