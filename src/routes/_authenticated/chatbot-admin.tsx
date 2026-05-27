@@ -15,12 +15,22 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { toast } from "sonner";
 import { Plus, Trash2, Edit2, Eye } from "lucide-react";
 
+import { RoleGuard } from "@/components/RoleGuard";
+
 export const Route = createFileRoute("/_authenticated/chatbot-admin")({
   ssr: false,
-  component: ChatbotAdmin,
+  component: ChatbotAdminGuarded,
 });
 
 const SCOPE_KEYS = ["campaigns", "calendar", "posts", "leads", "meetings", "files", "reports"] as const;
+
+function ChatbotAdminGuarded() {
+  return (
+    <RoleGuard role="admin">
+      <ChatbotAdmin />
+    </RoleGuard>
+  );
+}
 
 function ChatbotAdmin() {
   const qc = useQueryClient();

@@ -5,6 +5,7 @@ import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, Megaphone, KanbanSq
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ClientChatbot } from "@/components/ClientChatbot";
+import { useUserRole } from "@/hooks/use-user-role";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthedLayout,
@@ -15,6 +16,7 @@ function AuthedLayout() {
   const [checking, setChecking] = useState(true);
   const [open, setOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { isAdmin } = useUserRole();
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
@@ -55,9 +57,9 @@ function AuthedLayout() {
     { to: "/search-console", label: "Search Console", icon: Search, group: "Marketing Tools" },
     { to: "/social", label: "Social", icon: Share2, group: "Marketing Tools" },
     { to: "/help-support", label: "Help & Support", icon: LifeBuoy, group: "Workspace" },
-    { to: "/chatbot-admin", label: "Chatbot Admin", icon: Bot, group: "Workspace" },
+    ...(isAdmin ? [{ to: "/chatbot-admin", label: "Chatbot Admin", icon: Bot, group: "Workspace" }] : []),
     { to: "/settings", label: "Settings", icon: SettingsIcon, group: "Workspace" },
-  ] as const;
+  ] as { to: string; label: string; icon: typeof LayoutDashboard; group: string }[];
 
   const groups = Array.from(new Set(nav.map((n) => n.group)));
 
@@ -80,7 +82,7 @@ function AuthedLayout() {
                 return (
                   <Link
                     key={item.to}
-                    to={item.to}
+                    to={item.to as "/dashboard"}
                     onClick={() => setOpen(false)}
                     className={cn(
                       "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
