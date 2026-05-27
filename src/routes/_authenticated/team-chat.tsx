@@ -134,6 +134,85 @@ function TeamChatPage() {
     refetchInterval: 30000,
   });
 
+  const { data: clients = [] } = useQuery({
+    queryKey: ["chat-clients", me],
+    queryFn: async () => {
+      const { data } = await (supabase.from("clients") as any)
+        .select("id,business_name,notes").eq("user_id", me!).order("business_name");
+      return (data ?? []) as Array<{ id: string; business_name: string; notes: string | null }>;
+    },
+    enabled: !!me,
+  });
+
+  const runConvert = async () => {
+    if (!convertMsg || !me) return;
+    const content = (convertMsg.content || "").trim();
+    const title = content.slice(0, 80) || "From team chat";
+    setConvertBusy(true);
+    try {
+      if (convertAction === "task") {
+        const { error } = await (supabase.from("tasks") as any).insert({
+          user_id: me, title, notes: content, status: "todo", priority: "medium",
+          client_id: convertClientId || null,
+        });
+        if (error) throw error;
+        toast.success("Task created");
+      } else if (convertAction === "meeting") {
+        const { error } = await (supabase.from("meetings") as any).insert({
+          user_id: me, title, description: content,
+          meeting_date: convertDate, status: "scheduled",
+          client_id: convertClientId || null,
+        });
+        if (error) throw error;
+        toast.success("Meeting scheduled");
+      } else if (convertAction === "calendar") {
+        const { data: post, error: pe } = await (supabase.from("content_posts") as any).insert({
+          user_id: me, platform: convertPlatform, caption: content,
+          status: "scheduled", scheduled_for: new Date(convertDate).toISOString(),
+          client_id: convertClientId || null,
+        }).select("id").single();
+        if (pe) throw pe;
+        const { error: ce } = await (supabase.from("content_calendar") as any).insert({
+          user_id: me, post_id: post.id, platform: convertPlatform,
+          calendar_date: convertDate, status: "scheduled",
+        });
+        if (ce) throw ce;
+        toast.success("Added to content calendar");
+      } else if (convertAction === "client_note") {
+        if (!convertClientId) { toast.error("Pick a client"); setConvertBusy(false); return; }
+        const c = clients.find((x) => x.id === convertClientId);
+        const prev = c?.notes ? c.notes + "\n\n" : "";
+        const stamp = new Date().toLocaleString();
+        const { error } = await (supabase.from("clients") as any)
+          .update({ notes: `${prev}[${stamp}] ${content}` }).eq("id", convertClientId);
+        if (error) throw error;
+        toast.success("Saved to client notes");
+      } else if (convertAction === "ai_campaign") {
+        let ideas = "";
+        try { ideas = await aiAssist({ data: { action: "campaign_ideas", context: content } }); } catch {}
+        const { error } = await (supabase.from("campaigns") as any).insert({
+          user_id: me, name: title, type: "seo", status: "planned",
+          goal: content, results_notes: ideas || "",
+          client_id: convertClientId || null,
+        });
+        if (error) throw error;
+        toast.success("AI campaign created");
+      }
+      try {
+        await (supabase.from("chat_audit_log") as any).insert({
+          user_id: me, channel_id: convertMsg.channel_id, message_id: convertMsg.id,
+          action: `convert_${convertAction}`, details: { client_id: convertClientId || null },
+        });
+      } catch {}
+      setConvertMsg(null);
+    } catch (e: any) {
+      toast.error(e?.message || "Failed");
+    } finally {
+      setConvertBusy(false);
+    }
+  };
+
+
   const myChannelIds = new Set(members.map((m) => m.channel_id));
   const visible = channels.filter((c) =>
     (c.channel_type === "public" || myChannelIds.has(c.id)) &&
