@@ -1071,6 +1071,36 @@ export type Database = {
         }
         Relationships: []
       }
+      demo_workspaces: {
+        Row: {
+          converted_to_real: boolean
+          created_at: string
+          demo_enabled: boolean
+          demo_profile_type: string | null
+          demo_started_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          converted_to_real?: boolean
+          created_at?: string
+          demo_enabled?: boolean
+          demo_profile_type?: string | null
+          demo_started_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          converted_to_real?: boolean
+          created_at?: string
+          demo_enabled?: boolean
+          demo_profile_type?: string | null
+          demo_started_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       generated_images: {
         Row: {
           campaign_folder_id: string | null
@@ -1370,6 +1400,57 @@ export type Database = {
           updated_at?: string
           user_id?: string
           value?: number | null
+        }
+        Relationships: []
+      }
+      marketing_intelligence_profiles: {
+        Row: {
+          ai_memory: Json
+          brand_voice: Json
+          business_summary: string | null
+          client_id: string | null
+          content_strategy_preferences: Json
+          created_at: string
+          human_support_preferences: Json
+          id: string
+          platform_preferences: Json
+          ppc_preferences: Json
+          seo_preferences: Json
+          target_audience: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_memory?: Json
+          brand_voice?: Json
+          business_summary?: string | null
+          client_id?: string | null
+          content_strategy_preferences?: Json
+          created_at?: string
+          human_support_preferences?: Json
+          id?: string
+          platform_preferences?: Json
+          ppc_preferences?: Json
+          seo_preferences?: Json
+          target_audience?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_memory?: Json
+          brand_voice?: Json
+          business_summary?: string | null
+          client_id?: string | null
+          content_strategy_preferences?: Json
+          created_at?: string
+          human_support_preferences?: Json
+          id?: string
+          platform_preferences?: Json
+          ppc_preferences?: Json
+          seo_preferences?: Json
+          target_audience?: Json
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -1828,6 +1909,123 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      onboarding_answers: {
+        Row: {
+          answer_value: Json | null
+          client_id: string | null
+          created_at: string
+          id: string
+          question_key: string
+          source: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          answer_value?: Json | null
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          question_key: string
+          source?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          answer_value?: Json | null
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          question_key?: string
+          source?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      onboarding_profiles: {
+        Row: {
+          approval_required: boolean
+          brand_colors: Json
+          brand_tone: string | null
+          business_goal: string | null
+          business_name: string | null
+          campaign_creation_preference: string | null
+          client_id: string | null
+          competitors: Json
+          content_types: Json
+          created_at: string
+          id: string
+          industry: string | null
+          location: string | null
+          marketing_budget_range: string | null
+          offers: Json
+          onboarding_status: Database["public"]["Enums"]["onboarding_status_enum"]
+          posting_frequency: string | null
+          selected_platforms: Json
+          services: Json
+          target_audience: Json
+          unique_selling_points: Json
+          updated_at: string
+          user_id: string
+          website_url: string | null
+          workspace_type: Database["public"]["Enums"]["workspace_type_enum"]
+        }
+        Insert: {
+          approval_required?: boolean
+          brand_colors?: Json
+          brand_tone?: string | null
+          business_goal?: string | null
+          business_name?: string | null
+          campaign_creation_preference?: string | null
+          client_id?: string | null
+          competitors?: Json
+          content_types?: Json
+          created_at?: string
+          id?: string
+          industry?: string | null
+          location?: string | null
+          marketing_budget_range?: string | null
+          offers?: Json
+          onboarding_status?: Database["public"]["Enums"]["onboarding_status_enum"]
+          posting_frequency?: string | null
+          selected_platforms?: Json
+          services?: Json
+          target_audience?: Json
+          unique_selling_points?: Json
+          updated_at?: string
+          user_id: string
+          website_url?: string | null
+          workspace_type?: Database["public"]["Enums"]["workspace_type_enum"]
+        }
+        Update: {
+          approval_required?: boolean
+          brand_colors?: Json
+          brand_tone?: string | null
+          business_goal?: string | null
+          business_name?: string | null
+          campaign_creation_preference?: string | null
+          client_id?: string | null
+          competitors?: Json
+          content_types?: Json
+          created_at?: string
+          id?: string
+          industry?: string | null
+          location?: string | null
+          marketing_budget_range?: string | null
+          offers?: Json
+          onboarding_status?: Database["public"]["Enums"]["onboarding_status_enum"]
+          posting_frequency?: string | null
+          selected_platforms?: Json
+          services?: Json
+          target_audience?: Json
+          unique_selling_points?: Json
+          updated_at?: string
+          user_id?: string
+          website_url?: string | null
+          workspace_type?: Database["public"]["Enums"]["workspace_type_enum"]
+        }
+        Relationships: []
       }
       ppc_keywords: {
         Row: {
@@ -3184,6 +3382,11 @@ export type Database = {
         | "won"
         | "lost"
         | "discovery_booked"
+      onboarding_status_enum:
+        | "not_started"
+        | "in_progress"
+        | "completed"
+        | "skipped"
       strategy_approval_status:
         | "pending"
         | "approved"
@@ -3199,6 +3402,7 @@ export type Database = {
         | "archived"
       task_priority: "low" | "medium" | "high" | "urgent"
       task_status: "todo" | "in_progress" | "waiting" | "done"
+      workspace_type_enum: "real" | "demo"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -3375,6 +3579,12 @@ export const Constants = {
         "lost",
         "discovery_booked",
       ],
+      onboarding_status_enum: [
+        "not_started",
+        "in_progress",
+        "completed",
+        "skipped",
+      ],
       strategy_approval_status: [
         "pending",
         "approved",
@@ -3392,6 +3602,7 @@ export const Constants = {
       ],
       task_priority: ["low", "medium", "high", "urgent"],
       task_status: ["todo", "in_progress", "waiting", "done"],
+      workspace_type_enum: ["real", "demo"],
     },
   },
 } as const
