@@ -577,9 +577,10 @@ export const completeHumanStrategyRequest = createServerFn({ method: "POST" })
 
     // Only owner or assigned strategist or admin can complete (RLS will enforce too)
     const wasFree = req.price === null;
-    const updates: Record<string, unknown> = { request_status: "completed" };
-    if (wasFree && req.user_id === userId) updates.free_consultation_used = true;
-    else if (wasFree) updates.free_consultation_used = true;
+    const updates: { request_status: "completed"; free_consultation_used?: boolean } = {
+      request_status: "completed",
+    };
+    if (wasFree) updates.free_consultation_used = true;
     await supabase.from("human_strategy_requests").update(updates).eq("id", data.requestId);
 
     if (req.meeting_id) {
