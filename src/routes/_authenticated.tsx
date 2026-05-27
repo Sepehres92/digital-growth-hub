@@ -5,6 +5,7 @@ import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, Megaphone, KanbanSq
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ClientChatbot } from "@/components/ClientChatbot";
+import { useUserRole } from "@/hooks/use-user-role";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthedLayout,
