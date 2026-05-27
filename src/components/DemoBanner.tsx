@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Link } from "@tanstack/react-router";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getWorkspaceMode, convertDemoToReal } from "@/lib/onboarding.functions";
+import { getWorkspaceMode, convertDemoToReal, resetDemoWorkspace } from "@/lib/onboarding.functions";
 import { toast } from "sonner";
+
 
 export function DemoBanner() {
   const getMode = useServerFn(getWorkspaceMode);
