@@ -268,15 +268,23 @@ export const executeSeoPpcStrategy = createServerFn({ method: "POST" })
       (plan["60_day"] ?? []).forEach((t) => tasks.push({ title: `[60-day] ${t}`, priority: "medium" }));
       (plan["90_day"] ?? []).forEach((t) => tasks.push({ title: `[90-day] ${t}`, priority: "medium" }));
       ((recs.on_page as string[]) ?? []).forEach((t) => tasks.push({ title: `On-page: ${t}`, priority: "medium" }));
-      ((recs.technical_seo as string[]) ?? []).forEach((t) => tasks.push({ title: `Technical SEO: ${t}`, priority: "high" }));
+      ((recs.technical_seo as string[]) ?? []).forEach((t) =>
+        tasks.push({ title: `Technical SEO checklist: ${t}`, priority: "high" }),
+      );
       ((recs.gbp_recommendations as string[]) ?? []).forEach((t) => tasks.push({ title: `GBP: ${t}`, priority: "medium" }));
       ((recs.backlink_strategy as string[]) ?? []).forEach((t) => tasks.push({ title: `Backlinks: ${t}`, priority: "low" }));
+      // Monthly SEO report placeholder task
+      tasks.push({
+        title: `Monthly SEO report — ${c.business_name}`,
+        notes: "Placeholder: compile rankings, traffic, conversions, and next-month actions.",
+        priority: "medium",
+      });
     } else {
       ((recs.landing_page_recommendations as string[]) ?? []).forEach((t) =>
         tasks.push({ title: `Landing page: ${t}`, priority: "high" }),
       );
       ((recs.conversion_tracking_checklist as string[]) ?? []).forEach((t) =>
-        tasks.push({ title: `Tracking: ${t}`, priority: "high" }),
+        tasks.push({ title: `Conversion tracking setup: ${t}`, priority: "high" }),
       );
       ((recs.ab_testing_plan as string[]) ?? []).forEach((t) =>
         tasks.push({ title: `A/B test: ${t}`, priority: "medium" }),
@@ -284,16 +292,30 @@ export const executeSeoPpcStrategy = createServerFn({ method: "POST" })
       const groups = (recs.keyword_groups as { name: string; keywords: string[] }[]) ?? [];
       groups.forEach((g) =>
         tasks.push({
-          title: `Build ad group: ${g.name}`,
+          title: `Keyword group: ${g.name}`,
           notes: `Keywords: ${(g.keywords ?? []).join(", ")}`,
           priority: "high",
         }),
       );
+      const negatives = (recs.negative_keywords as string[]) ?? [];
+      if (negatives.length > 0) {
+        tasks.push({
+          title: `Negative keyword list — ${c.business_name}`,
+          notes: negatives.join(", "),
+          priority: "medium",
+        });
+      }
+      // Reporting dashboard placeholder
+      tasks.push({
+        title: `PPC reporting dashboard — ${c.business_name}`,
+        notes: "Placeholder: build dashboard for spend, CPL, CTR, conversions by ad group.",
+        priority: "medium",
+      });
     }
 
     if (tasks.length > 0) {
       await supabase.from("tasks").insert(
-        tasks.slice(0, 80).map((t) => ({
+        tasks.slice(0, 100).map((t) => ({
           user_id: userId,
           client_id: c.client_id,
           campaign_id: camp.id,
@@ -305,8 +327,8 @@ export const executeSeoPpcStrategy = createServerFn({ method: "POST" })
       );
     }
 
-    // For SEO: drop content topics into content_calendar via content_posts (drafts)
     if (isSeo) {
+      // Blog topics → content_posts + content_calendar
       const topics = ((recs.content_topics as string[]) ?? []).slice(0, 12);
       if (topics.length > 0) {
         const postRows = topics.map((title, i) => {
@@ -340,8 +362,42 @@ export const executeSeoPpcStrategy = createServerFn({ method: "POST" })
           );
         }
       }
+
+      // GBP post ideas → content_posts (platform=google_business)
+      const gbpIdeas = ((recs.gbp_recommendations as string[]) ?? []).slice(0, 8);
+      if (gbpIdeas.length > 0) {
+        await supabase.from("content_posts").insert(
+          gbpIdeas.map((idea, i) => {
+            const d = new Date();
+            d.setDate(d.getDate() + i * 4);
+            return {
+              user_id: userId,
+              client_id: c.client_id,
+              campaign_id: camp.id,
+              platform: "google_business",
+              title: `GBP post: ${idea.slice(0, 120)}`,
+              caption: idea,
+              scheduled_for: d.toISOString(),
+              status: data.requireApproval ? "pending_approval" : "draft",
+              ai_generated: true,
+            };
+          }),
+        );
+      }
+
+      // Meta title/description drafts → ai_copies (AI Writer)
+      const metaDrafts = topics.slice(0, 10).map((t) => ({
+        user_id: userId,
+        content_type: "seo_meta",
+        variation: "meta",
+        prompt_inputs: { business: c.business_name, campaign_id: camp.id, topic: t },
+        output: `Title: ${t} | ${c.business_name}\nDescription: Discover ${t.toLowerCase()} from ${c.business_name}. Learn more and get started today.`,
+      }));
+      if (metaDrafts.length > 0) {
+        await supabase.from("ai_copies").insert(metaDrafts);
+      }
     } else {
-      // For PPC: save ad copy ideas into ai_copies for the AI Writer
+      // PPC ad copy drafts → ai_copies
       const ideas = ((recs.ad_copy_ideas as { headline: string; description: string }[]) ?? []).slice(0, 20);
       if (ideas.length > 0) {
         await supabase.from("ai_copies").insert(
@@ -351,6 +407,19 @@ export const executeSeoPpcStrategy = createServerFn({ method: "POST" })
             variation: "search",
             prompt_inputs: { business: c.business_name, campaign_id: camp.id },
             output: `${a.headline}\n${a.description}`,
+          })),
+        );
+      }
+      // Landing page copy drafts → ai_copies
+      const lpRecs = ((recs.landing_page_recommendations as string[]) ?? []).slice(0, 6);
+      if (lpRecs.length > 0) {
+        await supabase.from("ai_copies").insert(
+          lpRecs.map((rec) => ({
+            user_id: userId,
+            content_type: "landing_page",
+            variation: "ppc",
+            prompt_inputs: { business: c.business_name, campaign_id: camp.id },
+            output: `Hero: ${c.business_name}\nRecommendation: ${rec}\nCTA: Get started`,
           })),
         );
       }
@@ -399,12 +468,29 @@ export const requestSeoPpcSpecialist = createServerFn({ method: "POST" })
       .single();
     if (!c) throw new Error("Consultation not found");
 
+    // Load admin settings (best-effort)
+    const { data: settings } = await supabase
+      .from("seo_ppc_admin_settings")
+      .select("*")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    const isSeo = c.module === "seo";
+    if (settings) {
+      if (isSeo && settings.seo_enabled === false) {
+        throw new Error("SEO consultant is disabled. Contact your administrator.");
+      }
+      if (!isSeo && settings.ppc_enabled === false) {
+        throw new Error("PPC consultant is disabled. Contact your administrator.");
+      }
+    }
+
     if (data.type === "free") {
       const { data: existing } = await supabase
-        .from("human_strategy_requests")
+        .from("human_seo_ppc_requests")
         .select("id, free_consultation_used, request_status")
         .eq("user_id", userId)
-        .is("price", null);
+        .eq("payment_required", false);
       const conflict = (existing ?? []).some(
         (r) =>
           r.free_consultation_used ||
@@ -417,6 +503,13 @@ export const requestSeoPpcSpecialist = createServerFn({ method: "POST" })
       }
     }
 
+    const freeMinutes = settings?.free_consultation_minutes ?? 60;
+    const paidPrice = settings?.paid_consultation_price ?? 0;
+    const specialists = (isSeo ? settings?.seo_specialist_ids : settings?.ppc_specialist_ids) ?? [];
+    const assignedTo = Array.isArray(specialists) && specialists.length > 0 ? specialists[0] : null;
+    const bookingLink = settings?.booking_link ?? "";
+    const paymentLink = settings?.payment_link ?? "";
+
     // Create meeting placeholder
     const { data: meeting } = await supabase
       .from("meetings")
@@ -424,34 +517,43 @@ export const requestSeoPpcSpecialist = createServerFn({ method: "POST" })
         user_id: userId,
         client_id: c.client_id,
         title: `${c.module.toUpperCase()} Specialist Consultation — ${c.business_name}`,
-        description: data.notes,
+        description: [
+          data.notes,
+          bookingLink ? `Book: ${bookingLink}` : "",
+          data.type === "paid" && paymentLink ? `Payment: ${paymentLink}` : "",
+        ]
+          .filter(Boolean)
+          .join("\n"),
         meeting_date: new Date().toISOString().slice(0, 10),
         status: "scheduled",
-        goal: `One-time ${data.type} ${c.module.toUpperCase()} specialist consultation`,
+        goal: `One-time ${data.type} ${c.module.toUpperCase()} specialist consultation (${freeMinutes} min)`,
       })
       .select("id")
       .single();
 
     // Insert human request
     const { data: req, error: reqErr } = await supabase
-      .from("human_strategy_requests")
+      .from("human_seo_ppc_requests")
       .insert({
         user_id: userId,
         client_id: c.client_id,
-        consultation_id: null,
+        consultation_id: c.id,
         request_status: "pending",
         payment_required: data.type === "paid",
-        price: data.type === "paid" ? 0 : null,
+        price: data.type === "paid" ? paidPrice : null,
         meeting_id: meeting?.id ?? null,
+        assigned_to: assignedTo,
+        free_consultation_used: false,
       })
       .select("id")
       .single();
     if (reqErr) throw new Error(reqErr.message);
 
-    // Admin task
+    // Admin / team task
     await supabase.from("tasks").insert({
       user_id: userId,
       client_id: c.client_id,
+      assigned_to: assignedTo,
       title: `Specialist requested (${data.type}) — ${c.business_name} [${c.module.toUpperCase()}]`,
       notes: data.notes || `From SEO/PPC consultant ${c.id}`,
       status: "todo",
@@ -470,7 +572,7 @@ export const requestSeoPpcSpecialist = createServerFn({ method: "POST" })
         await supabase.from("chat_messages").insert({
           channel_id: chan.id,
           user_id: userId,
-          content: `🚨 ${data.type === "free" ? "Free" : "Paid"} ${c.module.toUpperCase()} specialist consultation requested for ${c.business_name}.`,
+          content: `🚨 ${data.type === "free" ? "Free" : "Paid"} ${c.module.toUpperCase()} specialist consultation requested for ${c.business_name}.${bookingLink ? ` Booking: ${bookingLink}` : ""}`,
           ai_generated: true,
         });
       }
@@ -478,10 +580,64 @@ export const requestSeoPpcSpecialist = createServerFn({ method: "POST" })
       /* ignore */
     }
 
-    await supabase
-      .from("seo_ppc_consultations")
-      .update({ human_request_id: req.id })
-      .eq("id", c.id);
+    return { requestId: req.id, meetingId: meeting?.id ?? null, assignedTo, bookingLink, paymentLink };
+  });
 
-    return { requestId: req.id, meetingId: meeting?.id ?? null };
+// ============ COMPLETE HUMAN REQUEST ============
+const CompleteInput = z.object({ requestId: z.string().uuid() });
+
+export const completeSeoPpcSpecialistRequest = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => CompleteInput.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const { data: req, error } = await supabase
+      .from("human_seo_ppc_requests")
+      .update({ request_status: "completed", free_consultation_used: true })
+      .eq("id", data.requestId)
+      .select("id, meeting_id")
+      .single();
+    if (error) throw new Error(error.message);
+    if (req.meeting_id) {
+      await supabase.from("meetings").update({ status: "completed" }).eq("id", req.meeting_id);
+    }
+    return { ok: true };
+  });
+
+// ============ ADMIN SETTINGS ============
+const SettingsSchema = z.object({
+  seo_enabled: z.boolean().default(true),
+  ppc_enabled: z.boolean().default(true),
+  free_consultation_minutes: z.number().int().min(0).max(600).default(60),
+  paid_consultation_price: z.number().min(0).max(100000).default(0),
+  seo_specialist_ids: z.array(z.string().uuid()).max(50).default([]),
+  ppc_specialist_ids: z.array(z.string().uuid()).max(50).default([]),
+  booking_link: z.string().max(500).default(""),
+  payment_link: z.string().max(500).default(""),
+});
+
+export const getSeoPpcAdminSettings = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { data } = await supabase
+      .from("seo_ppc_admin_settings")
+      .select("*")
+      .eq("user_id", userId)
+      .maybeSingle();
+    return { settings: data ?? null };
+  });
+
+export const saveSeoPpcAdminSettings = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => SettingsSchema.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: saved, error } = await supabase
+      .from("seo_ppc_admin_settings")
+      .upsert({ user_id: userId, ...data }, { onConflict: "user_id" })
+      .select("*")
+      .single();
+    if (error) throw new Error(error.message);
+    return { settings: saved };
   });
