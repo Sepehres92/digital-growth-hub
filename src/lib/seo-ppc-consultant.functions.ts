@@ -373,7 +373,7 @@ export const executeSeoPpcStrategy = createServerFn({ method: "POST" })
       .update({
         status: "executed",
         campaign_id: camp.id,
-        customizations: data.customizations ?? null,
+        customizations: (data.customizations ?? null) as Json | null,
       })
       .eq("id", c.id);
 
