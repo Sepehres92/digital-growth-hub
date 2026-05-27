@@ -483,10 +483,11 @@ function MonthGrid({
                       draggable
                       onDragStart={(e) => e.dataTransfer.setData("text/post-id", p.id)}
                       onClick={() => onClickPost(p)}
-                      className={cn("cursor-grab truncate rounded px-1.5 py-0.5 text-[11px] active:cursor-grabbing", pm.color, pm.text)}
+                      className={cn("group/post cursor-grab truncate rounded px-1.5 py-0.5 text-[11px] active:cursor-grabbing flex items-center gap-1", pm.color, pm.text)}
                       title={p.caption}
                     >
-                      {timeOf(p.scheduled_at)} · {p.caption || pm.label}
+                      {p.ai_generated && <Sparkles className="size-2.5 shrink-0 opacity-90" />}
+                      <span className="truncate">{timeOf(p.scheduled_at)} · {p.caption || pm.label}</span>
                     </div>
                   );
                 })}
