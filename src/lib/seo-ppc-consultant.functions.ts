@@ -30,6 +30,8 @@ async function callAI(system: string, user: string, asJson = true): Promise<stri
   return json?.choices?.[0]?.message?.content ?? "";
 }
 
+type Json = string | number | boolean | null | { [k: string]: Json } | Json[];
+
 function parseJson<T>(raw: string): T {
   try { return JSON.parse(raw) as T; } catch {
     const m = raw.match(/\{[\s\S]*\}/);
