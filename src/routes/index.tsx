@@ -1024,8 +1024,8 @@ function Testimonials() {
           <p className="mt-3 text-sm text-muted-foreground">Replace with real customer quotes before launch.</p>
         </div>
         <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-2">
-          {testimonials.map((t) => (
-            <GlassCard key={t.name} className="p-6">
+          {testimonials.map((t, i) => (
+            <GlassCard key={`${t.name}-${i}`} className="p-6">
               <p className="text-base leading-relaxed">"{t.quote}"</p>
               <div className="mt-5 flex items-center gap-3">
                 <div className="grid size-10 place-items-center rounded-full bg-gradient-to-br from-primary to-navy text-sm font-semibold text-white">
