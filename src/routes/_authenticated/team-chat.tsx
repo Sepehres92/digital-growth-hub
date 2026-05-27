@@ -436,14 +436,23 @@ function TeamChatPage() {
   const presenceFor = (uid: string) => presence.find((p) => p.user_id === uid);
   const activeChannel = channels.find((c) => c.id === activeId);
   const activeMember = members.find((m) => m.channel_id === activeId);
+
+  useEffect(() => { activeChannelNameRef.current = activeChannel?.name ?? ""; }, [activeChannel]);
+
   const unreadCount = (cid: string) => {
     const mem = members.find((m) => m.channel_id === cid);
     if (!mem) return 0;
-    // approximate
     return messages.filter((m) => m.channel_id === cid && new Date(m.created_at) > new Date(mem.last_read_at) && m.user_id !== me).length;
   };
 
+  // Read receipts: how many OTHER members have last_read_at >= message.created_at
+  const readByCount = (m: Message) => {
+    if (m.user_id !== me) return 0;
+    return channelMembers.filter((cm) => cm.user_id !== me && new Date(cm.last_read_at) >= new Date(m.created_at)).length;
+  };
+
   useEffect(() => { if (activeId && myChannelIds.has(activeId)) markRead.mutate(activeId); /* eslint-disable-next-line */ }, [activeId, messages.length]);
+
 
   const filteredMsgs = useMemo(() => {
     if (!search || !activeChannel) return messages;
