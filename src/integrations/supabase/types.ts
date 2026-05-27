@@ -1671,6 +1671,51 @@ export type Database = {
           },
         ]
       }
+      seo_ppc_admin_settings: {
+        Row: {
+          booking_link: string
+          created_at: string
+          free_consultation_minutes: number
+          id: string
+          paid_consultation_price: number
+          payment_link: string
+          ppc_enabled: boolean
+          ppc_specialist_ids: string[]
+          seo_enabled: boolean
+          seo_specialist_ids: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          booking_link?: string
+          created_at?: string
+          free_consultation_minutes?: number
+          id?: string
+          paid_consultation_price?: number
+          payment_link?: string
+          ppc_enabled?: boolean
+          ppc_specialist_ids?: string[]
+          seo_enabled?: boolean
+          seo_specialist_ids?: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          booking_link?: string
+          created_at?: string
+          free_consultation_minutes?: number
+          id?: string
+          paid_consultation_price?: number
+          payment_link?: string
+          ppc_enabled?: boolean
+          ppc_specialist_ids?: string[]
+          seo_enabled?: boolean
+          seo_specialist_ids?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       seo_ppc_approvals: {
         Row: {
           approval_status: string
