@@ -339,7 +339,7 @@ function TrustedBy() {
     <section className="border-y border-border/60 bg-surface/60 py-12">
       <div className="mx-auto max-w-7xl px-6">
         <p className="text-center text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          Trusted by 2,400+ agencies and businesses worldwide
+          Built for agencies, real estate, contractors, and local businesses
         </p>
         <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-6">
           {types.map((t) => (
@@ -586,9 +586,9 @@ function VideoStudio() {
 function CalendarShowcase() {
   const week = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const events = [
-    { d: 0, t: "9:00", l: "IG Post", c: "bg-pink-500/20 text-pink-600" },
+    { d: 0, t: "9:00", l: "Instagram", c: "bg-pink-500/20 text-pink-600" },
     { d: 1, t: "12:00", l: "TikTok", c: "bg-purple-500/20 text-purple-600" },
-    { d: 2, t: "10:30", l: "LinkedIn", c: "bg-blue-500/20 text-blue-600" },
+    { d: 2, t: "10:30", l: "Facebook", c: "bg-blue-500/20 text-blue-600" },
     { d: 3, t: "14:00", l: "X Post", c: "bg-cyan-500/20 text-cyan-600" },
     { d: 4, t: "11:00", l: "Reel", c: "bg-rose-500/20 text-rose-600" },
     { d: 5, t: "16:00", l: "YouTube", c: "bg-red-500/20 text-red-600" },
@@ -599,7 +599,9 @@ function CalendarShowcase() {
         <GlassCard className="order-2 overflow-hidden p-0 lg:order-1">
           <div className="border-b border-border/60 bg-card p-3">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-medium">November 2026</span>
+              <span className="font-medium">
+                {new Date().toLocaleString("en-US", { month: "long", year: "numeric" })}
+              </span>
               <div className="flex gap-1">
                 <span className="rounded bg-muted px-2 py-0.5">Week</span>
                 <span className="rounded bg-primary/10 px-2 py-0.5 text-primary">Month</span>
@@ -636,7 +638,7 @@ function CalendarShowcase() {
           <ul className="mt-6 space-y-3">
             {[
               "Drag-and-drop scheduling across platforms",
-              "Multi-platform publishing (IG, TikTok, LinkedIn, X, YouTube)",
+              "Multi-platform publishing (Instagram, Facebook, TikTok, X, YouTube)",
               "Client approval workflows with one-click sign-off",
               "Recurring content templates and bulk scheduling",
             ].map((x) => (
@@ -803,15 +805,15 @@ function ClientPortal() {
 
 function Security() {
   const items = [
-    { i: Lock, t: "Role-based access", d: "Granular permissions per team and client" },
-    { i: ShieldCheck, t: "Encrypted storage", d: "AES-256 at rest, TLS 1.3 in transit" },
-    { i: FileCheck2, t: "Secure file uploads", d: "Virus scanning + content moderation" },
-    { i: Eye, t: "Audit logs", d: "Every action, every change, every export" },
-    { i: UsersRound, t: "Privacy controls", d: "Per-client data isolation and scopes" },
-    { i: Sparkles, t: "AI safety systems", d: "Rights-checked, watermarked, reviewable" },
+    { i: Lock, t: "Role-based access", d: "Roles stored in a separate table and checked server-side" },
+    { i: ShieldCheck, t: "Encryption in transit & at rest", d: "HTTPS/TLS everywhere; encrypted storage by default" },
+    { i: FileCheck2, t: "Row-level security", d: "Per-user and per-client data isolation at the database" },
+    { i: Eye, t: "Audit logs", d: "Sensitive actions are recorded for review" },
+    { i: UsersRound, t: "Privacy controls", d: "Granular permissions per team and client" },
+    { i: Sparkles, t: "AI safety policy", d: "Clear rules for AI content — review before publish" },
   ];
   return (
-    <section className="relative overflow-hidden py-24">
+    <section id="security" className="relative overflow-hidden py-24">
       <div className="pointer-events-none absolute inset-0 -z-10 opacity-50" style={{
         background: "radial-gradient(circle at 80% 20%, color-mix(in oklab, var(--primary) 25%, transparent), transparent 50%)"
       }} />
@@ -819,8 +821,11 @@ function Security() {
         <div className="mx-auto max-w-2xl text-center">
           <SectionLabel>Security & Privacy</SectionLabel>
           <h2 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
-            Enterprise-grade security, built in.
+            Security and privacy, built in.
           </h2>
+          <p className="mt-3 text-sm text-muted-foreground">
+            See full details on our <Link to="/security" className="text-primary hover:underline">Security</Link> page.
+          </p>
         </div>
         <div className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {items.map((it) => (
@@ -913,7 +918,7 @@ const plans = [
   },
   {
     name: "Enterprise", price: "Custom", desc: "For large agencies and teams",
-    features: ["Unlimited clients", "Unlimited users", "White-label portal", "SAML SSO + audit logs", "Dedicated success manager", "Custom integrations", "99.99% SLA"],
+    features: ["Unlimited clients", "Unlimited users", "White-label portal", "SAML SSO + audit logs", "Dedicated success manager", "Custom integrations"],
     cta: "Contact sales", featured: false,
   },
 ];
@@ -987,22 +992,10 @@ function Pricing() {
 // ---------------- 13. Testimonials ----------------
 
 const testimonials = [
-  {
-    quote: "We replaced 8 tools with Agency OS. Our team ships content 4x faster and clients actually love the portal.",
-    name: "Jenna Martinez", role: "Founder, Northstar Marketing",
-  },
-  {
-    quote: "The AI video studio alone is worth it. We're putting out reels for every property in a fraction of the time.",
-    name: "David Chen", role: "Broker, Apex Realty",
-  },
-  {
-    quote: "Our crews are out on jobs, not at desks. Agency OS handles the marketing while we handle the wrench.",
-    name: "Mike Sullivan", role: "Owner, Sullivan Roofing",
-  },
-  {
-    quote: "Client approvals used to take a week. With the portal it's same-day. Our retention is up 28%.",
-    name: "Priya Shah", role: "CEO, Bright Local",
-  },
+  { quote: "Example testimonial placeholder — replace with a real customer quote before launch.", name: "Customer name", role: "Role, Company" },
+  { quote: "Example testimonial placeholder — replace with a real customer quote before launch.", name: "Customer name", role: "Role, Company" },
+  { quote: "Example testimonial placeholder — replace with a real customer quote before launch.", name: "Customer name", role: "Role, Company" },
+  { quote: "Example testimonial placeholder — replace with a real customer quote before launch.", name: "Customer name", role: "Role, Company" },
 ];
 
 function Testimonials() {
@@ -1043,7 +1036,7 @@ const faqs = [
   { q: "Can clients log in?", a: "Yes. Every client gets a white-label portal where they can view campaigns, approve content, read meeting summaries, and chat with an AI assistant trained on their account." },
   { q: "Does it support social posting?", a: "Yes. Schedule and publish to Instagram, TikTok, LinkedIn, X, YouTube, Facebook, and Pinterest. Built-in approval flows and multi-platform calendars included." },
   { q: "Can my team collaborate?", a: "Absolutely. Real-time team chat, meeting scheduling, task boards, shared notes, and live activity indicators — all in one workspace." },
-  { q: "Is my data secure?", a: "We use AES-256 encryption at rest, TLS 1.3 in transit, role-based access control, full audit logs, and per-client data isolation. SOC 2 and GDPR compliant." },
+  { q: "Is my data secure?", a: "We use HTTPS/TLS in transit, encrypted storage at rest, role-based access control, and Row-Level Security so each client's data is isolated. See our Security page for full details." },
   { q: "Does it support AI videos?", a: "Yes. The AI Video Studio handles scripts, voiceovers, subtitles, B-roll, and exports in 9:16 (TikTok, Reels, Shorts), 16:9 (YouTube), and square formats." },
 ];
 
@@ -1094,15 +1087,15 @@ function FinalCTA() {
               Build Your AI-Powered Marketing Agency Today
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-lg text-white/70">
-              Join 2,400+ agencies running on Digital Agency OS. Free for 14 days.
+              Start your free 14-day trial. No credit card required.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link to="/auth" className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 text-sm font-semibold text-navy hover:bg-white/90">
+              <Link to="/auth" search={{ mode: "signup" }} className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 text-sm font-semibold text-navy hover:bg-white/90">
                 Start Free <ArrowRight className="size-4" />
               </Link>
-              <a href="#demo" className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/5 px-6 py-3.5 text-sm font-semibold backdrop-blur hover:bg-white/10">
+              <Link to="/book-demo" className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/5 px-6 py-3.5 text-sm font-semibold backdrop-blur hover:bg-white/10">
                 Book Demo
-              </a>
+              </Link>
             </div>
           </div>
         </div>
