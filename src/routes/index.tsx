@@ -518,7 +518,7 @@ function AIContentShowcase() {
 
 function VideoStudio() {
   return (
-    <section className="py-24">
+    <section id="video-studio" className="py-24">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 lg:grid-cols-2">
         <div>
           <SectionLabel>AI Video Studio</SectionLabel>
@@ -595,7 +595,7 @@ function CalendarShowcase() {
     { d: 5, t: "16:00", l: "YouTube", c: "bg-red-500/20 text-red-600" },
   ];
   return (
-    <section className="bg-surface/60 py-24">
+    <section id="calendar" className="bg-surface/60 py-24">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 lg:grid-cols-2">
         <GlassCard className="order-2 overflow-hidden p-0 lg:order-1">
           <div className="border-b border-border/60 bg-card p-3">
@@ -658,7 +658,7 @@ function CalendarShowcase() {
 
 function TeamCollab() {
   return (
-    <section className="py-24">
+    <section id="team" className="py-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <SectionLabel>Team Collaboration</SectionLabel>
@@ -739,7 +739,7 @@ function TeamCollab() {
 
 function ClientPortal() {
   return (
-    <section className="bg-surface/60 py-24">
+    <section id="portal" className="bg-surface/60 py-24">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 lg:grid-cols-2">
         <div>
           <SectionLabel>Client Portal</SectionLabel>
@@ -858,7 +858,7 @@ function Automation() {
     { i: BarChart3, l: "Analytics", c: "from-indigo-500 to-blue-500" },
   ];
   return (
-    <section className="bg-navy py-24 text-navy-foreground">
+    <section id="automation" className="bg-navy py-24 text-navy-foreground">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <SectionLabel>Workflows on autopilot</SectionLabel>
