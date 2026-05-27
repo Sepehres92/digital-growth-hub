@@ -202,6 +202,9 @@ function DashboardMockup() {
           <div className="ml-4 flex-1 rounded-md bg-background/60 px-3 py-1 text-xs text-muted-foreground">
             app.agencyos.com/dashboard
           </div>
+          <span className="rounded-full border border-border bg-background/60 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+            Mockup
+          </span>
         </div>
         <div className="grid grid-cols-12 gap-4 bg-gradient-to-br from-card to-surface p-4 md:p-6">
           {/* sidebar */}
