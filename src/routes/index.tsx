@@ -935,6 +935,9 @@ function Pricing() {
           <p className="mt-4 text-lg text-muted-foreground">
             14-day free trial. No credit card required. Cancel anytime.
           </p>
+          <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-700 dark:text-amber-400">
+            Placeholder pricing — billing is not yet active
+          </p>
         </div>
         <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3">
           {plans.map((p) => (
@@ -971,16 +974,26 @@ function Pricing() {
                   </li>
                 ))}
               </ul>
-              <Link
-                to="/auth"
-                className={`mt-7 inline-flex items-center justify-center gap-1.5 rounded-xl px-5 py-3 text-sm font-semibold ${
-                  p.featured
-                    ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/30"
-                    : "border border-border bg-background hover:bg-accent"
-                }`}
-              >
-                {p.cta} <ArrowRight className="size-3.5" />
-              </Link>
+              {p.name === "Enterprise" ? (
+                <Link
+                  to="/contact"
+                  className="mt-7 inline-flex items-center justify-center gap-1.5 rounded-xl border border-border bg-background px-5 py-3 text-sm font-semibold hover:bg-accent"
+                >
+                  {p.cta} <ArrowRight className="size-3.5" />
+                </Link>
+              ) : (
+                <Link
+                  to="/auth"
+                  search={{ mode: "signup", plan: p.name.toLowerCase() }}
+                  className={`mt-7 inline-flex items-center justify-center gap-1.5 rounded-xl px-5 py-3 text-sm font-semibold ${
+                    p.featured
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/30"
+                      : "border border-border bg-background hover:bg-accent"
+                  }`}
+                >
+                  {p.cta} <ArrowRight className="size-3.5" />
+                </Link>
+              )}
             </div>
           ))}
         </div>
