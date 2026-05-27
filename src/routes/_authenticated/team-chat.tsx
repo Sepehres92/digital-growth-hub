@@ -666,9 +666,25 @@ function TeamChatPage() {
                               )}
                             </div>
                           ))}
-                          <div className="mt-1 flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                          <div className="mt-1 flex flex-wrap items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
                             <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" onClick={() => setThreadParent(m)}>
                               <CornerDownRight className="size-3" /> Reply
+                            </Button>
+                            <span className="mx-1 h-3 w-px bg-border" />
+                            <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" title="Create Task" onClick={() => openConvert(m, "task")}>
+                              <ListTodo className="size-3" /> Task
+                            </Button>
+                            <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" title="Create Meeting" onClick={() => openConvert(m, "meeting")}>
+                              <CalendarPlus className="size-3" /> Meeting
+                            </Button>
+                            <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" title="Add to Calendar" onClick={() => openConvert(m, "calendar")}>
+                              <CalendarDays className="size-3" /> Calendar
+                            </Button>
+                            <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" title="Generate AI Content" onClick={() => openConvert(m, "ai_campaign")}>
+                              <Wand2 className="size-3" /> AI Content
+                            </Button>
+                            <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" title="Save to Client" onClick={() => openConvert(m, "client_note")}>
+                              <Building2 className="size-3" /> Save
                             </Button>
                             {m.user_id === me ? (
                               <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px] text-destructive" onClick={() => deleteMessage.mutate(m.id)}>Delete</Button>
@@ -676,6 +692,7 @@ function TeamChatPage() {
                               <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" onClick={() => hideForMe.mutate(m)}>Hide</Button>
                             )}
                           </div>
+
                           {m.user_id === me && !isPending && reads > 0 && (
                             <div className="mt-1 flex items-center gap-1 text-[10px] text-muted-foreground">
                               <CheckCheck className="size-3 text-primary" /> Seen by {reads}
