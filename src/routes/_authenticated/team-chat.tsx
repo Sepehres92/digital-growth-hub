@@ -16,7 +16,7 @@ import { chatAiAssist } from "@/lib/chat-ai.functions";
 import {
   Plus, Hash, Lock, Send, Search, Sparkles, Paperclip, Pin, BellOff, Bell,
   MessageSquare, Users, Phone, Video as VideoIcon, MonitorUp, CornerDownRight, X, Loader2,
-  RotateCw, Check, CheckCheck, WifiOff,
+  RotateCw, Check, CheckCheck, WifiOff, ListTodo, CalendarPlus, CalendarDays, Building2, Wand2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
