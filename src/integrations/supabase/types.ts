@@ -208,6 +208,235 @@ export type Database = {
           },
         ]
       }
+      chat_audit_log: {
+        Row: {
+          action: string
+          channel_id: string | null
+          created_at: string
+          details: Json
+          id: string
+          message_id: string | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          channel_id?: string | null
+          created_at?: string
+          details?: Json
+          id?: string
+          message_id?: string | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          channel_id?: string | null
+          created_at?: string
+          details?: Json
+          id?: string
+          message_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      chat_channel_members: {
+        Row: {
+          channel_id: string
+          id: string
+          joined_at: string
+          last_read_at: string
+          muted: boolean
+          pinned: boolean
+          role: string
+          user_id: string
+        }
+        Insert: {
+          channel_id: string
+          id?: string
+          joined_at?: string
+          last_read_at?: string
+          muted?: boolean
+          pinned?: boolean
+          role?: string
+          user_id: string
+        }
+        Update: {
+          channel_id?: string
+          id?: string
+          joined_at?: string
+          last_read_at?: string
+          muted?: boolean
+          pinned?: boolean
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_channel_members_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "chat_channels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_channels: {
+        Row: {
+          campaign_id: string | null
+          channel_type: string
+          client_id: string | null
+          created_at: string
+          created_by: string
+          description: string
+          id: string
+          is_archived: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          channel_type?: string
+          client_id?: string | null
+          created_at?: string
+          created_by: string
+          description?: string
+          id?: string
+          is_archived?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          campaign_id?: string | null
+          channel_type?: string
+          client_id?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string
+          id?: string
+          is_archived?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      chat_messages: {
+        Row: {
+          ai_generated: boolean
+          attachments: Json
+          channel_id: string
+          content: string
+          created_at: string
+          deleted_for: string[]
+          edited: boolean
+          id: string
+          mentions: string[]
+          message_type: string
+          parent_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_generated?: boolean
+          attachments?: Json
+          channel_id: string
+          content?: string
+          created_at?: string
+          deleted_for?: string[]
+          edited?: boolean
+          id?: string
+          mentions?: string[]
+          message_type?: string
+          parent_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_generated?: boolean
+          attachments?: Json
+          channel_id?: string
+          content?: string
+          created_at?: string
+          deleted_for?: string[]
+          edited?: boolean
+          id?: string
+          mentions?: string[]
+          message_type?: string
+          parent_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "chat_channels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_messages_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "chat_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_presence: {
+        Row: {
+          last_seen: string
+          status: string
+          typing_in: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          last_seen?: string
+          status?: string
+          typing_in?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          last_seen?: string
+          status?: string
+          typing_in?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      chat_reactions: {
+        Row: {
+          created_at: string
+          emoji: string
+          id: string
+          message_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          emoji: string
+          id?: string
+          message_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          emoji?: string
+          id?: string
+          message_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_reactions_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "chat_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_images: {
         Row: {
           client_id: string | null
@@ -1441,6 +1670,14 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_channel_admin: {
+        Args: { _channel_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_channel_member: {
+        Args: { _channel_id: string; _user_id: string }
         Returns: boolean
       }
     }
