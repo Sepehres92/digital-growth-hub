@@ -40,6 +40,7 @@ import { Route as AuthenticatedContentCalendarRouteImport } from './routes/_auth
 import { Route as AuthenticatedClientsRouteImport } from './routes/_authenticated/clients'
 import { Route as AuthenticatedChatbotAdminRouteImport } from './routes/_authenticated/chatbot-admin'
 import { Route as AuthenticatedCampaignsRouteImport } from './routes/_authenticated/campaigns'
+import { Route as AuthenticatedCampaignWizardRouteImport } from './routes/_authenticated/campaign-wizard'
 import { Route as AuthenticatedCampaignFoldersRouteImport } from './routes/_authenticated/campaign-folders'
 import { Route as AuthenticatedAutoCampaignRouteImport } from './routes/_authenticated/auto-campaign'
 import { Route as AuthenticatedAiWriterRouteImport } from './routes/_authenticated/ai-writer'
@@ -207,6 +208,12 @@ const AuthenticatedCampaignsRoute = AuthenticatedCampaignsRouteImport.update({
   path: '/campaigns',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedCampaignWizardRoute =
+  AuthenticatedCampaignWizardRouteImport.update({
+    id: '/campaign-wizard',
+    path: '/campaign-wizard',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedCampaignFoldersRoute =
   AuthenticatedCampaignFoldersRouteImport.update({
     id: '/campaign-folders',
@@ -281,6 +288,7 @@ export interface FileRoutesByFullPath {
   '/ai-writer': typeof AuthenticatedAiWriterRoute
   '/auto-campaign': typeof AuthenticatedAutoCampaignRoute
   '/campaign-folders': typeof AuthenticatedCampaignFoldersRoute
+  '/campaign-wizard': typeof AuthenticatedCampaignWizardRoute
   '/campaigns': typeof AuthenticatedCampaignsRoute
   '/chatbot-admin': typeof AuthenticatedChatbotAdminRoute
   '/clients': typeof AuthenticatedClientsRoute
@@ -321,6 +329,7 @@ export interface FileRoutesByTo {
   '/ai-writer': typeof AuthenticatedAiWriterRoute
   '/auto-campaign': typeof AuthenticatedAutoCampaignRoute
   '/campaign-folders': typeof AuthenticatedCampaignFoldersRoute
+  '/campaign-wizard': typeof AuthenticatedCampaignWizardRoute
   '/campaigns': typeof AuthenticatedCampaignsRoute
   '/chatbot-admin': typeof AuthenticatedChatbotAdminRoute
   '/clients': typeof AuthenticatedClientsRoute
@@ -363,6 +372,7 @@ export interface FileRoutesById {
   '/_authenticated/ai-writer': typeof AuthenticatedAiWriterRoute
   '/_authenticated/auto-campaign': typeof AuthenticatedAutoCampaignRoute
   '/_authenticated/campaign-folders': typeof AuthenticatedCampaignFoldersRoute
+  '/_authenticated/campaign-wizard': typeof AuthenticatedCampaignWizardRoute
   '/_authenticated/campaigns': typeof AuthenticatedCampaignsRoute
   '/_authenticated/chatbot-admin': typeof AuthenticatedChatbotAdminRoute
   '/_authenticated/clients': typeof AuthenticatedClientsRoute
@@ -405,6 +415,7 @@ export interface FileRouteTypes {
     | '/ai-writer'
     | '/auto-campaign'
     | '/campaign-folders'
+    | '/campaign-wizard'
     | '/campaigns'
     | '/chatbot-admin'
     | '/clients'
@@ -445,6 +456,7 @@ export interface FileRouteTypes {
     | '/ai-writer'
     | '/auto-campaign'
     | '/campaign-folders'
+    | '/campaign-wizard'
     | '/campaigns'
     | '/chatbot-admin'
     | '/clients'
@@ -486,6 +498,7 @@ export interface FileRouteTypes {
     | '/_authenticated/ai-writer'
     | '/_authenticated/auto-campaign'
     | '/_authenticated/campaign-folders'
+    | '/_authenticated/campaign-wizard'
     | '/_authenticated/campaigns'
     | '/_authenticated/chatbot-admin'
     | '/_authenticated/clients'
@@ -741,6 +754,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCampaignsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/campaign-wizard': {
+      id: '/_authenticated/campaign-wizard'
+      path: '/campaign-wizard'
+      fullPath: '/campaign-wizard'
+      preLoaderRoute: typeof AuthenticatedCampaignWizardRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/campaign-folders': {
       id: '/_authenticated/campaign-folders'
       path: '/campaign-folders'
@@ -809,6 +829,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAiWriterRoute: typeof AuthenticatedAiWriterRoute
   AuthenticatedAutoCampaignRoute: typeof AuthenticatedAutoCampaignRoute
   AuthenticatedCampaignFoldersRoute: typeof AuthenticatedCampaignFoldersRoute
+  AuthenticatedCampaignWizardRoute: typeof AuthenticatedCampaignWizardRoute
   AuthenticatedCampaignsRoute: typeof AuthenticatedCampaignsRoute
   AuthenticatedChatbotAdminRoute: typeof AuthenticatedChatbotAdminRoute
   AuthenticatedClientsRoute: typeof AuthenticatedClientsRoute
@@ -833,6 +854,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAiWriterRoute: AuthenticatedAiWriterRoute,
   AuthenticatedAutoCampaignRoute: AuthenticatedAutoCampaignRoute,
   AuthenticatedCampaignFoldersRoute: AuthenticatedCampaignFoldersRoute,
+  AuthenticatedCampaignWizardRoute: AuthenticatedCampaignWizardRoute,
   AuthenticatedCampaignsRoute: AuthenticatedCampaignsRoute,
   AuthenticatedChatbotAdminRoute: AuthenticatedChatbotAdminRoute,
   AuthenticatedClientsRoute: AuthenticatedClientsRoute,

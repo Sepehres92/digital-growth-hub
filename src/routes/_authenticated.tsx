@@ -43,6 +43,7 @@ function AuthedLayout() {
     { to: "/leads", label: "Leads", icon: Users, group: "Workspace" },
     { to: "/clients", label: "Clients", icon: Briefcase, group: "Workspace" },
     { to: "/campaigns", label: "Campaigns", icon: Megaphone, group: "Workspace" },
+    { to: "/campaign-wizard", label: "New Campaign Wizard", icon: Wand2, group: "Workspace" },
     { to: "/campaign-folders", label: "Campaign Folders", icon: FolderOpen, group: "Workspace" },
     { to: "/tasks", label: "Tasks", icon: KanbanSquare, group: "Workspace" },
     { to: "/meetings", label: "Meetings", icon: Video, group: "Workspace" },
