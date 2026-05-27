@@ -327,7 +327,7 @@ Campaign focus: ${cz.campaignFocus ?? "n/a"}`;
         image_prompt: p.image_prompt,
         video_script: p.video_idea,
         scheduled_date: scheduled.toISOString(),
-        approval_status: requireApproval ? "pending" : "approved",
+        approval_status: (requireApproval ? "pending" : "approved") as "pending" | "approved",
       };
     });
     await supabase.from("generated_strategy_content").insert(generatedRows);
