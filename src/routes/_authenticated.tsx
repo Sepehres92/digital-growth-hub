@@ -54,6 +54,8 @@ function AuthedLayout() {
     { to: "/semrush", label: "Semrush", icon: BarChart3, group: "Marketing Tools" },
     { to: "/search-console", label: "Search Console", icon: Search, group: "Marketing Tools" },
     { to: "/social", label: "Social", icon: Share2, group: "Marketing Tools" },
+    { to: "/help-support", label: "Help & Support", icon: LifeBuoy, group: "Workspace" },
+    { to: "/chatbot-admin", label: "Chatbot Admin", icon: Bot, group: "Workspace" },
     { to: "/settings", label: "Settings", icon: SettingsIcon, group: "Workspace" },
   ] as const;
 
