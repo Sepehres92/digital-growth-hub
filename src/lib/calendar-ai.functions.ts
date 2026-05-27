@@ -170,15 +170,7 @@ Start date: ${startIso}
 Pick best posting hours for each platform (Instagram: 11, Facebook: 13, X: 9, TikTok: 19, YouTube: 17).`;
 
     const raw = await callAI(sys, user, true);
-    let parsed: { posts: PlannedPost[] };
-    try {
-      parsed = JSON.parse(raw);
-    } catch {
-      // Try to extract JSON object from the text
-      const m = raw.match(/\{[\s\S]*\}/);
-      if (!m) throw new Error("AI returned malformed plan");
-      parsed = JSON.parse(m[0]);
-    }
+    const parsed = extractJSON<{ posts: PlannedPost[] }>(raw);
     if (!parsed?.posts?.length) throw new Error("AI returned no posts");
     // Validate / clamp each post
     const out: PlannedPost[] = parsed.posts.slice(0, 60).map((p) => ({
