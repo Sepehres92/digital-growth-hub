@@ -443,6 +443,7 @@ export type Database = {
           context_page: string | null
           created_at: string
           id: string
+          session_memory: Json
           status: string
           title: string
           updated_at: string
@@ -453,6 +454,7 @@ export type Database = {
           context_page?: string | null
           created_at?: string
           id?: string
+          session_memory?: Json
           status?: string
           title?: string
           updated_at?: string
@@ -463,6 +465,7 @@ export type Database = {
           context_page?: string | null
           created_at?: string
           id?: string
+          session_memory?: Json
           status?: string
           title?: string
           updated_at?: string

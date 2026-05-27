@@ -1,0 +1,1 @@
+ALTER TABLE public.chatbot_conversations ADD COLUMN IF NOT EXISTS session_memory jsonb NOT NULL DEFAULT '{}'::jsonb;
