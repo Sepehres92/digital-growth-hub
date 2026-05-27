@@ -1,4 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { ProfileAutofillBanner } from "@/components/ProfileAutofillBanner";
+
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
@@ -136,7 +138,9 @@ function CampaignWizardPage() {
 
   return (
     <div className="container mx-auto p-6 max-w-3xl space-y-6">
+      <ProfileAutofillBanner toolName="Campaign Wizard" highlight={["business_name", "industry", "target_audience", "main_goal", "creation_mode", "approval_required"]} />
       <div>
+
         <h1 className="text-3xl font-bold">Create Campaign</h1>
         <p className="text-muted-foreground">Step {step} of 6</p>
         <div className="flex gap-1 mt-3">

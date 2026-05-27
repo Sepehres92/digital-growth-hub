@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { ProfileAutofillBanner } from "@/components/ProfileAutofillBanner";
+
 import { useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -165,7 +167,9 @@ function AIStudioPage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
+      <ProfileAutofillBanner toolName="AI Studio" highlight={["brand_tone", "brand_colors", "business_name", "industry"]} />
       <div className="flex items-center gap-3">
+
         <div className="flex size-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/60 text-primary-foreground">
           <ImageIcon className="size-5" />
         </div>

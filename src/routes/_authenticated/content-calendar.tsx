@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { ProfileAutofillBanner } from "@/components/ProfileAutofillBanner";
+
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -245,7 +247,9 @@ function ContentCalendarPage() {
 
   return (
     <div className="space-y-6">
+      <ProfileAutofillBanner toolName="Content Calendar" highlight={["posting_frequency", "platforms", "content_types", "brand_tone"]} />
       <header className="flex flex-wrap items-center justify-between gap-3">
+
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
             <CalIcon className="size-6 text-primary" /> Content Calendar

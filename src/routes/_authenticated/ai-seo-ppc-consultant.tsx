@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { ProfileAutofillBanner } from "@/components/ProfileAutofillBanner";
+
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
@@ -156,7 +158,9 @@ function SeoPpcConsultant() {
 
   return (
     <div className="mx-auto max-w-5xl space-y-6">
+      <ProfileAutofillBanner toolName="SEO/PPC Consultant" highlight={["target_keywords", "seo_competitors", "target_locations", "ppc_budget", "conversion_goal"]} />
       <div className="flex items-center justify-between">
+
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-bold">
             <Sparkles className="size-6 text-primary" />

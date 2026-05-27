@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { ProfileAutofillBanner } from "@/components/ProfileAutofillBanner";
+
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -114,7 +116,9 @@ function AIWriterPage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
+      <ProfileAutofillBanner toolName="AI Writer" highlight={["brand_tone", "target_audience", "business_name", "industry"]} />
       <div className="flex items-center gap-3">
+
         <div className="flex size-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/60 text-primary-foreground">
           <Sparkles className="size-5" />
         </div>
