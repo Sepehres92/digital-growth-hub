@@ -1514,6 +1514,45 @@ export type Database = {
         }
         Relationships: []
       }
+      strategy_admin_settings: {
+        Row: {
+          available_strategist_ids: string[]
+          booking_link: string
+          created_at: string
+          free_consultation_minutes: number
+          human_consultation_enabled: boolean
+          id: string
+          paid_consultation_price: number
+          payment_link: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          available_strategist_ids?: string[]
+          booking_link?: string
+          created_at?: string
+          free_consultation_minutes?: number
+          human_consultation_enabled?: boolean
+          id?: string
+          paid_consultation_price?: number
+          payment_link?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          available_strategist_ids?: string[]
+          booking_link?: string
+          created_at?: string
+          free_consultation_minutes?: number
+          human_consultation_enabled?: boolean
+          id?: string
+          paid_consultation_price?: number
+          payment_link?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       strategy_approvals: {
         Row: {
           approval_status: Database["public"]["Enums"]["strategy_approval_status"]
