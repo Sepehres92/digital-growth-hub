@@ -308,8 +308,75 @@ Campaign focus: ${cz.campaignFocus ?? "n/a"}`;
         notes: `Category: ${p.category}\nVideo idea: ${p.video_idea}\nImage prompt: ${p.image_prompt}`,
       };
     });
-    const { error: postsErr } = await supabase.from("social_posts").insert(rows);
+    const { data: insertedPosts, error: postsErr } = await supabase
+      .from("social_posts")
+      .insert(rows)
+      .select("id, platform, scheduled_at, caption");
     if (postsErr) throw new Error(postsErr.message);
+    const postIds = insertedPosts ?? [];
+
+    // Content calendar entries (one per post)
+    if (postIds.length > 0) {
+      await supabase.from("content_calendar").insert(
+        postIds.map((p) => ({
+          user_id: userId,
+          post_id: p.id,
+          calendar_date: String(p.scheduled_at).slice(0, 10),
+          platform: p.platform,
+          status: requireApproval ? "pending_approval" : "scheduled",
+        })),
+      );
+
+      // Approval queue (only when approval required)
+      if (requireApproval) {
+        await supabase.from("content_approvals").insert(
+          postIds.map((p) => ({
+            post_id: p.id,
+            approved_by: userId,
+            status: "pending",
+            notes: "Auto-queued by AI Strategy Consultant",
+          })),
+        );
+      }
+    }
+
+    // AI image prompts → ai_images (one row per post with an image prompt)
+    const imageRows = posts
+      .filter((p) => p.image_prompt && p.image_prompt.trim().length > 0)
+      .map((p) => ({
+        user_id: userId,
+        client_id: c.client_id,
+        campaign_id: camp.id,
+        mode: "strategy_prompt",
+        prompt: p.image_prompt,
+        style: "social",
+        size: "1080x1080",
+        image_url: "",
+      }));
+    if (imageRows.length > 0) {
+      await supabase.from("ai_images").insert(imageRows);
+    }
+
+    // Video scripts → video_projects (one row per post with a video idea)
+    const videoRows = posts
+      .filter((p) => p.video_idea && p.video_idea.trim().length > 0)
+      .map((p) => ({
+        user_id: userId,
+        client_id: c.client_id,
+        campaign_id: camp.id,
+        type: "social_short",
+        format: "vertical",
+        platform: p.platform,
+        style: "auto",
+        title: `${p.category} — ${c.business_name}`,
+        status: "script_ready",
+        inputs: { source: "strategy_consultant", caption: p.caption } as never,
+        output: p.video_idea,
+        output_json: { script: p.video_idea, image_prompt: p.image_prompt } as never,
+      }));
+    if (videoRows.length > 0) {
+      await supabase.from("video_projects").insert(videoRows);
+    }
 
     // Mirror into generated_strategy_content for the strategy module's record.
     const generatedRows = posts.map((p) => {
@@ -331,6 +398,19 @@ Campaign focus: ${cz.campaignFocus ?? "n/a"}`;
       };
     });
     await supabase.from("generated_strategy_content").insert(generatedRows);
+
+    // Create a team review task when human approval is required
+    if (requireApproval) {
+      await supabase.from("tasks").insert({
+        user_id: userId,
+        client_id: c.client_id,
+        campaign_id: camp.id,
+        title: `Review ${rows.length} AI-generated posts for ${c.business_name}`,
+        notes: `Strategy consultation: ${c.id}\nCampaign: ${camp.id}\nQueued in Approval Queue + Content Calendar.`,
+        status: "todo",
+        priority: "high",
+      });
+    }
 
     await supabase
       .from("strategy_consultations")
