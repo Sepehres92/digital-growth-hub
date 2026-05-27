@@ -26,10 +26,12 @@ import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedMeetingsRouteImport } from './routes/_authenticated/meetings'
 import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated/leads'
+import { Route as AuthenticatedHelpSupportRouteImport } from './routes/_authenticated/help-support'
 import { Route as AuthenticatedGlobalDashboardRouteImport } from './routes/_authenticated/global-dashboard'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedContentCalendarRouteImport } from './routes/_authenticated/content-calendar'
 import { Route as AuthenticatedClientsRouteImport } from './routes/_authenticated/clients'
+import { Route as AuthenticatedChatbotAdminRouteImport } from './routes/_authenticated/chatbot-admin'
 import { Route as AuthenticatedCampaignsRouteImport } from './routes/_authenticated/campaigns'
 import { Route as AuthenticatedAutoCampaignRouteImport } from './routes/_authenticated/auto-campaign'
 import { Route as AuthenticatedAiWriterRouteImport } from './routes/_authenticated/ai-writer'
@@ -121,6 +123,12 @@ const AuthenticatedLeadsRoute = AuthenticatedLeadsRouteImport.update({
   path: '/leads',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedHelpSupportRoute =
+  AuthenticatedHelpSupportRouteImport.update({
+    id: '/help-support',
+    path: '/help-support',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedGlobalDashboardRoute =
   AuthenticatedGlobalDashboardRouteImport.update({
     id: '/global-dashboard',
@@ -143,6 +151,12 @@ const AuthenticatedClientsRoute = AuthenticatedClientsRouteImport.update({
   path: '/clients',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedChatbotAdminRoute =
+  AuthenticatedChatbotAdminRouteImport.update({
+    id: '/chatbot-admin',
+    path: '/chatbot-admin',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedCampaignsRoute = AuthenticatedCampaignsRouteImport.update({
   id: '/campaigns',
   path: '/campaigns',
@@ -195,10 +209,12 @@ export interface FileRoutesByFullPath {
   '/ai-writer': typeof AuthenticatedAiWriterRoute
   '/auto-campaign': typeof AuthenticatedAutoCampaignRoute
   '/campaigns': typeof AuthenticatedCampaignsRoute
+  '/chatbot-admin': typeof AuthenticatedChatbotAdminRoute
   '/clients': typeof AuthenticatedClientsRoute
   '/content-calendar': typeof AuthenticatedContentCalendarRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/global-dashboard': typeof AuthenticatedGlobalDashboardRoute
+  '/help-support': typeof AuthenticatedHelpSupportRoute
   '/leads': typeof AuthenticatedLeadsRoute
   '/meetings': typeof AuthenticatedMeetingsRoute
   '/settings': typeof AuthenticatedSettingsRoute
@@ -223,10 +239,12 @@ export interface FileRoutesByTo {
   '/ai-writer': typeof AuthenticatedAiWriterRoute
   '/auto-campaign': typeof AuthenticatedAutoCampaignRoute
   '/campaigns': typeof AuthenticatedCampaignsRoute
+  '/chatbot-admin': typeof AuthenticatedChatbotAdminRoute
   '/clients': typeof AuthenticatedClientsRoute
   '/content-calendar': typeof AuthenticatedContentCalendarRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/global-dashboard': typeof AuthenticatedGlobalDashboardRoute
+  '/help-support': typeof AuthenticatedHelpSupportRoute
   '/leads': typeof AuthenticatedLeadsRoute
   '/meetings': typeof AuthenticatedMeetingsRoute
   '/settings': typeof AuthenticatedSettingsRoute
@@ -253,10 +271,12 @@ export interface FileRoutesById {
   '/_authenticated/ai-writer': typeof AuthenticatedAiWriterRoute
   '/_authenticated/auto-campaign': typeof AuthenticatedAutoCampaignRoute
   '/_authenticated/campaigns': typeof AuthenticatedCampaignsRoute
+  '/_authenticated/chatbot-admin': typeof AuthenticatedChatbotAdminRoute
   '/_authenticated/clients': typeof AuthenticatedClientsRoute
   '/_authenticated/content-calendar': typeof AuthenticatedContentCalendarRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/global-dashboard': typeof AuthenticatedGlobalDashboardRoute
+  '/_authenticated/help-support': typeof AuthenticatedHelpSupportRoute
   '/_authenticated/leads': typeof AuthenticatedLeadsRoute
   '/_authenticated/meetings': typeof AuthenticatedMeetingsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
@@ -283,10 +303,12 @@ export interface FileRouteTypes {
     | '/ai-writer'
     | '/auto-campaign'
     | '/campaigns'
+    | '/chatbot-admin'
     | '/clients'
     | '/content-calendar'
     | '/dashboard'
     | '/global-dashboard'
+    | '/help-support'
     | '/leads'
     | '/meetings'
     | '/settings'
@@ -311,10 +333,12 @@ export interface FileRouteTypes {
     | '/ai-writer'
     | '/auto-campaign'
     | '/campaigns'
+    | '/chatbot-admin'
     | '/clients'
     | '/content-calendar'
     | '/dashboard'
     | '/global-dashboard'
+    | '/help-support'
     | '/leads'
     | '/meetings'
     | '/settings'
@@ -340,10 +364,12 @@ export interface FileRouteTypes {
     | '/_authenticated/ai-writer'
     | '/_authenticated/auto-campaign'
     | '/_authenticated/campaigns'
+    | '/_authenticated/chatbot-admin'
     | '/_authenticated/clients'
     | '/_authenticated/content-calendar'
     | '/_authenticated/dashboard'
     | '/_authenticated/global-dashboard'
+    | '/_authenticated/help-support'
     | '/_authenticated/leads'
     | '/_authenticated/meetings'
     | '/_authenticated/settings'
@@ -487,6 +513,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLeadsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/help-support': {
+      id: '/_authenticated/help-support'
+      path: '/help-support'
+      fullPath: '/help-support'
+      preLoaderRoute: typeof AuthenticatedHelpSupportRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/global-dashboard': {
       id: '/_authenticated/global-dashboard'
       path: '/global-dashboard'
@@ -513,6 +546,13 @@ declare module '@tanstack/react-router' {
       path: '/clients'
       fullPath: '/clients'
       preLoaderRoute: typeof AuthenticatedClientsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/chatbot-admin': {
+      id: '/_authenticated/chatbot-admin'
+      path: '/chatbot-admin'
+      fullPath: '/chatbot-admin'
+      preLoaderRoute: typeof AuthenticatedChatbotAdminRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/campaigns': {
@@ -567,10 +607,12 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAiWriterRoute: typeof AuthenticatedAiWriterRoute
   AuthenticatedAutoCampaignRoute: typeof AuthenticatedAutoCampaignRoute
   AuthenticatedCampaignsRoute: typeof AuthenticatedCampaignsRoute
+  AuthenticatedChatbotAdminRoute: typeof AuthenticatedChatbotAdminRoute
   AuthenticatedClientsRoute: typeof AuthenticatedClientsRoute
   AuthenticatedContentCalendarRoute: typeof AuthenticatedContentCalendarRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedGlobalDashboardRoute: typeof AuthenticatedGlobalDashboardRoute
+  AuthenticatedHelpSupportRoute: typeof AuthenticatedHelpSupportRoute
   AuthenticatedLeadsRoute: typeof AuthenticatedLeadsRoute
   AuthenticatedMeetingsRoute: typeof AuthenticatedMeetingsRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
@@ -585,10 +627,12 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAiWriterRoute: AuthenticatedAiWriterRoute,
   AuthenticatedAutoCampaignRoute: AuthenticatedAutoCampaignRoute,
   AuthenticatedCampaignsRoute: AuthenticatedCampaignsRoute,
+  AuthenticatedChatbotAdminRoute: AuthenticatedChatbotAdminRoute,
   AuthenticatedClientsRoute: AuthenticatedClientsRoute,
   AuthenticatedContentCalendarRoute: AuthenticatedContentCalendarRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedGlobalDashboardRoute: AuthenticatedGlobalDashboardRoute,
+  AuthenticatedHelpSupportRoute: AuthenticatedHelpSupportRoute,
   AuthenticatedLeadsRoute: AuthenticatedLeadsRoute,
   AuthenticatedMeetingsRoute: AuthenticatedMeetingsRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
