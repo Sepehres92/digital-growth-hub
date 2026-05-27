@@ -1016,10 +1016,11 @@ function Testimonials() {
     <section className="bg-surface/60 py-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <SectionLabel>Loved by agencies and businesses</SectionLabel>
+          <SectionLabel>Testimonials (placeholders)</SectionLabel>
           <h2 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
             Real teams. Real results.
           </h2>
+          <p className="mt-3 text-sm text-muted-foreground">Replace with real customer quotes before launch.</p>
         </div>
         <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-2">
           {testimonials.map((t) => (
