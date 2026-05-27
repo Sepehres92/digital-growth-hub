@@ -581,13 +581,42 @@ function TeamChatPage() {
                               <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" onClick={() => hideForMe.mutate(m)}>Hide</Button>
                             )}
                           </div>
+                          {m.user_id === me && !isPending && reads > 0 && (
+                            <div className="mt-1 flex items-center gap-1 text-[10px] text-muted-foreground">
+                              <CheckCheck className="size-3 text-primary" /> Seen by {reads}
+                            </div>
+                          )}
+                          {m.user_id === me && !isPending && reads === 0 && (
+                            <div className="mt-1 flex items-center gap-1 text-[10px] text-muted-foreground">
+                              <Check className="size-3" /> Sent
+                            </div>
+                          )}
                         </div>
                       </div>
                     );
                   })}
+                  {failedMessages.map((f) => (
+                    <div key={f.tempId} className="mx-2 mt-1 flex items-center gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-2 py-1.5 text-xs">
+                      <span className="flex-1 truncate text-destructive">Failed: {f.content}</span>
+                      <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" onClick={() => retryFailed(f)}>
+                        <RotateCw className="size-3" /> Retry
+                      </Button>
+                      <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" onClick={() => setFailedMessages((p) => p.filter((x) => x.tempId !== f.tempId))}>
+                        <X className="size-3" />
+                      </Button>
+                    </div>
+                  ))}
+                  {typingUsers.length > 0 && (
+                    <div className="mt-2 px-2 text-xs italic text-muted-foreground">
+                      {typingUsers.length === 1
+                        ? `${typingUsers[0].slice(0, 8)} is typing…`
+                        : `${typingUsers.length} people are typing…`}
+                    </div>
+                  )}
                   <div ref={endRef} />
                 </div>
               </ScrollArea>
+
 
               <div className="border-t border-border bg-card p-3">
                 <div className="mx-auto flex max-w-4xl items-end gap-2">
