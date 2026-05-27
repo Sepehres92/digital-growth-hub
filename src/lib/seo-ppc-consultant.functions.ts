@@ -77,7 +77,7 @@ export const saveSeoPpcIntake = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => Intake.parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const row: Record<string, unknown> = {
+    const base = {
       user_id: userId,
       client_id: data.clientId ?? null,
       module: data.module,
@@ -89,18 +89,23 @@ export const saveSeoPpcIntake = createServerFn({ method: "POST" })
       primary_goal: data.primaryGoal,
       status: "intake",
     };
-    if (data.module === "seo") {
-      row.target_customer = data.targetCustomer;
-      row.target_keywords = data.targetKeywords;
-      row.competitors = data.competitors;
-      row.seo_scope = data.seoScope;
-    } else {
-      row.platforms = data.platforms;
-      row.ideal_cost_per_lead = data.idealCostPerLead ?? null;
-      row.existing_landing_pages = data.existingLandingPages;
-      row.conversion_goal = data.conversionGoal;
-      row.offers = data.offers;
-    }
+    const row =
+      data.module === "seo"
+        ? {
+            ...base,
+            target_customer: data.targetCustomer,
+            target_keywords: data.targetKeywords,
+            competitors: data.competitors,
+            seo_scope: data.seoScope,
+          }
+        : {
+            ...base,
+            platforms: data.platforms,
+            ideal_cost_per_lead: data.idealCostPerLead ?? null,
+            existing_landing_pages: data.existingLandingPages,
+            conversion_goal: data.conversionGoal,
+            offers: data.offers,
+          };
     const { data: inserted, error } = await supabase
       .from("seo_ppc_consultations")
       .insert(row)
