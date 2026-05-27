@@ -509,6 +509,11 @@ function TeamChatPage() {
                   {activeChannel.channel_type === "private" ? <Lock className="size-4" /> : <Hash className="size-4" />}
                   <h2 className="truncate font-semibold">{activeChannel.name}</h2>
                   <span className="hidden truncate text-xs text-muted-foreground md:inline">{activeChannel.description}</span>
+                  {connState !== "connected" && (
+                    <span className="ml-1 inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-medium text-amber-600">
+                      <WifiOff className="size-3" /> {connState === "reconnecting" ? "Reconnecting…" : "Connecting…"}
+                    </span>
+                  )}
                 </div>
                 <div className="ml-auto flex items-center gap-1">
                   <Button size="icon" variant="ghost" disabled title="Voice call (coming soon)"><Phone className="size-4" /></Button>
