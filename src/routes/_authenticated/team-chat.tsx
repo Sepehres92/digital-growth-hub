@@ -135,19 +135,48 @@ function TeamChatPage() {
 
   useEffect(() => { if (!activeId && sorted.length) setActiveId(sorted[0].id); }, [sorted, activeId]);
 
-  const { data: messages = [] } = useQuery({
+  // Infinite scroll: load PAGE newest first, fetch older as user scrolls up.
+  const messagesQuery = useInfiniteQuery({
     queryKey: ["chat-messages", activeId],
-    queryFn: async () => {
-      const { data, error } = await (supabase.from("chat_messages") as any)
+    enabled: !!activeId,
+    initialPageParam: null as string | null,
+    queryFn: async ({ pageParam }) => {
+      let q = (supabase.from("chat_messages") as any)
         .select("*")
         .eq("channel_id", activeId!)
         .is("parent_id", null)
-        .order("created_at", { ascending: true })
-        .limit(200);
+        .order("created_at", { ascending: false })
+        .limit(PAGE);
+      if (pageParam) q = q.lt("created_at", pageParam);
+      const { data, error } = await q;
       if (error) throw error;
       return data as Message[];
     },
+    getNextPageParam: (lastPage) =>
+      lastPage.length < PAGE ? undefined : lastPage[lastPage.length - 1].created_at,
+  });
+
+  const serverMessages = useMemo(() => {
+    const flat = messagesQuery.data?.pages.flat() ?? [];
+    return [...flat].sort((a, b) => a.created_at.localeCompare(b.created_at));
+  }, [messagesQuery.data]);
+
+  const messages = useMemo(() => {
+    const seen = new Set(serverMessages.map((m) => m.id));
+    return [...serverMessages, ...pendingMessages.filter((p) => !seen.has(p.id))];
+  }, [serverMessages, pendingMessages]);
+
+  // All members of the active channel (for read receipts)
+  const { data: channelMembers = [] } = useQuery({
+    queryKey: ["chat-channel-members", activeId],
     enabled: !!activeId,
+    queryFn: async () => {
+      const { data, error } = await (supabase.from("chat_channel_members") as any)
+        .select("user_id,last_read_at").eq("channel_id", activeId!);
+      if (error) throw error;
+      return (data ?? []) as Array<{ user_id: string; last_read_at: string }>;
+    },
+    refetchInterval: 15000,
   });
 
   const { data: threadMsgs = [] } = useQuery({
@@ -163,20 +192,71 @@ function TeamChatPage() {
     enabled: !!threadParent,
   });
 
-  // Realtime
+  // Notification permission
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof Notification === "undefined") return;
+    if (Notification.permission === "granted") notifEnabledRef.current = true;
+    else if (Notification.permission === "default") {
+      Notification.requestPermission().then((p) => { notifEnabledRef.current = p === "granted"; }).catch(() => {});
+    }
+  }, []);
+
+  // Realtime: messages + typing broadcasts + reconnect state
   useEffect(() => {
     if (!activeId) return;
+    setConnState("connecting");
     const ch = supabase
-      .channel(`chat-${activeId}`)
+      .channel(`chat-${activeId}`, { config: { broadcast: { self: false } } })
       .on("postgres_changes", { event: "*", schema: "public", table: "chat_messages", filter: `channel_id=eq.${activeId}` },
-        () => {
+        (payload: any) => {
           qc.invalidateQueries({ queryKey: ["chat-messages", activeId] });
           if (threadParent) qc.invalidateQueries({ queryKey: ["chat-thread", threadParent.id] });
-          if (soundOn) try { new Audio("data:audio/wav;base64,UklGRhwAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=").play().catch(() => {}); } catch {}
+          if (payload?.eventType === "INSERT" && payload?.new?.user_id !== me) {
+            if (document.hidden && notifEnabledRef.current) {
+              try { new Notification(`New message in #${activeChannelNameRef.current || "channel"}`, { body: String(payload.new.content ?? "").slice(0, 140) }); } catch {}
+            }
+            if (soundOn) try { new Audio("data:audio/wav;base64,UklGRhwAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=").play().catch(() => {}); } catch {}
+          }
         })
-      .subscribe();
-    return () => { supabase.removeChannel(ch); };
-  }, [activeId, qc, threadParent, soundOn]);
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "chat_channel_members", filter: `channel_id=eq.${activeId}` },
+        () => qc.invalidateQueries({ queryKey: ["chat-channel-members", activeId] }))
+      .on("broadcast", { event: "typing" }, ({ payload }: { payload: { user_id: string } }) => {
+        if (!payload?.user_id || payload.user_id === me) return;
+        setTypingUsers((prev) => (prev.includes(payload.user_id) ? prev : [...prev, payload.user_id]));
+        window.setTimeout(() => setTypingUsers((prev) => prev.filter((u) => u !== payload.user_id)), 4000);
+      })
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") setConnState("connected");
+        else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") setConnState("reconnecting");
+      });
+    channelRef.current = ch;
+    return () => { supabase.removeChannel(ch); channelRef.current = null; };
+  }, [activeId, qc, threadParent, soundOn, me]);
+
+  // Auto-reconnect refresh on tab visibility return
+  useEffect(() => {
+    const onVis = () => {
+      if (!document.hidden && activeId) {
+        qc.invalidateQueries({ queryKey: ["chat-messages", activeId] });
+      }
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, [activeId, qc]);
+
+  // Infinite scroll sentinel
+  useEffect(() => {
+    const el = topSentinelRef.current;
+    if (!el || !messagesQuery.hasNextPage) return;
+    const obs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !messagesQuery.isFetchingNextPage) {
+        messagesQuery.fetchNextPage();
+      }
+    }, { rootMargin: "200px" });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [messagesQuery.hasNextPage, messagesQuery.isFetchingNextPage, messagesQuery]);
+
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages.length, activeId]);
 
