@@ -677,6 +677,53 @@ export type Database = {
         }
         Relationships: []
       }
+      competitor_research: {
+        Row: {
+          ad_observations: Json | null
+          competitor_name: string | null
+          competitor_url: string | null
+          consultation_id: string
+          content_gaps: Json | null
+          created_at: string
+          id: string
+          keyword_gaps: Json | null
+          observed_strengths: Json | null
+          observed_weaknesses: Json | null
+        }
+        Insert: {
+          ad_observations?: Json | null
+          competitor_name?: string | null
+          competitor_url?: string | null
+          consultation_id: string
+          content_gaps?: Json | null
+          created_at?: string
+          id?: string
+          keyword_gaps?: Json | null
+          observed_strengths?: Json | null
+          observed_weaknesses?: Json | null
+        }
+        Update: {
+          ad_observations?: Json | null
+          competitor_name?: string | null
+          competitor_url?: string | null
+          consultation_id?: string
+          content_gaps?: Json | null
+          created_at?: string
+          id?: string
+          keyword_gaps?: Json | null
+          observed_strengths?: Json | null
+          observed_weaknesses?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "competitor_research_consultation_id_fkey"
+            columns: ["consultation_id"]
+            isOneToOne: false
+            referencedRelation: "seo_ppc_consultations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       content_approvals: {
         Row: {
           approved_by: string
@@ -979,6 +1026,56 @@ export type Database = {
             columns: ["consultation_id"]
             isOneToOne: false
             referencedRelation: "strategy_consultations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      human_seo_ppc_requests: {
+        Row: {
+          assigned_to: string | null
+          client_id: string | null
+          consultation_id: string | null
+          created_at: string
+          free_consultation_used: boolean
+          id: string
+          meeting_id: string | null
+          payment_required: boolean
+          price: number | null
+          request_status: string
+          user_id: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          client_id?: string | null
+          consultation_id?: string | null
+          created_at?: string
+          free_consultation_used?: boolean
+          id?: string
+          meeting_id?: string | null
+          payment_required?: boolean
+          price?: number | null
+          request_status?: string
+          user_id: string
+        }
+        Update: {
+          assigned_to?: string | null
+          client_id?: string | null
+          consultation_id?: string | null
+          created_at?: string
+          free_consultation_used?: boolean
+          id?: string
+          meeting_id?: string | null
+          payment_required?: boolean
+          price?: number | null
+          request_status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "human_seo_ppc_requests_consultation_id_fkey"
+            columns: ["consultation_id"]
+            isOneToOne: false
+            referencedRelation: "seo_ppc_consultations"
             referencedColumns: ["id"]
           },
         ]
@@ -1400,6 +1497,109 @@ export type Database = {
         }
         Relationships: []
       }
+      ppc_keywords: {
+        Row: {
+          ad_group: string | null
+          consultation_id: string
+          created_at: string
+          estimated_cpc: number | null
+          id: string
+          intent: string | null
+          keyword: string
+          match_type: string | null
+          priority: string | null
+        }
+        Insert: {
+          ad_group?: string | null
+          consultation_id: string
+          created_at?: string
+          estimated_cpc?: number | null
+          id?: string
+          intent?: string | null
+          keyword: string
+          match_type?: string | null
+          priority?: string | null
+        }
+        Update: {
+          ad_group?: string | null
+          consultation_id?: string
+          created_at?: string
+          estimated_cpc?: number | null
+          id?: string
+          intent?: string | null
+          keyword?: string
+          match_type?: string | null
+          priority?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ppc_keywords_consultation_id_fkey"
+            columns: ["consultation_id"]
+            isOneToOne: false
+            referencedRelation: "seo_ppc_consultations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ppc_recommendations: {
+        Row: {
+          ab_testing_plan: Json | null
+          ad_copy_recommendations: Json | null
+          budget_allocation: Json | null
+          campaign_structure: Json | null
+          consultation_id: string
+          conversion_tracking_checklist: Json | null
+          created_at: string
+          id: string
+          keyword_groups: Json | null
+          landing_page_recommendations: Json | null
+          negative_keywords: Json | null
+          recommended_platforms: Json | null
+          retargeting_strategy: Json | null
+          sources_used: Json | null
+        }
+        Insert: {
+          ab_testing_plan?: Json | null
+          ad_copy_recommendations?: Json | null
+          budget_allocation?: Json | null
+          campaign_structure?: Json | null
+          consultation_id: string
+          conversion_tracking_checklist?: Json | null
+          created_at?: string
+          id?: string
+          keyword_groups?: Json | null
+          landing_page_recommendations?: Json | null
+          negative_keywords?: Json | null
+          recommended_platforms?: Json | null
+          retargeting_strategy?: Json | null
+          sources_used?: Json | null
+        }
+        Update: {
+          ab_testing_plan?: Json | null
+          ad_copy_recommendations?: Json | null
+          budget_allocation?: Json | null
+          campaign_structure?: Json | null
+          consultation_id?: string
+          conversion_tracking_checklist?: Json | null
+          created_at?: string
+          id?: string
+          keyword_groups?: Json | null
+          landing_page_recommendations?: Json | null
+          negative_keywords?: Json | null
+          recommended_platforms?: Json | null
+          retargeting_strategy?: Json | null
+          sources_used?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ppc_recommendations_consultation_id_fkey"
+            columns: ["consultation_id"]
+            isOneToOne: false
+            referencedRelation: "seo_ppc_consultations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           agency_name: string | null
@@ -1427,12 +1627,96 @@ export type Database = {
         }
         Relationships: []
       }
+      seo_keywords: {
+        Row: {
+          consultation_id: string
+          created_at: string
+          difficulty_score: number | null
+          id: string
+          intent: string | null
+          keyword: string
+          page_target: string | null
+          priority: string | null
+          search_volume: number | null
+        }
+        Insert: {
+          consultation_id: string
+          created_at?: string
+          difficulty_score?: number | null
+          id?: string
+          intent?: string | null
+          keyword: string
+          page_target?: string | null
+          priority?: string | null
+          search_volume?: number | null
+        }
+        Update: {
+          consultation_id?: string
+          created_at?: string
+          difficulty_score?: number | null
+          id?: string
+          intent?: string | null
+          keyword?: string
+          page_target?: string | null
+          priority?: string | null
+          search_volume?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seo_keywords_consultation_id_fkey"
+            columns: ["consultation_id"]
+            isOneToOne: false
+            referencedRelation: "seo_ppc_consultations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      seo_ppc_approvals: {
+        Row: {
+          approval_status: string
+          approved_at: string | null
+          client_id: string | null
+          client_notes: string | null
+          consultation_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          approval_status?: string
+          approved_at?: string | null
+          client_id?: string | null
+          client_notes?: string | null
+          consultation_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          approval_status?: string
+          approved_at?: string | null
+          client_id?: string | null
+          client_notes?: string | null
+          consultation_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seo_ppc_approvals_consultation_id_fkey"
+            columns: ["consultation_id"]
+            isOneToOne: false
+            referencedRelation: "seo_ppc_consultations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       seo_ppc_consultations: {
         Row: {
+          business_goal: string | null
           business_name: string
           campaign_id: string | null
           client_id: string | null
           competitors: string | null
+          consultation_type: string | null
           conversion_goal: string | null
           created_at: string
           customizations: Json | null
@@ -1440,6 +1724,7 @@ export type Database = {
           human_request_id: string | null
           id: string
           ideal_cost_per_lead: number | null
+          industry: string | null
           location: string | null
           module: string
           monthly_budget: number | null
@@ -1450,17 +1735,21 @@ export type Database = {
           seo_scope: string | null
           services: string | null
           status: string
+          target_audience: string | null
           target_customer: string | null
           target_keywords: string | null
+          target_location: string | null
           updated_at: string
           user_id: string
           website_url: string | null
         }
         Insert: {
+          business_goal?: string | null
           business_name: string
           campaign_id?: string | null
           client_id?: string | null
           competitors?: string | null
+          consultation_type?: string | null
           conversion_goal?: string | null
           created_at?: string
           customizations?: Json | null
@@ -1468,6 +1757,7 @@ export type Database = {
           human_request_id?: string | null
           id?: string
           ideal_cost_per_lead?: number | null
+          industry?: string | null
           location?: string | null
           module: string
           monthly_budget?: number | null
@@ -1478,17 +1768,21 @@ export type Database = {
           seo_scope?: string | null
           services?: string | null
           status?: string
+          target_audience?: string | null
           target_customer?: string | null
           target_keywords?: string | null
+          target_location?: string | null
           updated_at?: string
           user_id: string
           website_url?: string | null
         }
         Update: {
+          business_goal?: string | null
           business_name?: string
           campaign_id?: string | null
           client_id?: string | null
           competitors?: string | null
+          consultation_type?: string | null
           conversion_goal?: string | null
           created_at?: string
           customizations?: Json | null
@@ -1496,6 +1790,7 @@ export type Database = {
           human_request_id?: string | null
           id?: string
           ideal_cost_per_lead?: number | null
+          industry?: string | null
           location?: string | null
           module?: string
           monthly_budget?: number | null
@@ -1506,13 +1801,77 @@ export type Database = {
           seo_scope?: string | null
           services?: string | null
           status?: string
+          target_audience?: string | null
           target_customer?: string | null
           target_keywords?: string | null
+          target_location?: string | null
           updated_at?: string
           user_id?: string
           website_url?: string | null
         }
         Relationships: []
+      }
+      seo_recommendations: {
+        Row: {
+          backlink_recommendations: Json | null
+          competitor_gap_summary: Json | null
+          consultation_id: string
+          content_recommendations: Json | null
+          created_at: string
+          google_business_profile_recommendations: Json | null
+          id: string
+          keyword_strategy: Json | null
+          local_seo_strategy: Json | null
+          on_page_recommendations: Json | null
+          seo_30_day_plan: Json | null
+          seo_60_day_plan: Json | null
+          seo_90_day_plan: Json | null
+          sources_used: Json | null
+          technical_seo_recommendations: Json | null
+        }
+        Insert: {
+          backlink_recommendations?: Json | null
+          competitor_gap_summary?: Json | null
+          consultation_id: string
+          content_recommendations?: Json | null
+          created_at?: string
+          google_business_profile_recommendations?: Json | null
+          id?: string
+          keyword_strategy?: Json | null
+          local_seo_strategy?: Json | null
+          on_page_recommendations?: Json | null
+          seo_30_day_plan?: Json | null
+          seo_60_day_plan?: Json | null
+          seo_90_day_plan?: Json | null
+          sources_used?: Json | null
+          technical_seo_recommendations?: Json | null
+        }
+        Update: {
+          backlink_recommendations?: Json | null
+          competitor_gap_summary?: Json | null
+          consultation_id?: string
+          content_recommendations?: Json | null
+          created_at?: string
+          google_business_profile_recommendations?: Json | null
+          id?: string
+          keyword_strategy?: Json | null
+          local_seo_strategy?: Json | null
+          on_page_recommendations?: Json | null
+          seo_30_day_plan?: Json | null
+          seo_60_day_plan?: Json | null
+          seo_90_day_plan?: Json | null
+          sources_used?: Json | null
+          technical_seo_recommendations?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seo_recommendations_consultation_id_fkey"
+            columns: ["consultation_id"]
+            isOneToOne: false
+            referencedRelation: "seo_ppc_consultations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       social_accounts: {
         Row: {
@@ -2238,6 +2597,10 @@ export type Database = {
       }
       is_channel_member: {
         Args: { _channel_id: string; _user_id: string }
+        Returns: boolean
+      }
+      owns_seo_ppc_consultation: {
+        Args: { _consultation_id: string; _user_id: string }
         Returns: boolean
       }
     }
