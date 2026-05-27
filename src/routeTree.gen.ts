@@ -44,6 +44,7 @@ import { Route as AuthenticatedAutoCampaignRouteImport } from './routes/_authent
 import { Route as AuthenticatedAiWriterRouteImport } from './routes/_authenticated/ai-writer'
 import { Route as AuthenticatedAiVideoStudioRouteImport } from './routes/_authenticated/ai-video-studio'
 import { Route as AuthenticatedAiStudioRouteImport } from './routes/_authenticated/ai-studio'
+import { Route as AuthenticatedAiStrategyConsultantRouteImport } from './routes/_authenticated/ai-strategy-consultant'
 import { Route as AuthenticatedAccountPrivacyRouteImport } from './routes/_authenticated/account-privacy'
 
 const Char91indexChar93Route = Char91indexChar93RouteImport.update({
@@ -226,6 +227,12 @@ const AuthenticatedAiStudioRoute = AuthenticatedAiStudioRouteImport.update({
   path: '/ai-studio',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAiStrategyConsultantRoute =
+  AuthenticatedAiStrategyConsultantRouteImport.update({
+    id: '/ai-strategy-consultant',
+    path: '/ai-strategy-consultant',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedAccountPrivacyRoute =
   AuthenticatedAccountPrivacyRouteImport.update({
     id: '/account-privacy',
@@ -253,6 +260,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/upload-ownership-policy': typeof UploadOwnershipPolicyRoute
   '/account-privacy': typeof AuthenticatedAccountPrivacyRoute
+  '/ai-strategy-consultant': typeof AuthenticatedAiStrategyConsultantRoute
   '/ai-studio': typeof AuthenticatedAiStudioRoute
   '/ai-video-studio': typeof AuthenticatedAiVideoStudioRoute
   '/ai-writer': typeof AuthenticatedAiWriterRoute
@@ -290,6 +298,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/upload-ownership-policy': typeof UploadOwnershipPolicyRoute
   '/account-privacy': typeof AuthenticatedAccountPrivacyRoute
+  '/ai-strategy-consultant': typeof AuthenticatedAiStrategyConsultantRoute
   '/ai-studio': typeof AuthenticatedAiStudioRoute
   '/ai-video-studio': typeof AuthenticatedAiVideoStudioRoute
   '/ai-writer': typeof AuthenticatedAiWriterRoute
@@ -329,6 +338,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/upload-ownership-policy': typeof UploadOwnershipPolicyRoute
   '/_authenticated/account-privacy': typeof AuthenticatedAccountPrivacyRoute
+  '/_authenticated/ai-strategy-consultant': typeof AuthenticatedAiStrategyConsultantRoute
   '/_authenticated/ai-studio': typeof AuthenticatedAiStudioRoute
   '/_authenticated/ai-video-studio': typeof AuthenticatedAiVideoStudioRoute
   '/_authenticated/ai-writer': typeof AuthenticatedAiWriterRoute
@@ -368,6 +378,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/upload-ownership-policy'
     | '/account-privacy'
+    | '/ai-strategy-consultant'
     | '/ai-studio'
     | '/ai-video-studio'
     | '/ai-writer'
@@ -405,6 +416,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/upload-ownership-policy'
     | '/account-privacy'
+    | '/ai-strategy-consultant'
     | '/ai-studio'
     | '/ai-video-studio'
     | '/ai-writer'
@@ -443,6 +455,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/upload-ownership-policy'
     | '/_authenticated/account-privacy'
+    | '/_authenticated/ai-strategy-consultant'
     | '/_authenticated/ai-studio'
     | '/_authenticated/ai-video-studio'
     | '/_authenticated/ai-writer'
@@ -730,6 +743,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAiStudioRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/ai-strategy-consultant': {
+      id: '/_authenticated/ai-strategy-consultant'
+      path: '/ai-strategy-consultant'
+      fullPath: '/ai-strategy-consultant'
+      preLoaderRoute: typeof AuthenticatedAiStrategyConsultantRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/account-privacy': {
       id: '/_authenticated/account-privacy'
       path: '/account-privacy'
@@ -742,6 +762,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteChildren {
   AuthenticatedAccountPrivacyRoute: typeof AuthenticatedAccountPrivacyRoute
+  AuthenticatedAiStrategyConsultantRoute: typeof AuthenticatedAiStrategyConsultantRoute
   AuthenticatedAiStudioRoute: typeof AuthenticatedAiStudioRoute
   AuthenticatedAiVideoStudioRoute: typeof AuthenticatedAiVideoStudioRoute
   AuthenticatedAiWriterRoute: typeof AuthenticatedAiWriterRoute
@@ -762,6 +783,8 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAccountPrivacyRoute: AuthenticatedAccountPrivacyRoute,
+  AuthenticatedAiStrategyConsultantRoute:
+    AuthenticatedAiStrategyConsultantRoute,
   AuthenticatedAiStudioRoute: AuthenticatedAiStudioRoute,
   AuthenticatedAiVideoStudioRoute: AuthenticatedAiVideoStudioRoute,
   AuthenticatedAiWriterRoute: AuthenticatedAiWriterRoute,

@@ -921,6 +921,53 @@ export type Database = {
         }
         Relationships: []
       }
+      human_strategist_requests: {
+        Row: {
+          client_id: string | null
+          consultation_id: string | null
+          created_at: string
+          id: string
+          notes: string
+          preferred_time: string
+          request_type: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          client_id?: string | null
+          consultation_id?: string | null
+          created_at?: string
+          id?: string
+          notes?: string
+          preferred_time?: string
+          request_type?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          client_id?: string | null
+          consultation_id?: string | null
+          created_at?: string
+          id?: string
+          notes?: string
+          preferred_time?: string
+          request_type?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "human_strategist_requests_consultation_id_fkey"
+            columns: ["consultation_id"]
+            isOneToOne: false
+            referencedRelation: "strategy_consultations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leads: {
         Row: {
           company: string | null
@@ -1397,6 +1444,75 @@ export type Database = {
           platform?: string
           scheduled_at?: string
           status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      strategy_consultations: {
+        Row: {
+          audience: string
+          brand_assets: string
+          business_name: string
+          campaign_id: string | null
+          client_id: string | null
+          created_at: string
+          customizations: Json | null
+          customize_mode: boolean
+          goal: string
+          id: string
+          industry: string
+          location: string
+          platforms: Json
+          posting_frequency: string
+          recommendations: Json | null
+          services: string
+          status: string
+          tone: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          audience?: string
+          brand_assets?: string
+          business_name?: string
+          campaign_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          customizations?: Json | null
+          customize_mode?: boolean
+          goal?: string
+          id?: string
+          industry?: string
+          location?: string
+          platforms?: Json
+          posting_frequency?: string
+          recommendations?: Json | null
+          services?: string
+          status?: string
+          tone?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          audience?: string
+          brand_assets?: string
+          business_name?: string
+          campaign_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          customizations?: Json | null
+          customize_mode?: boolean
+          goal?: string
+          id?: string
+          industry?: string
+          location?: string
+          platforms?: Json
+          posting_frequency?: string
+          recommendations?: Json | null
+          services?: string
+          status?: string
+          tone?: string
           updated_at?: string
           user_id?: string
         }
