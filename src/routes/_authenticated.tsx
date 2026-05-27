@@ -149,6 +149,7 @@ function AuthedLayout() {
           <Outlet />
         </main>
       </div>
+      <ClientChatbot />
     </div>
   );
 }
