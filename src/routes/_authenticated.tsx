@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, Megaphone, KanbanSquare, Settings as SettingsIcon, Search, BarChart3, FileSearch, Share2, Globe, BookOpen, Sparkles, ImageIcon, CalendarDays, Wand2, Video, Clapperboard } from "lucide-react";
+import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, Megaphone, KanbanSquare, Settings as SettingsIcon, Search, BarChart3, FileSearch, Share2, Globe, BookOpen, Sparkles, ImageIcon, CalendarDays, Wand2, Video, Clapperboard, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -42,6 +42,7 @@ function AuthedLayout() {
     { to: "/campaigns", label: "Campaigns", icon: Megaphone, group: "Workspace" },
     { to: "/tasks", label: "Tasks", icon: KanbanSquare, group: "Workspace" },
     { to: "/meetings", label: "Meetings", icon: Video, group: "Workspace" },
+    { to: "/team-chat", label: "Team Chat", icon: MessageSquare, group: "Workspace" },
     { to: "/blog", label: "Daily Blog", icon: BookOpen, group: "Workspace" },
     { to: "/auto-campaign", label: "AI Auto Campaign", icon: Wand2, group: "Marketing Tools" },
     { to: "/ai-writer", label: "AI Writer", icon: Sparkles, group: "Marketing Tools" },
