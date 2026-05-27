@@ -127,6 +127,7 @@ function TopNav() {
           </Link>
           <Link
             to="/auth"
+            search={{ mode: "signup" }}
             className="inline-flex items-center gap-1.5 rounded-md bg-foreground px-4 py-2 text-sm font-semibold text-background hover:opacity-90"
           >
             Get started <ArrowRight className="size-3.5" />
