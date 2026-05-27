@@ -893,6 +893,73 @@ function TeamChatPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Convert message dialog */}
+      <Dialog open={!!convertMsg} onOpenChange={(o) => !o && setConvertMsg(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {convertAction === "task" && <><ListTodo className="size-4" /> Create Task</>}
+              {convertAction === "meeting" && <><CalendarPlus className="size-4" /> Create Meeting</>}
+              {convertAction === "calendar" && <><CalendarDays className="size-4" /> Add to Content Calendar</>}
+              {convertAction === "client_note" && <><Building2 className="size-4" /> Save to Client</>}
+              {convertAction === "ai_campaign" && <><Wand2 className="size-4" /> Generate AI Campaign</>}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div>
+              <Label>Message</Label>
+              <Textarea rows={3} value={convertMsg?.content ?? ""} readOnly className="mt-1.5 bg-muted/30" />
+            </div>
+            {(convertAction === "task" || convertAction === "meeting" || convertAction === "calendar" || convertAction === "client_note" || convertAction === "ai_campaign") && (
+              <div>
+                <Label>Client {convertAction === "client_note" ? "(required)" : "(optional)"}</Label>
+                <Select value={convertClientId || "none"} onValueChange={(v) => setConvertClientId(v === "none" ? "" : v)}>
+                  <SelectTrigger className="mt-1.5"><SelectValue placeholder="No client" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">No client</SelectItem>
+                    {clients.map((c) => <SelectItem key={c.id} value={c.id}>{c.business_name}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+            {convertAction === "meeting" && (
+              <div>
+                <Label>Date</Label>
+                <Input type="date" value={convertDate} onChange={(e) => setConvertDate(e.target.value)} className="mt-1.5" />
+              </div>
+            )}
+            {convertAction === "calendar" && (
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label>Date</Label>
+                  <Input type="date" value={convertDate} onChange={(e) => setConvertDate(e.target.value)} className="mt-1.5" />
+                </div>
+                <div>
+                  <Label>Platform</Label>
+                  <Select value={convertPlatform} onValueChange={setConvertPlatform}>
+                    <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {["instagram", "facebook", "twitter", "linkedin", "tiktok", "youtube", "blog"].map((p) =>
+                        <SelectItem key={p} value={p}>{p}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            )}
+            {convertAction === "ai_campaign" && (
+              <p className="text-xs text-muted-foreground">AI will generate campaign ideas from this message and save them as a new campaign draft.</p>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConvertMsg(null)}>Cancel</Button>
+            <Button onClick={runConvert} disabled={convertBusy}>
+              {convertBusy ? <><Loader2 className="size-4 animate-spin" /> Creating…</> : "Create"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
+
   );
 }
