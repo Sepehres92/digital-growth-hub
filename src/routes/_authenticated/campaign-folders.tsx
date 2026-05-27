@@ -48,7 +48,8 @@ function CampaignFoldersPage() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (input: Parameters<typeof create>[0]["data"]) => create({ data: input }),
+    mutationFn: (input: { name: string; folderType: "social_media" | "seo" | "ppc" | "combined" | "human_assisted" | "ai_generated" | "ai_human_review"; sourceType: "ai" | "human" | "ai_human_review"; goal?: string }) =>
+      create({ data: input }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["campaign-folders"] });
       setCreateOpen(false);

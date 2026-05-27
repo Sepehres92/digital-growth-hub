@@ -40,6 +40,7 @@ import { Route as AuthenticatedContentCalendarRouteImport } from './routes/_auth
 import { Route as AuthenticatedClientsRouteImport } from './routes/_authenticated/clients'
 import { Route as AuthenticatedChatbotAdminRouteImport } from './routes/_authenticated/chatbot-admin'
 import { Route as AuthenticatedCampaignsRouteImport } from './routes/_authenticated/campaigns'
+import { Route as AuthenticatedCampaignFoldersRouteImport } from './routes/_authenticated/campaign-folders'
 import { Route as AuthenticatedAutoCampaignRouteImport } from './routes/_authenticated/auto-campaign'
 import { Route as AuthenticatedAiWriterRouteImport } from './routes/_authenticated/ai-writer'
 import { Route as AuthenticatedAiVideoStudioRouteImport } from './routes/_authenticated/ai-video-studio'
@@ -206,6 +207,12 @@ const AuthenticatedCampaignsRoute = AuthenticatedCampaignsRouteImport.update({
   path: '/campaigns',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedCampaignFoldersRoute =
+  AuthenticatedCampaignFoldersRouteImport.update({
+    id: '/campaign-folders',
+    path: '/campaign-folders',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedAutoCampaignRoute =
   AuthenticatedAutoCampaignRouteImport.update({
     id: '/auto-campaign',
@@ -273,6 +280,7 @@ export interface FileRoutesByFullPath {
   '/ai-video-studio': typeof AuthenticatedAiVideoStudioRoute
   '/ai-writer': typeof AuthenticatedAiWriterRoute
   '/auto-campaign': typeof AuthenticatedAutoCampaignRoute
+  '/campaign-folders': typeof AuthenticatedCampaignFoldersRoute
   '/campaigns': typeof AuthenticatedCampaignsRoute
   '/chatbot-admin': typeof AuthenticatedChatbotAdminRoute
   '/clients': typeof AuthenticatedClientsRoute
@@ -312,6 +320,7 @@ export interface FileRoutesByTo {
   '/ai-video-studio': typeof AuthenticatedAiVideoStudioRoute
   '/ai-writer': typeof AuthenticatedAiWriterRoute
   '/auto-campaign': typeof AuthenticatedAutoCampaignRoute
+  '/campaign-folders': typeof AuthenticatedCampaignFoldersRoute
   '/campaigns': typeof AuthenticatedCampaignsRoute
   '/chatbot-admin': typeof AuthenticatedChatbotAdminRoute
   '/clients': typeof AuthenticatedClientsRoute
@@ -353,6 +362,7 @@ export interface FileRoutesById {
   '/_authenticated/ai-video-studio': typeof AuthenticatedAiVideoStudioRoute
   '/_authenticated/ai-writer': typeof AuthenticatedAiWriterRoute
   '/_authenticated/auto-campaign': typeof AuthenticatedAutoCampaignRoute
+  '/_authenticated/campaign-folders': typeof AuthenticatedCampaignFoldersRoute
   '/_authenticated/campaigns': typeof AuthenticatedCampaignsRoute
   '/_authenticated/chatbot-admin': typeof AuthenticatedChatbotAdminRoute
   '/_authenticated/clients': typeof AuthenticatedClientsRoute
@@ -394,6 +404,7 @@ export interface FileRouteTypes {
     | '/ai-video-studio'
     | '/ai-writer'
     | '/auto-campaign'
+    | '/campaign-folders'
     | '/campaigns'
     | '/chatbot-admin'
     | '/clients'
@@ -433,6 +444,7 @@ export interface FileRouteTypes {
     | '/ai-video-studio'
     | '/ai-writer'
     | '/auto-campaign'
+    | '/campaign-folders'
     | '/campaigns'
     | '/chatbot-admin'
     | '/clients'
@@ -473,6 +485,7 @@ export interface FileRouteTypes {
     | '/_authenticated/ai-video-studio'
     | '/_authenticated/ai-writer'
     | '/_authenticated/auto-campaign'
+    | '/_authenticated/campaign-folders'
     | '/_authenticated/campaigns'
     | '/_authenticated/chatbot-admin'
     | '/_authenticated/clients'
@@ -728,6 +741,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCampaignsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/campaign-folders': {
+      id: '/_authenticated/campaign-folders'
+      path: '/campaign-folders'
+      fullPath: '/campaign-folders'
+      preLoaderRoute: typeof AuthenticatedCampaignFoldersRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/auto-campaign': {
       id: '/_authenticated/auto-campaign'
       path: '/auto-campaign'
@@ -788,6 +808,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAiVideoStudioRoute: typeof AuthenticatedAiVideoStudioRoute
   AuthenticatedAiWriterRoute: typeof AuthenticatedAiWriterRoute
   AuthenticatedAutoCampaignRoute: typeof AuthenticatedAutoCampaignRoute
+  AuthenticatedCampaignFoldersRoute: typeof AuthenticatedCampaignFoldersRoute
   AuthenticatedCampaignsRoute: typeof AuthenticatedCampaignsRoute
   AuthenticatedChatbotAdminRoute: typeof AuthenticatedChatbotAdminRoute
   AuthenticatedClientsRoute: typeof AuthenticatedClientsRoute
@@ -811,6 +832,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAiVideoStudioRoute: AuthenticatedAiVideoStudioRoute,
   AuthenticatedAiWriterRoute: AuthenticatedAiWriterRoute,
   AuthenticatedAutoCampaignRoute: AuthenticatedAutoCampaignRoute,
+  AuthenticatedCampaignFoldersRoute: AuthenticatedCampaignFoldersRoute,
   AuthenticatedCampaignsRoute: AuthenticatedCampaignsRoute,
   AuthenticatedChatbotAdminRoute: AuthenticatedChatbotAdminRoute,
   AuthenticatedClientsRoute: AuthenticatedClientsRoute,
