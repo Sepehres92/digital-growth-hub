@@ -203,13 +203,23 @@ export const clientChatbotChat = createServerFn({ method: "POST" })
       ctxParts.push("Knowledge base articles:\n" + kb.map((a: any) => `### ${a.title} [${a.category}]\n${a.body}`).join("\n\n"));
     }
 
-    // Load recent chat history
-    const { data: history } = await supabase
-      .from("chatbot_messages")
-      .select("role,content,created_at")
-      .eq("conversation_id", data.conversationId)
-      .order("created_at", { ascending: true })
-      .limit(40);
+    // Load recent chat history + existing lightweight session memory
+    const [{ data: history }, { data: convoRow }] = await Promise.all([
+      supabase
+        .from("chatbot_messages")
+        .select("role,content,created_at")
+        .eq("conversation_id", data.conversationId)
+        .order("created_at", { ascending: true })
+        .limit(40),
+      supabase
+        .from("chatbot_conversations")
+        .select("session_memory")
+        .eq("id", data.conversationId)
+        .maybeSingle(),
+    ]);
+
+    const sessionMemory: Record<string, unknown> =
+      (convoRow?.session_memory as Record<string, unknown>) || {};
 
     // Save user message
     const { error: insErr } = await supabase.from("chatbot_messages").insert({
@@ -221,6 +231,10 @@ export const clientChatbotChat = createServerFn({ method: "POST" })
     });
     if (insErr) throw new Error(insErr.message);
 
+    const memoryBlock = Object.keys(sessionMemory).length
+      ? `=== SESSION MEMORY (preferences remembered for this conversation only) ===\n${JSON.stringify(sessionMemory, null, 2)}`
+      : "";
+
     const system = [
       `You are a helpful AI assistant inside a digital marketing agency's client portal. Tone: ${tone}.`,
       "You answer questions about the client using ONLY the data in the CONTEXT block below.",
@@ -230,8 +244,17 @@ export const clientChatbotChat = createServerFn({ method: "POST" })
       "If the answer isn't in the context, say you don't have that information and offer to escalate.",
       "Explain marketing concepts simply when asked. Be concise. Use bullet points and markdown when helpful.",
       'Always end answers that involve marketing decisions, billing, legal, or account changes with: "Note: please confirm with your account manager before acting."',
+      "",
+      "SESSION MEMORY RULES:",
+      "- Use SESSION MEMORY to recall the user's stated preferences (preferred name, tone, language, topics of interest, reporting cadence, shorthand they use).",
+      "- At the very end of EVERY reply, append a single line in this exact format and nothing after it:",
+      "  <memory>{\"preferred_name\":\"...\",\"tone\":\"...\",\"language\":\"...\",\"interests\":[\"...\"],\"notes\":\"...\"}</memory>",
+      "- Include ONLY fields you are confident about; omit unknown ones. Keep the JSON under 500 characters.",
+      "- Memory MUST contain only user-stated preferences. Never put private client data, campaign numbers, secrets, or info from forbidden sources in memory.",
+      "- The <memory> line is stripped before the user sees the message, so do not reference it in your prose.",
       customInstructions ? `Custom instructions: ${customInstructions}` : "",
       "",
+      memoryBlock,
       "=== CONTEXT ===",
       ctxParts.join("\n\n") || "(no context loaded)",
     ].filter(Boolean).join("\n");
@@ -241,12 +264,34 @@ export const clientChatbotChat = createServerFn({ method: "POST" })
       { role: "user", content: data.message },
     ];
 
-    let reply = "";
+    let rawReply = "";
     try {
-      reply = await callAI(system, convo);
+      rawReply = await callAI(system, convo);
     } catch (e: any) {
-      reply = `I couldn't reach the AI right now (${e?.message || "unknown error"}). You can create a support ticket and the team will follow up.`;
+      rawReply = `I couldn't reach the AI right now (${e?.message || "unknown error"}). You can create a support ticket and the team will follow up.`;
     }
+
+    // Extract <memory>{...}</memory> tail, merge into session_memory, strip from reply
+    let updatedMemory = sessionMemory;
+    const memMatch = rawReply.match(/<memory>([\s\S]*?)<\/memory>\s*$/i);
+    if (memMatch) {
+      try {
+        const parsed = JSON.parse(memMatch[1].trim());
+        if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+          const merged: Record<string, unknown> = { ...sessionMemory };
+          for (const [k, v] of Object.entries(parsed)) {
+            if (v === null || v === "" || (Array.isArray(v) && v.length === 0)) continue;
+            merged[k] = v;
+          }
+          // Cap size to keep memory lightweight
+          const serialized = JSON.stringify(merged);
+          if (serialized.length <= 2000) updatedMemory = merged;
+        }
+      } catch {
+        // ignore malformed memory tag
+      }
+    }
+    const reply = rawReply.replace(/\s*<memory>[\s\S]*?<\/memory>\s*$/i, "").trim();
 
     await supabase.from("chatbot_messages").insert({
       conversation_id: data.conversationId,
@@ -255,7 +300,14 @@ export const clientChatbotChat = createServerFn({ method: "POST" })
       content: reply,
       attachments: [],
     });
-    await supabase.from("chatbot_conversations").update({ updated_at: new Date().toISOString(), context_page: data.contextPage ?? null }).eq("id", data.conversationId);
+    await supabase
+      .from("chatbot_conversations")
+      .update({
+        updated_at: new Date().toISOString(),
+        context_page: data.contextPage ?? null,
+        session_memory: updatedMemory,
+      })
+      .eq("id", data.conversationId);
 
     return { reply };
   });
