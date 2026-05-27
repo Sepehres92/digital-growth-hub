@@ -30,6 +30,58 @@ async function callAI(system: string, user: string, asJson = false): Promise<str
   return json?.choices?.[0]?.message?.content ?? "";
 }
 
+function extractJSON<T = unknown>(raw: string): T {
+  let cleaned = String(raw || "")
+    .replace(/^\uFEFF/, "")
+    .replace(/```(?:json)?\s*/gi, "")
+    .replace(/```\s*$/g, "")
+    .trim();
+  if (!cleaned) throw new Error("AI returned an empty response");
+
+  // Try direct parse first
+  try { return JSON.parse(cleaned) as T; } catch { /* fall through */ }
+
+  // Find the outermost JSON object/array
+  const objStart = cleaned.indexOf("{");
+  const arrStart = cleaned.indexOf("[");
+  const isArray = arrStart !== -1 && (objStart === -1 || arrStart < objStart);
+  const start = isArray ? arrStart : objStart;
+  if (start === -1) throw new Error("AI response did not contain JSON");
+  const openCh = isArray ? "[" : "{";
+  const closeCh = isArray ? "]" : "}";
+  const lastClose = cleaned.lastIndexOf(closeCh);
+  if (lastClose > start) {
+    try { return JSON.parse(cleaned.slice(start, lastClose + 1)) as T; } catch { /* fall through */ }
+  }
+
+  // Truncated JSON — auto-close open braces/brackets/strings
+  let body = cleaned.slice(start);
+  let inStr = false, esc = false;
+  const stack: string[] = [];
+  for (let i = 0; i < body.length; i++) {
+    const c = body[i];
+    if (inStr) {
+      if (esc) { esc = false; continue; }
+      if (c === "\\") { esc = true; continue; }
+      if (c === '"') inStr = false;
+      continue;
+    }
+    if (c === '"') { inStr = true; continue; }
+    if (c === "{" || c === "[") stack.push(c);
+    else if (c === "}" || c === "]") stack.pop();
+  }
+  // Drop trailing partial token after last complete value
+  body = body.replace(/,\s*$/, "");
+  if (inStr) body += '"';
+  while (stack.length) {
+    const open = stack.pop();
+    body += open === "{" ? "}" : "]";
+  }
+  try { return JSON.parse(body) as T; } catch (e) {
+    throw new Error(`AI returned malformed JSON: ${(e as Error).message}`);
+  }
+}
+
 const SnippetInput = z.object({
   kind: z.enum(["caption", "hashtags", "cta", "video_title", "seo_description", "thumbnail_prompt"]),
   platform: z.string().max(40).default(""),
@@ -118,15 +170,7 @@ Start date: ${startIso}
 Pick best posting hours for each platform (Instagram: 11, Facebook: 13, X: 9, TikTok: 19, YouTube: 17).`;
 
     const raw = await callAI(sys, user, true);
-    let parsed: { posts: PlannedPost[] };
-    try {
-      parsed = JSON.parse(raw);
-    } catch {
-      // Try to extract JSON object from the text
-      const m = raw.match(/\{[\s\S]*\}/);
-      if (!m) throw new Error("AI returned malformed plan");
-      parsed = JSON.parse(m[0]);
-    }
+    const parsed = extractJSON<{ posts: PlannedPost[] }>(raw);
     if (!parsed?.posts?.length) throw new Error("AI returned no posts");
     // Validate / clamp each post
     const out: PlannedPost[] = parsed.posts.slice(0, 60).map((p) => ({
@@ -201,14 +245,7 @@ Total posts: ${totalPosts} (~${data.postsPerWeek}/week)
 Start date: ${startIso}`;
 
     const raw = await callAI(sys, user, true);
-    let parsed: { strategy?: string; posts: AutoCampaignPost[] };
-    try {
-      parsed = JSON.parse(raw);
-    } catch {
-      const m = raw.match(/\{[\s\S]*\}/);
-      if (!m) throw new Error("AI returned malformed campaign");
-      parsed = JSON.parse(m[0]);
-    }
+    const parsed = extractJSON<{ strategy?: string; posts: AutoCampaignPost[] }>(raw);
     if (!parsed?.posts?.length) throw new Error("AI returned no posts");
 
     const allowed = ["instagram", "facebook", "x", "tiktok", "youtube"];
