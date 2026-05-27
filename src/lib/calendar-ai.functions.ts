@@ -216,7 +216,13 @@ export type AutoCampaignPost = {
 
 export const generateAutoCampaign = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => AutoCampaignInput.parse(d))
+  .inputValidator((d: unknown) => {
+    const v = { ...((d ?? {}) as Record<string, unknown>) };
+    if (typeof v.postsPerWeek === "number") {
+      v.postsPerWeek = Math.min(21, Math.max(3, Math.round(v.postsPerWeek as number)));
+    }
+    return AutoCampaignInput.parse(v);
+  })
   .handler(async ({ data }) => {
     const start = data.startDate ? new Date(data.startDate) : new Date();
     const startIso = start.toISOString().slice(0, 10);
