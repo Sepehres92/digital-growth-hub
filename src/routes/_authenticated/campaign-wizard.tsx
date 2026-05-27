@@ -5,7 +5,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { createCampaignFromWizard } from "@/lib/campaign-folders.functions";
+import { createCampaignWithFolder } from "@/lib/create-campaign-with-folder.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -54,7 +54,7 @@ const PLATFORMS = ["instagram", "facebook", "x", "tiktok", "youtube", "linkedin"
 
 function CampaignWizardPage() {
   const navigate = useNavigate();
-  const createFromWizard = useServerFn(createCampaignFromWizard);
+  const createFromWizard = useServerFn(createCampaignWithFolder);
 
   const [step, setStep] = useState(1);
   const [clientId, setClientId] = useState<string>("");
@@ -102,22 +102,29 @@ function CampaignWizardPage() {
   }, [name, kind, source, goal, audience, tone, budget, platforms, keywords, customNotes, needsBudget, needsPlatforms, needsKeywords]);
 
   const create = useMutation({
-    mutationFn: () =>
-      createFromWizard({
+    mutationFn: () => {
+      const campaignType: "seo" | "ppc" | "social_media" | "website" =
+        kind === "seo"
+          ? "seo"
+          : kind === "ppc"
+            ? "ppc"
+            : kind === "social_media"
+              ? "social_media"
+              : "website";
+      return createFromWizard({
         data: {
-          clientId: clientId || null,
-          name: name.trim(),
-          campaignKind: kind as CampaignKind,
-          sourceType: source as SourceType,
-          goal: goal || undefined,
-          targetAudience: audience || undefined,
-          monthlyBudget: budget ? Number(budget) : undefined,
-          tone: tone || undefined,
-          platforms: needsPlatforms ? platforms : undefined,
-          keywords: needsKeywords ? keywords : undefined,
-          strategySummary: strategyPreview,
+          client_id: clientId || null,
+          campaign_type: campaignType,
+          creation_method: source as "ai" | "human" | "ai_human_review",
+          strategy_data: {
+            name: name.trim(),
+            goal: goal || undefined,
+            strategy_summary: strategyPreview,
+            monthly_budget: needsBudget && budget ? Number(budget) : undefined,
+          },
         },
-      }),
+      });
+    },
     onSuccess: () => {
       toast.success("Campaign folder created with all assets connected.");
       navigate({ to: "/campaign-folders" });
