@@ -31,10 +31,12 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedTeamChatRouteImport } from './routes/_authenticated/team-chat'
 import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedMeetingsRouteImport } from './routes/_authenticated/meetings'
 import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated/leads'
 import { Route as AuthenticatedHelpSupportRouteImport } from './routes/_authenticated/help-support'
 import { Route as AuthenticatedGlobalDashboardRouteImport } from './routes/_authenticated/global-dashboard'
+import { Route as AuthenticatedDemoTemplatesRouteImport } from './routes/_authenticated/demo-templates'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedContentCalendarRouteImport } from './routes/_authenticated/content-calendar'
 import { Route as AuthenticatedClientsRouteImport } from './routes/_authenticated/clients'
@@ -159,6 +161,11 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedMeetingsRoute = AuthenticatedMeetingsRouteImport.update({
   id: '/meetings',
   path: '/meetings',
@@ -179,6 +186,12 @@ const AuthenticatedGlobalDashboardRoute =
   AuthenticatedGlobalDashboardRouteImport.update({
     id: '/global-dashboard',
     path: '/global-dashboard',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedDemoTemplatesRoute =
+  AuthenticatedDemoTemplatesRouteImport.update({
+    id: '/demo-templates',
+    path: '/demo-templates',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -294,10 +307,12 @@ export interface FileRoutesByFullPath {
   '/clients': typeof AuthenticatedClientsRoute
   '/content-calendar': typeof AuthenticatedContentCalendarRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/demo-templates': typeof AuthenticatedDemoTemplatesRoute
   '/global-dashboard': typeof AuthenticatedGlobalDashboardRoute
   '/help-support': typeof AuthenticatedHelpSupportRoute
   '/leads': typeof AuthenticatedLeadsRoute
   '/meetings': typeof AuthenticatedMeetingsRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
   '/team-chat': typeof AuthenticatedTeamChatRoute
@@ -335,10 +350,12 @@ export interface FileRoutesByTo {
   '/clients': typeof AuthenticatedClientsRoute
   '/content-calendar': typeof AuthenticatedContentCalendarRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/demo-templates': typeof AuthenticatedDemoTemplatesRoute
   '/global-dashboard': typeof AuthenticatedGlobalDashboardRoute
   '/help-support': typeof AuthenticatedHelpSupportRoute
   '/leads': typeof AuthenticatedLeadsRoute
   '/meetings': typeof AuthenticatedMeetingsRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
   '/team-chat': typeof AuthenticatedTeamChatRoute
@@ -378,10 +395,12 @@ export interface FileRoutesById {
   '/_authenticated/clients': typeof AuthenticatedClientsRoute
   '/_authenticated/content-calendar': typeof AuthenticatedContentCalendarRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/demo-templates': typeof AuthenticatedDemoTemplatesRoute
   '/_authenticated/global-dashboard': typeof AuthenticatedGlobalDashboardRoute
   '/_authenticated/help-support': typeof AuthenticatedHelpSupportRoute
   '/_authenticated/leads': typeof AuthenticatedLeadsRoute
   '/_authenticated/meetings': typeof AuthenticatedMeetingsRoute
+  '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
   '/_authenticated/team-chat': typeof AuthenticatedTeamChatRoute
@@ -421,10 +440,12 @@ export interface FileRouteTypes {
     | '/clients'
     | '/content-calendar'
     | '/dashboard'
+    | '/demo-templates'
     | '/global-dashboard'
     | '/help-support'
     | '/leads'
     | '/meetings'
+    | '/onboarding'
     | '/settings'
     | '/tasks'
     | '/team-chat'
@@ -462,10 +483,12 @@ export interface FileRouteTypes {
     | '/clients'
     | '/content-calendar'
     | '/dashboard'
+    | '/demo-templates'
     | '/global-dashboard'
     | '/help-support'
     | '/leads'
     | '/meetings'
+    | '/onboarding'
     | '/settings'
     | '/tasks'
     | '/team-chat'
@@ -504,10 +527,12 @@ export interface FileRouteTypes {
     | '/_authenticated/clients'
     | '/_authenticated/content-calendar'
     | '/_authenticated/dashboard'
+    | '/_authenticated/demo-templates'
     | '/_authenticated/global-dashboard'
     | '/_authenticated/help-support'
     | '/_authenticated/leads'
     | '/_authenticated/meetings'
+    | '/_authenticated/onboarding'
     | '/_authenticated/settings'
     | '/_authenticated/tasks'
     | '/_authenticated/team-chat'
@@ -691,6 +716,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/onboarding': {
+      id: '/_authenticated/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/meetings': {
       id: '/_authenticated/meetings'
       path: '/meetings'
@@ -717,6 +749,13 @@ declare module '@tanstack/react-router' {
       path: '/global-dashboard'
       fullPath: '/global-dashboard'
       preLoaderRoute: typeof AuthenticatedGlobalDashboardRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/demo-templates': {
+      id: '/_authenticated/demo-templates'
+      path: '/demo-templates'
+      fullPath: '/demo-templates'
+      preLoaderRoute: typeof AuthenticatedDemoTemplatesRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/dashboard': {
@@ -835,10 +874,12 @@ interface AuthenticatedRouteChildren {
   AuthenticatedClientsRoute: typeof AuthenticatedClientsRoute
   AuthenticatedContentCalendarRoute: typeof AuthenticatedContentCalendarRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDemoTemplatesRoute: typeof AuthenticatedDemoTemplatesRoute
   AuthenticatedGlobalDashboardRoute: typeof AuthenticatedGlobalDashboardRoute
   AuthenticatedHelpSupportRoute: typeof AuthenticatedHelpSupportRoute
   AuthenticatedLeadsRoute: typeof AuthenticatedLeadsRoute
   AuthenticatedMeetingsRoute: typeof AuthenticatedMeetingsRoute
+  AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedTasksRoute: typeof AuthenticatedTasksRoute
   AuthenticatedTeamChatRoute: typeof AuthenticatedTeamChatRoute
@@ -860,10 +901,12 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedClientsRoute: AuthenticatedClientsRoute,
   AuthenticatedContentCalendarRoute: AuthenticatedContentCalendarRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDemoTemplatesRoute: AuthenticatedDemoTemplatesRoute,
   AuthenticatedGlobalDashboardRoute: AuthenticatedGlobalDashboardRoute,
   AuthenticatedHelpSupportRoute: AuthenticatedHelpSupportRoute,
   AuthenticatedLeadsRoute: AuthenticatedLeadsRoute,
   AuthenticatedMeetingsRoute: AuthenticatedMeetingsRoute,
+  AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedTasksRoute: AuthenticatedTasksRoute,
   AuthenticatedTeamChatRoute: AuthenticatedTeamChatRoute,

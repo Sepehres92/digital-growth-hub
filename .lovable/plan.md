@@ -1,91 +1,73 @@
+# Smart Onboarding System
 
-# Security, Privacy & Legal Hardening — Phased Plan
+A large, multi-area feature. Below is a focused, shippable plan that delivers the full intent in clear phases.
 
-Your request covers ~15 distinct security/compliance domains. Shipping all of them in one pass would mean shallow implementations of each (which is worse than none). I'm proposing 3 phases. **Phase 1 covers everything that's high-impact + achievable now on this stack.** Phases 2–3 are optional follow-ups.
+## 1. Data model (one migration)
 
-Some items in your list are **already done** or **not applicable** — flagged below.
+New table `marketing_profiles` (1 row per user, optionally per client):
+- business: `business_name`, `website_url`, `industry`, `location`, `services`, `target_audience`, `main_goal`, `budget_range`
+- brand: `brand_tone`, `brand_colors` (jsonb), `logo_url`, `media_urls` (jsonb), `competitors`, `usps`, `offers`
+- marketing: `platforms` (text[]), `posting_frequency`, `content_types` (text[]), `approval_required` (bool), `creation_mode` ('ai'|'human'|'ai_human')
+- seo_ppc: `target_keywords` (text[]), `seo_competitors`, `target_locations` (text[]), `ppc_budget`, `lead_type`, `landing_page_url`, `conversion_goal`
+- team: `client_portal_enabled`, `human_consultation_requested`
+- meta: `onboarding_completed` (bool), `onboarding_step` (int), `is_demo` (bool), `demo_template` (text), `client_id` (nullable fk)
 
----
+New table `workspace_mode` (1 row per user): `mode` enum `real`|`demo`, `demo_template`, `created_at`. Drives the global demo banner + safety guards.
 
-## Already in place ✅
+RLS: own-row only. GRANTs to authenticated + service_role.
 
-- **Password hashing, email verification, password reset, session management** — handled by Lovable Cloud Auth.
-- **RLS on every user-data table** — verified: `clients`, `campaigns`, `tasks`, `leads`, `ai_copies`, `ai_images`, `generated_images`, `client_images`, `creative_projects`, `profiles` all have owner-scoped policies.
-- **API keys server-side only** — `LOVABLE_API_KEY` lives in server env, called from `createServerFn` only.
-- **HTTPS, secure cookies, SQL-injection protection** — provided by Lovable Cloud + Supabase client (parameterized queries).
-- **Content policy banner** on AI Studio (added earlier).
-- **Private storage bucket** `client-uploads` (owner-only folder policies).
+## 2. Server functions (`src/lib/onboarding.functions.ts`)
 
-## Not applicable on this stack ❌
+- `getMarketingProfile()` → current profile (or null)
+- `saveMarketingProfile(partial)` → upsert by user_id
+- `completeOnboarding()` → marks done, creates a `clients` row from profile, links it
+- `getWorkspaceMode()` / `setWorkspaceMode({mode, template})`
+- `seedDemoWorkspace({template})` → inserts fake client, campaign folder, calendar entries, posts, SEO/PPC campaign, meeting, chat msgs, report placeholder, chatbot convo — all tagged `is_demo=true` where the column exists, otherwise prefixed with "[DEMO]"
+- `convertDemoToReal({keepDemoAsExamples})` → flips mode, optionally purges `[DEMO]` rows
 
-- **CSRF tokens** — not needed; serverFn uses bearer-token auth, not cookies.
-- **"Scan uploads for malicious files"** — requires an AV service (ClamAV/VirusTotal). Out of scope unless you want me to wire a third-party API.
-- **"Encrypt sensitive fields"** at the column level — Postgres already encrypts at rest; column-level encryption (pgsodium) is overkill for the data you currently store (no SSNs/payment info).
-- **Backup/recovery system** — managed automatically by Lovable Cloud.
+## 3. UI routes
 
----
+- `src/routes/_authenticated/onboarding.tsx` — entry chooser ("Create My Real Workspace" / "Try Demo Workspace") + multi-step wizard (Business → Brand → Marketing → SEO/PPC → Team) with progress bar, "Save & continue later", "Skip optional".
+- `src/routes/_authenticated/demo-templates.tsx` — pick a sample business (Roofing, Real Estate, Restaurant, Fitness, Contractor, Agency) → calls `seedDemoWorkspace`.
+- Auto-redirect in `_authenticated.tsx`: if `onboarding_completed=false` and not on `/onboarding`, push to `/onboarding`.
 
-## Phase 1 — Ship now (recommended)
+## 4. Demo banner + safety
 
-**Goal:** close real gaps, add legal pages, add audit logging foundation.
+- `<DemoBanner />` mounted in `_authenticated.tsx` layout; visible only when `workspace_mode.mode='demo'`. Copy: "You are in Demo Mode. Data is fake. Publishing, payments, and external integrations are disabled."
+- Add helper `useIsDemoMode()` and guard server fns that publish/pay/email/connect: short-circuit with a friendly toast error when in demo.
+- "Convert to Real Workspace" button in banner → opens conversion dialog.
 
-### A. Database & RLS
-1. Create `user_roles` table + `app_role` enum (`admin`, `member`) + `has_role()` SECURITY DEFINER function — required for any admin features and prevents privilege escalation (per Lovable security rules).
-2. Create `audit_logs` table (user_id, action, resource_type, resource_id, metadata jsonb, ip, created_at) with RLS: users see own logs, admins see all.
-3. Add file-size + MIME-type CHECK constraints on `client_images` (max 10 MB, image/* only).
-4. Tighten `blog_posts` policy — currently `anon` can INSERT; restrict to authenticated.
+## 5. Smart profile reuse (replace repeated forms)
 
-### B. Server functions — validation & rate limiting
-5. Add Zod input validation to every existing `createServerFn` that doesn't have it (`ai-writer`, `ai-studio`, `generate-ai-image`).
-6. Add a simple in-DB rate limiter table (`rate_limits`: user_id, action, window_start, count) + helper called from AI server fns (e.g. 30 AI generations / hour).
-7. Log every AI generation and file upload to `audit_logs`.
+Build a shared `<ProfileAutofillCard />` that shows "Using saved profile · Edit details · Add campaign-specific only" and seeds form state from `getMarketingProfile()`. Wire into:
+- AI Writer, AI Strategy Consultant, SEO/PPC Consultant, AI Image Studio, AI Video Studio, Campaign Wizard, Content Calendar auto-campaign, Social Scheduler.
 
-### C. File upload hardening
-8. Client-side: validate MIME type + size before upload; reject anything that isn't `image/png|jpeg|webp` ≤ 10 MB.
-9. Server-side: re-validate MIME from the storage object metadata after upload.
+Each tool keeps only feature-specific fields (e.g. Image Studio asks just "What image?" + "Which campaign?"; SEO asks only "Any new keywords / campaign-specific budget?").
 
-### D. Legal & privacy pages (public routes)
-10. `/privacy` — Privacy Policy (GDPR/PIPEDA/CCPA-aligned template, customized to this app).
-11. `/terms` — Terms of Service incl. AI-content disclaimers (user owns inputs, must have rights, must review AI output, no liability for misuse, no medical/legal/financial advice).
-12. `/cookies` — Cookie Policy (this app uses only essential auth cookies).
-13. Footer links to all three on every page.
-14. Signup form: required consent checkbox ("I agree to Terms & Privacy Policy").
+## 6. Sidebar / nav
 
-### E. Account self-service (GDPR / PIPEDA right-to-erasure & portability)
-15. **Settings → Privacy** page with:
-    - **Export my data** button → server fn returns JSON of all user rows across tables.
-    - **Delete my account** button → server fn deletes all user rows + auth user (confirmation modal).
+Add nav entries: "Onboarding" and "Demo Templates" under a new "Setup" group. Add "Edit Marketing Profile" in Settings.
 
-### F. Frontend protection
-16. Audit codebase for `dangerouslySetInnerHTML` — sanitize with DOMPurify if any user content is rendered as HTML.
-17. Add Zod schemas to all user-facing forms that don't have them (length limits, format checks).
+## Technical notes
 
----
+- New `marketing_profiles` rows are auto-fed into `clients` on completion so existing campaign/folder flows keep working unchanged.
+- Demo-seeded rows reuse existing tables (no schema fork) — tagged via name prefix `[DEMO]` + new `is_demo bool default false` column added to: `clients`, `campaigns`, `campaign_folders`, `content_posts`, `social_posts`. (Trigger copies `is_demo` from campaign → folder so cascade tagging works.)
+- Demo guards live in client + server: client hides destructive buttons, server fns throw if `workspace_mode='demo'` for `publishSocialPost`, payment intents, email sends, and OAuth connect handlers.
+- All wizard steps are independent — `saveMarketingProfile` is called on every "Next" so users can resume.
 
-## Phase 2 — Follow-up (ask separately)
+## Out of scope for this turn (logged for follow-up)
 
-- Admin role UI + admin-only routes (requires Phase 1 §A.1).
-- Security Dashboard page (recent logins, active sessions, audit log viewer, AI generation history).
-- Team invites + multi-role permissions (significant feature work — really a separate product area).
-- AI prompt moderation (call a moderation model before generation; logs flagged prompts).
-- Brute-force lockout (track failed logins, lock after N attempts).
-- MFA (TOTP) — requires Supabase MFA enrollment UI.
-- Email notifications to admins for suspicious activity.
+- Per-step animations / polish pass
+- Multi-client profiles (this turn does 1 profile per user, scoped per `client_id` ready for later)
+- Backfill UI to retrofit pre-existing accounts into the wizard
 
-## Phase 3 — Ops / infra
+## Files to touch
 
-- Custom security headers (CSP, X-Frame-Options) via TanStack response middleware.
-- Error monitoring (Sentry integration).
-- Cookie consent banner (only meaningful if you add analytics/marketing cookies — currently not needed).
-
----
-
-## What I need from you
-
-**Reply with one of:**
-
-1. **"Ship Phase 1"** — I'll implement A–F above. Estimated: 1 migration + ~6 new files + edits to ~8 existing files. Will deliver as a single coherent change.
-2. **"Ship Phase 1 + specific Phase 2 items: [list]"** — pick the Phase 2 items you want included.
-3. **"Different scope"** — tell me what to prioritize / drop.
-
-I'd strongly recommend option 1. Trying to do all 15 sections at once on a single turn would produce surface-level work and likely break things.
+- migration: `marketing_profiles`, `workspace_mode`, `is_demo` columns + grants/RLS
+- `src/lib/onboarding.functions.ts` (new)
+- `src/routes/_authenticated/onboarding.tsx` (new)
+- `src/routes/_authenticated/demo-templates.tsx` (new)
+- `src/components/DemoBanner.tsx` (new)
+- `src/components/ProfileAutofillCard.tsx` (new)
+- `src/routes/_authenticated.tsx` (banner mount + nav + redirect)
+- Light wiring in AI Writer / Image / Video / SEO-PPC / Campaign Wizard to consume profile

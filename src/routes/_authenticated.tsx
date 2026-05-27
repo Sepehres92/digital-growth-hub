@@ -1,11 +1,14 @@
 import { createFileRoute, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, Megaphone, KanbanSquare, Settings as SettingsIcon, Search, BarChart3, FileSearch, Share2, Globe, BookOpen, Sparkles, ImageIcon, CalendarDays, Wand2, Video, Clapperboard, MessageSquare, Bot, LifeBuoy, Brain, FolderOpen } from "lucide-react";
+import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, Megaphone, KanbanSquare, Settings as SettingsIcon, Search, BarChart3, FileSearch, Share2, Globe, BookOpen, Sparkles, ImageIcon, CalendarDays, Wand2, Video, Clapperboard, MessageSquare, Bot, LifeBuoy, Brain, FolderOpen, Rocket, FlaskConical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ClientChatbot } from "@/components/ClientChatbot";
 import { useUserRole } from "@/hooks/use-user-role";
+import { DemoBanner } from "@/components/DemoBanner";
+import { useServerFn } from "@tanstack/react-start";
+import { getMarketingProfile } from "@/lib/onboarding.functions";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthedLayout,
@@ -18,16 +21,30 @@ function AuthedLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { isAdmin } = useUserRole();
 
+  const getProfile = useServerFn(getMarketingProfile);
+
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
       if (!session) navigate({ to: "/auth" });
     });
     supabase.auth.getSession().then(({ data }) => {
-      if (!data.session) navigate({ to: "/auth" });
-      else setChecking(false);
+      if (!data.session) {
+        navigate({ to: "/auth" });
+        return;
+      }
+      setChecking(false);
+      // Auto-redirect to onboarding if profile not completed
+      if (pathname !== "/onboarding" && pathname !== "/demo-templates") {
+        getProfile({})
+          .then((r) => {
+            const completed = (r.profile as { onboarding_completed?: boolean } | null)?.onboarding_completed;
+            if (!completed) navigate({ to: "/onboarding" });
+          })
+          .catch(() => {});
+      }
     });
     return () => sub.subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, getProfile, pathname]);
 
   if (checking) {
     return (
@@ -38,6 +55,8 @@ function AuthedLayout() {
   }
 
   const nav = [
+    { to: "/onboarding", label: "Onboarding", icon: Rocket, group: "Setup" },
+    { to: "/demo-templates", label: "Demo Templates", icon: FlaskConical, group: "Setup" },
     { to: "/global-dashboard", label: "Global Dashboard", icon: Globe, group: "Workspace" },
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, group: "Workspace" },
     { to: "/leads", label: "Leads", icon: Users, group: "Workspace" },
@@ -151,6 +170,7 @@ function AuthedLayout() {
             {nav.find((n) => n.to === pathname)?.label ?? ""}
           </h1>
         </header>
+        <DemoBanner />
         <main className="flex-1 overflow-auto p-4 md:p-8">
           <Outlet />
         </main>
