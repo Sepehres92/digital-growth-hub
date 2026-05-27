@@ -16,6 +16,7 @@ function AuthedLayout() {
   const [checking, setChecking] = useState(true);
   const [open, setOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { isAdmin } = useUserRole();
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
