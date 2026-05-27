@@ -57,6 +57,16 @@ function TeamChatPage() {
   const [soundOn, setSoundOn] = useState(true);
   const fileRef = useRef<HTMLInputElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
+  const topSentinelRef = useRef<HTMLDivElement>(null);
+  const [typingUsers, setTypingUsers] = useState<string[]>([]);
+  const [pendingMessages, setPendingMessages] = useState<Message[]>([]);
+  const [failedMessages, setFailedMessages] = useState<Array<{ tempId: string; content: string; parentId: string | null; attachments?: Message["attachments"]; type?: string }>>([]);
+  const [connState, setConnState] = useState<"connecting" | "connected" | "reconnecting">("connecting");
+  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+  const lastSentTypingRef = useRef<number>(0);
+  const notifEnabledRef = useRef(false);
+  const activeChannelNameRef = useRef<string>("");
+  const PAGE = 30;
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setMe(data.user?.id ?? null));
