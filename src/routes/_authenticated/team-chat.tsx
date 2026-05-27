@@ -542,7 +542,7 @@ function TeamChatPage() {
                     const isPending = m.id.startsWith("temp-");
                     const reads = readByCount(m);
                     return (
-                      <div key={m.id} className="group flex gap-3 rounded-md px-2 py-2 hover:bg-accent/40">
+                      <div key={m.id} className={cn("group flex gap-3 rounded-md px-2 py-2 hover:bg-accent/40", isPending && "opacity-60")}>
                         <div className="relative">
                           <div className="grid size-9 place-items-center rounded-md bg-primary/15 text-xs font-medium text-primary">
                             {m.user_id.slice(0, 2).toUpperCase()}
@@ -556,6 +556,7 @@ function TeamChatPage() {
                             <span className="text-muted-foreground">{new Date(m.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
                             {m.ai_generated && <span className="rounded bg-primary/10 px-1.5 text-[10px] text-primary">AI</span>}
                             {m.edited && <span className="text-[10px] text-muted-foreground">(edited)</span>}
+                            {isPending && <Loader2 className="size-3 animate-spin text-muted-foreground" />}
                           </div>
                           <div className="mt-0.5 whitespace-pre-wrap break-words text-sm">{m.content}</div>
                           {m.attachments?.map((a, i) => (
