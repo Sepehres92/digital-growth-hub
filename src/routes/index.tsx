@@ -357,15 +357,15 @@ function TrustedBy() {
 // ---------------- 4. Core Features ----------------
 
 const features = [
-  { icon: PenLine, title: "AI Copywriting", desc: "Generate captions, ads, and emails in your brand voice instantly.", color: "from-violet-500 to-purple-500" },
-  { icon: ImageIcon, title: "AI Image Generation", desc: "Studio-quality visuals from a single prompt, every time.", color: "from-pink-500 to-rose-500" },
-  { icon: Film, title: "AI Video Studio", desc: "Scripts, voiceovers, subtitles, and renders — fully automated.", color: "from-orange-500 to-red-500" },
-  { icon: Users, title: "CRM & Leads", desc: "Capture, qualify, and convert leads in a unified pipeline.", color: "from-emerald-500 to-teal-500" },
-  { icon: CalendarDays, title: "Content Calendar", desc: "Plan months ahead with drag-and-drop scheduling.", color: "from-blue-500 to-cyan-500" },
-  { icon: Send, title: "Social Scheduler", desc: "Publish to every platform with one click and approval flows.", color: "from-indigo-500 to-blue-500" },
-  { icon: MessagesSquare, title: "Team Collaboration", desc: "Chat, meetings, tasks, and shared notes in one workspace.", color: "from-amber-500 to-orange-500" },
-  { icon: UserCircle2, title: "Client Portal", desc: "White-label portal for approvals, reports, and updates.", color: "from-fuchsia-500 to-pink-500" },
-  { icon: Bot, title: "AI Chatbot", desc: "24/7 client assistant trained on each client's data safely.", color: "from-cyan-500 to-sky-500" },
+  { icon: PenLine, title: "AI Copywriting", desc: "Generate captions, ads, and emails in your brand voice instantly.", color: "from-violet-500 to-purple-500", anchor: "#showcase" },
+  { icon: ImageIcon, title: "AI Image Generation", desc: "Studio-quality visuals from a single prompt, every time.", color: "from-pink-500 to-rose-500", anchor: "#showcase" },
+  { icon: Film, title: "AI Video Studio", desc: "Scripts, voiceovers, subtitles, and renders — fully automated.", color: "from-orange-500 to-red-500", anchor: "#video-studio" },
+  { icon: Users, title: "CRM & Leads", desc: "Capture, qualify, and convert leads in a unified pipeline.", color: "from-emerald-500 to-teal-500", anchor: "#automation" },
+  { icon: CalendarDays, title: "Content Calendar", desc: "Plan months ahead with drag-and-drop scheduling.", color: "from-blue-500 to-cyan-500", anchor: "#calendar" },
+  { icon: Send, title: "Social Scheduler", desc: "Publish to every platform with one click and approval flows.", color: "from-indigo-500 to-blue-500", anchor: "#calendar" },
+  { icon: MessagesSquare, title: "Team Collaboration", desc: "Chat, meetings, tasks, and shared notes in one workspace.", color: "from-amber-500 to-orange-500", anchor: "#team" },
+  { icon: UserCircle2, title: "Client Portal", desc: "White-label portal for approvals, reports, and updates.", color: "from-fuchsia-500 to-pink-500", anchor: "#portal" },
+  { icon: Bot, title: "AI Chatbot", desc: "24/7 client assistant trained on each client's data safely.", color: "from-cyan-500 to-sky-500", anchor: "#portal" },
 ];
 
 function CoreFeatures() {
@@ -383,9 +383,10 @@ function CoreFeatures() {
         </div>
         <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {features.map((f) => (
-            <div
+            <a
               key={f.title}
-              className="group relative overflow-hidden rounded-2xl border border-border/70 bg-card p-6 transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5"
+              href={f.anchor}
+              className="group relative block overflow-hidden rounded-2xl border border-border/70 bg-card p-6 transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5"
             >
               <div className={`inline-flex size-11 items-center justify-center rounded-xl bg-gradient-to-br ${f.color} text-white shadow-lg`}>
                 <f.icon className="size-5" />
