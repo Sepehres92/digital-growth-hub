@@ -1427,6 +1427,93 @@ export type Database = {
         }
         Relationships: []
       }
+      seo_ppc_consultations: {
+        Row: {
+          business_name: string
+          campaign_id: string | null
+          client_id: string | null
+          competitors: string | null
+          conversion_goal: string | null
+          created_at: string
+          customizations: Json | null
+          existing_landing_pages: string | null
+          human_request_id: string | null
+          id: string
+          ideal_cost_per_lead: number | null
+          location: string | null
+          module: string
+          monthly_budget: number | null
+          offers: string | null
+          platforms: string[] | null
+          primary_goal: string | null
+          recommendations: Json | null
+          seo_scope: string | null
+          services: string | null
+          status: string
+          target_customer: string | null
+          target_keywords: string | null
+          updated_at: string
+          user_id: string
+          website_url: string | null
+        }
+        Insert: {
+          business_name: string
+          campaign_id?: string | null
+          client_id?: string | null
+          competitors?: string | null
+          conversion_goal?: string | null
+          created_at?: string
+          customizations?: Json | null
+          existing_landing_pages?: string | null
+          human_request_id?: string | null
+          id?: string
+          ideal_cost_per_lead?: number | null
+          location?: string | null
+          module: string
+          monthly_budget?: number | null
+          offers?: string | null
+          platforms?: string[] | null
+          primary_goal?: string | null
+          recommendations?: Json | null
+          seo_scope?: string | null
+          services?: string | null
+          status?: string
+          target_customer?: string | null
+          target_keywords?: string | null
+          updated_at?: string
+          user_id: string
+          website_url?: string | null
+        }
+        Update: {
+          business_name?: string
+          campaign_id?: string | null
+          client_id?: string | null
+          competitors?: string | null
+          conversion_goal?: string | null
+          created_at?: string
+          customizations?: Json | null
+          existing_landing_pages?: string | null
+          human_request_id?: string | null
+          id?: string
+          ideal_cost_per_lead?: number | null
+          location?: string | null
+          module?: string
+          monthly_budget?: number | null
+          offers?: string | null
+          platforms?: string[] | null
+          primary_goal?: string | null
+          recommendations?: Json | null
+          seo_scope?: string | null
+          services?: string | null
+          status?: string
+          target_customer?: string | null
+          target_keywords?: string | null
+          updated_at?: string
+          user_id?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       social_accounts: {
         Row: {
           access_token: string | null
