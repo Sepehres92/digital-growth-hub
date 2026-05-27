@@ -1,11 +1,14 @@
 import { createFileRoute, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, Megaphone, KanbanSquare, Settings as SettingsIcon, Search, BarChart3, FileSearch, Share2, Globe, BookOpen, Sparkles, ImageIcon, CalendarDays, Wand2, Video, Clapperboard, MessageSquare, Bot, LifeBuoy, Brain, FolderOpen } from "lucide-react";
+import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, Megaphone, KanbanSquare, Settings as SettingsIcon, Search, BarChart3, FileSearch, Share2, Globe, BookOpen, Sparkles, ImageIcon, CalendarDays, Wand2, Video, Clapperboard, MessageSquare, Bot, LifeBuoy, Brain, FolderOpen, Rocket, FlaskConical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ClientChatbot } from "@/components/ClientChatbot";
 import { useUserRole } from "@/hooks/use-user-role";
+import { DemoBanner } from "@/components/DemoBanner";
+import { useServerFn } from "@tanstack/react-start";
+import { getMarketingProfile } from "@/lib/onboarding.functions";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthedLayout,
