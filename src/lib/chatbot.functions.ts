@@ -305,7 +305,7 @@ export const clientChatbotChat = createServerFn({ method: "POST" })
       .update({
         updated_at: new Date().toISOString(),
         context_page: data.contextPage ?? null,
-        session_memory: updatedMemory,
+        session_memory: updatedMemory as any,
       })
       .eq("id", data.conversationId);
 
