@@ -921,46 +921,111 @@ export type Database = {
         }
         Relationships: []
       }
-      human_strategist_requests: {
+      generated_strategy_content: {
         Row: {
+          approval_status: Database["public"]["Enums"]["strategy_approval_status"]
+          campaign_id: string | null
+          caption: string | null
+          client_id: string | null
+          consultation_id: string
+          content_type: string
+          created_at: string
+          cta: string | null
+          hashtags: string | null
+          id: string
+          image_prompt: string | null
+          platform: string
+          scheduled_date: string | null
+          title: string | null
+          video_script: string | null
+        }
+        Insert: {
+          approval_status?: Database["public"]["Enums"]["strategy_approval_status"]
+          campaign_id?: string | null
+          caption?: string | null
+          client_id?: string | null
+          consultation_id: string
+          content_type: string
+          created_at?: string
+          cta?: string | null
+          hashtags?: string | null
+          id?: string
+          image_prompt?: string | null
+          platform: string
+          scheduled_date?: string | null
+          title?: string | null
+          video_script?: string | null
+        }
+        Update: {
+          approval_status?: Database["public"]["Enums"]["strategy_approval_status"]
+          campaign_id?: string | null
+          caption?: string | null
+          client_id?: string | null
+          consultation_id?: string
+          content_type?: string
+          created_at?: string
+          cta?: string | null
+          hashtags?: string | null
+          id?: string
+          image_prompt?: string | null
+          platform?: string
+          scheduled_date?: string | null
+          title?: string | null
+          video_script?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "generated_strategy_content_consultation_id_fkey"
+            columns: ["consultation_id"]
+            isOneToOne: false
+            referencedRelation: "strategy_consultations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      human_strategy_requests: {
+        Row: {
+          assigned_to: string | null
           client_id: string | null
           consultation_id: string | null
           created_at: string
+          free_consultation_used: boolean
           id: string
-          notes: string
-          preferred_time: string
-          request_type: string
-          status: string
-          updated_at: string
+          meeting_id: string | null
+          payment_required: boolean
+          price: number | null
+          request_status: Database["public"]["Enums"]["human_request_status"]
           user_id: string
         }
         Insert: {
+          assigned_to?: string | null
           client_id?: string | null
           consultation_id?: string | null
           created_at?: string
+          free_consultation_used?: boolean
           id?: string
-          notes?: string
-          preferred_time?: string
-          request_type?: string
-          status?: string
-          updated_at?: string
+          meeting_id?: string | null
+          payment_required?: boolean
+          price?: number | null
+          request_status?: Database["public"]["Enums"]["human_request_status"]
           user_id: string
         }
         Update: {
+          assigned_to?: string | null
           client_id?: string | null
           consultation_id?: string | null
           created_at?: string
+          free_consultation_used?: boolean
           id?: string
-          notes?: string
-          preferred_time?: string
-          request_type?: string
-          status?: string
-          updated_at?: string
+          meeting_id?: string | null
+          payment_required?: boolean
+          price?: number | null
+          request_status?: Database["public"]["Enums"]["human_request_status"]
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "human_strategist_requests_consultation_id_fkey"
+            foreignKeyName: "human_strategy_requests_consultation_id_fkey"
             columns: ["consultation_id"]
             isOneToOne: false
             referencedRelation: "strategy_consultations"
@@ -1449,74 +1514,147 @@ export type Database = {
         }
         Relationships: []
       }
+      strategy_approvals: {
+        Row: {
+          approval_status: Database["public"]["Enums"]["strategy_approval_status"]
+          approved_at: string | null
+          client_id: string | null
+          client_notes: string | null
+          consultation_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          approval_status?: Database["public"]["Enums"]["strategy_approval_status"]
+          approved_at?: string | null
+          client_id?: string | null
+          client_notes?: string | null
+          consultation_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          approval_status?: Database["public"]["Enums"]["strategy_approval_status"]
+          approved_at?: string | null
+          client_id?: string | null
+          client_notes?: string | null
+          consultation_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strategy_approvals_consultation_id_fkey"
+            columns: ["consultation_id"]
+            isOneToOne: false
+            referencedRelation: "strategy_consultations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       strategy_consultations: {
         Row: {
-          audience: string
-          brand_assets: string
+          business_goal: string | null
           business_name: string
-          campaign_id: string | null
           client_id: string | null
+          consultation_type: Database["public"]["Enums"]["consultation_type"]
           created_at: string
-          customizations: Json | null
-          customize_mode: boolean
-          goal: string
           id: string
           industry: string
-          location: string
-          platforms: Json
-          posting_frequency: string
-          recommendations: Json | null
-          services: string
-          status: string
-          tone: string
+          location: string | null
+          preferred_posting_frequency: string | null
+          selected_platforms: string[]
+          status: Database["public"]["Enums"]["strategy_status"]
+          target_audience: string | null
+          tone: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
-          audience?: string
-          brand_assets?: string
-          business_name?: string
-          campaign_id?: string | null
+          business_goal?: string | null
+          business_name: string
           client_id?: string | null
+          consultation_type?: Database["public"]["Enums"]["consultation_type"]
           created_at?: string
-          customizations?: Json | null
-          customize_mode?: boolean
-          goal?: string
           id?: string
-          industry?: string
-          location?: string
-          platforms?: Json
-          posting_frequency?: string
-          recommendations?: Json | null
-          services?: string
-          status?: string
-          tone?: string
+          industry: string
+          location?: string | null
+          preferred_posting_frequency?: string | null
+          selected_platforms?: string[]
+          status?: Database["public"]["Enums"]["strategy_status"]
+          target_audience?: string | null
+          tone?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
-          audience?: string
-          brand_assets?: string
+          business_goal?: string | null
           business_name?: string
-          campaign_id?: string | null
           client_id?: string | null
+          consultation_type?: Database["public"]["Enums"]["consultation_type"]
           created_at?: string
-          customizations?: Json | null
-          customize_mode?: boolean
-          goal?: string
           id?: string
           industry?: string
-          location?: string
-          platforms?: Json
-          posting_frequency?: string
-          recommendations?: Json | null
-          services?: string
-          status?: string
-          tone?: string
+          location?: string | null
+          preferred_posting_frequency?: string | null
+          selected_platforms?: string[]
+          status?: Database["public"]["Enums"]["strategy_status"]
+          target_audience?: string | null
+          tone?: string | null
           updated_at?: string
           user_id?: string
         }
         Relationships: []
+      }
+      strategy_recommendations: {
+        Row: {
+          best_practices_summary: string | null
+          consultation_id: string
+          created_at: string
+          id: string
+          recommended_content_pillars: string[]
+          recommended_cta_strategy: string | null
+          recommended_hashtag_strategy: string | null
+          recommended_platforms: string[]
+          recommended_posting_frequency: string | null
+          recommended_posting_times: Json
+          sources_used: Json
+        }
+        Insert: {
+          best_practices_summary?: string | null
+          consultation_id: string
+          created_at?: string
+          id?: string
+          recommended_content_pillars?: string[]
+          recommended_cta_strategy?: string | null
+          recommended_hashtag_strategy?: string | null
+          recommended_platforms?: string[]
+          recommended_posting_frequency?: string | null
+          recommended_posting_times?: Json
+          sources_used?: Json
+        }
+        Update: {
+          best_practices_summary?: string | null
+          consultation_id?: string
+          created_at?: string
+          id?: string
+          recommended_content_pillars?: string[]
+          recommended_cta_strategy?: string | null
+          recommended_hashtag_strategy?: string | null
+          recommended_platforms?: string[]
+          recommended_posting_frequency?: string | null
+          recommended_posting_times?: Json
+          sources_used?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strategy_recommendations_consultation_id_fkey"
+            columns: ["consultation_id"]
+            isOneToOne: false
+            referencedRelation: "strategy_consultations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       support_tickets: {
         Row: {
@@ -1986,6 +2124,13 @@ export type Database = {
         | "completed"
         | "cancelled"
       campaign_type: "seo" | "ppc" | "social_media" | "website" | "branding"
+      consultation_type: "ai_only" | "human_requested" | "human_completed"
+      human_request_status:
+        | "pending"
+        | "assigned"
+        | "scheduled"
+        | "completed"
+        | "cancelled"
       lead_status:
         | "new"
         | "contacted"
@@ -1994,6 +2139,19 @@ export type Database = {
         | "won"
         | "lost"
         | "discovery_booked"
+      strategy_approval_status:
+        | "pending"
+        | "approved"
+        | "changes_requested"
+        | "rejected"
+      strategy_status:
+        | "intake"
+        | "researching"
+        | "recommended"
+        | "approved"
+        | "executing"
+        | "executed"
+        | "archived"
       task_priority: "low" | "medium" | "high" | "urgent"
       task_status: "todo" | "in_progress" | "waiting" | "done"
     }
@@ -2132,6 +2290,14 @@ export const Constants = {
         "cancelled",
       ],
       campaign_type: ["seo", "ppc", "social_media", "website", "branding"],
+      consultation_type: ["ai_only", "human_requested", "human_completed"],
+      human_request_status: [
+        "pending",
+        "assigned",
+        "scheduled",
+        "completed",
+        "cancelled",
+      ],
       lead_status: [
         "new",
         "contacted",
@@ -2140,6 +2306,21 @@ export const Constants = {
         "won",
         "lost",
         "discovery_booked",
+      ],
+      strategy_approval_status: [
+        "pending",
+        "approved",
+        "changes_requested",
+        "rejected",
+      ],
+      strategy_status: [
+        "intake",
+        "researching",
+        "recommended",
+        "approved",
+        "executing",
+        "executed",
+        "archived",
       ],
       task_priority: ["low", "medium", "high", "urgent"],
       task_status: ["todo", "in_progress", "waiting", "done"],
