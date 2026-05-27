@@ -16,7 +16,7 @@ import { chatAiAssist } from "@/lib/chat-ai.functions";
 import {
   Plus, Hash, Lock, Send, Search, Sparkles, Paperclip, Pin, BellOff, Bell,
   MessageSquare, Users, Phone, Video as VideoIcon, MonitorUp, CornerDownRight, X, Loader2,
-  RotateCw, Check, CheckCheck, WifiOff,
+  RotateCw, Check, CheckCheck, WifiOff, ListTodo, CalendarPlus, CalendarDays, Building2, Wand2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -67,6 +67,19 @@ function TeamChatPage() {
   const notifEnabledRef = useRef(false);
   const activeChannelNameRef = useRef<string>("");
   const PAGE = 30;
+
+  type ConvertAction = "task" | "meeting" | "calendar" | "client_note" | "ai_campaign";
+  const [convertMsg, setConvertMsg] = useState<Message | null>(null);
+  const [convertAction, setConvertAction] = useState<ConvertAction>("task");
+  const [convertClientId, setConvertClientId] = useState<string>("");
+  const [convertPlatform, setConvertPlatform] = useState<string>("instagram");
+  const [convertDate, setConvertDate] = useState<string>(() => new Date().toISOString().slice(0, 10));
+  const [convertBusy, setConvertBusy] = useState(false);
+  const openConvert = (m: Message, a: ConvertAction) => {
+    setConvertMsg(m); setConvertAction(a);
+    setConvertClientId(""); setConvertPlatform("instagram");
+    setConvertDate(new Date().toISOString().slice(0, 10));
+  };
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setMe(data.user?.id ?? null));
@@ -120,6 +133,88 @@ function TeamChatPage() {
     enabled: !!me,
     refetchInterval: 30000,
   });
+
+  const { data: clients = [] } = useQuery({
+    queryKey: ["chat-clients", me],
+    queryFn: async () => {
+      const { data } = await (supabase.from("clients") as any)
+        .select("id,business_name,notes").eq("user_id", me!).order("business_name");
+      return (data ?? []) as Array<{ id: string; business_name: string; notes: string | null }>;
+    },
+    enabled: !!me,
+  });
+
+  const runConvert = async () => {
+    if (!convertMsg || !me) return;
+    const content = (convertMsg.content || "").trim();
+    const title = content.slice(0, 80) || "From team chat";
+    setConvertBusy(true);
+    try {
+      if (convertAction === "task") {
+        const { error } = await (supabase.from("tasks") as any).insert({
+          user_id: me, title, notes: content, status: "todo", priority: "medium",
+          client_id: convertClientId || null,
+        });
+        if (error) throw error;
+        toast.success("Task created");
+      } else if (convertAction === "meeting") {
+        const { error } = await (supabase.from("meetings") as any).insert({
+          user_id: me, title, description: content,
+          meeting_date: convertDate, status: "scheduled",
+          client_id: convertClientId || null,
+        });
+        if (error) throw error;
+        toast.success("Meeting scheduled");
+      } else if (convertAction === "calendar") {
+        const { data: post, error: pe } = await (supabase.from("content_posts") as any).insert({
+          user_id: me, platform: convertPlatform, caption: content,
+          status: "scheduled", scheduled_for: new Date(convertDate).toISOString(),
+          client_id: convertClientId || null,
+        }).select("id").single();
+        if (pe) throw pe;
+        const { error: ce } = await (supabase.from("content_calendar") as any).insert({
+          user_id: me, post_id: post.id, platform: convertPlatform,
+          calendar_date: convertDate, status: "scheduled",
+        });
+        if (ce) throw ce;
+        toast.success("Added to content calendar");
+      } else if (convertAction === "client_note") {
+        if (!convertClientId) { toast.error("Pick a client"); setConvertBusy(false); return; }
+        const c = clients.find((x) => x.id === convertClientId);
+        const prev = c?.notes ? c.notes + "\n\n" : "";
+        const stamp = new Date().toLocaleString();
+        const { error } = await (supabase.from("clients") as any)
+          .update({ notes: `${prev}[${stamp}] ${content}` }).eq("id", convertClientId);
+        if (error) throw error;
+        toast.success("Saved to client notes");
+      } else if (convertAction === "ai_campaign") {
+        let ideas = "";
+        try {
+          const r = await aiAssist({ data: { channelId: convertMsg.channel_id, action: "campaign_ideas", extra: content } });
+          ideas = (r as any)?.reply ?? "";
+        } catch {}
+        const { error } = await (supabase.from("campaigns") as any).insert({
+          user_id: me, name: title, type: "seo", status: "planned",
+          goal: content, results_notes: ideas || "",
+          client_id: convertClientId || null,
+        });
+        if (error) throw error;
+        toast.success("AI campaign created");
+      }
+      try {
+        await (supabase.from("chat_audit_log") as any).insert({
+          user_id: me, channel_id: convertMsg.channel_id, message_id: convertMsg.id,
+          action: `convert_${convertAction}`, details: { client_id: convertClientId || null },
+        });
+      } catch {}
+      setConvertMsg(null);
+    } catch (e: any) {
+      toast.error(e?.message || "Failed");
+    } finally {
+      setConvertBusy(false);
+    }
+  };
+
 
   const myChannelIds = new Set(members.map((m) => m.channel_id));
   const visible = channels.filter((c) =>
@@ -571,9 +666,25 @@ function TeamChatPage() {
                               )}
                             </div>
                           ))}
-                          <div className="mt-1 flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                          <div className="mt-1 flex flex-wrap items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
                             <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" onClick={() => setThreadParent(m)}>
                               <CornerDownRight className="size-3" /> Reply
+                            </Button>
+                            <span className="mx-1 h-3 w-px bg-border" />
+                            <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" title="Create Task" onClick={() => openConvert(m, "task")}>
+                              <ListTodo className="size-3" /> Task
+                            </Button>
+                            <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" title="Create Meeting" onClick={() => openConvert(m, "meeting")}>
+                              <CalendarPlus className="size-3" /> Meeting
+                            </Button>
+                            <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" title="Add to Calendar" onClick={() => openConvert(m, "calendar")}>
+                              <CalendarDays className="size-3" /> Calendar
+                            </Button>
+                            <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" title="Generate AI Content" onClick={() => openConvert(m, "ai_campaign")}>
+                              <Wand2 className="size-3" /> AI Content
+                            </Button>
+                            <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" title="Save to Client" onClick={() => openConvert(m, "client_note")}>
+                              <Building2 className="size-3" /> Save
                             </Button>
                             {m.user_id === me ? (
                               <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px] text-destructive" onClick={() => deleteMessage.mutate(m.id)}>Delete</Button>
@@ -581,6 +692,7 @@ function TeamChatPage() {
                               <Button size="sm" variant="ghost" className="h-6 px-2 text-[11px]" onClick={() => hideForMe.mutate(m)}>Hide</Button>
                             )}
                           </div>
+
                           {m.user_id === me && !isPending && reads > 0 && (
                             <div className="mt-1 flex items-center gap-1 text-[10px] text-muted-foreground">
                               <CheckCheck className="size-3 text-primary" /> Seen by {reads}
@@ -781,6 +893,73 @@ function TeamChatPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Convert message dialog */}
+      <Dialog open={!!convertMsg} onOpenChange={(o) => !o && setConvertMsg(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {convertAction === "task" && <><ListTodo className="size-4" /> Create Task</>}
+              {convertAction === "meeting" && <><CalendarPlus className="size-4" /> Create Meeting</>}
+              {convertAction === "calendar" && <><CalendarDays className="size-4" /> Add to Content Calendar</>}
+              {convertAction === "client_note" && <><Building2 className="size-4" /> Save to Client</>}
+              {convertAction === "ai_campaign" && <><Wand2 className="size-4" /> Generate AI Campaign</>}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div>
+              <Label>Message</Label>
+              <Textarea rows={3} value={convertMsg?.content ?? ""} readOnly className="mt-1.5 bg-muted/30" />
+            </div>
+            {(convertAction === "task" || convertAction === "meeting" || convertAction === "calendar" || convertAction === "client_note" || convertAction === "ai_campaign") && (
+              <div>
+                <Label>Client {convertAction === "client_note" ? "(required)" : "(optional)"}</Label>
+                <Select value={convertClientId || "none"} onValueChange={(v) => setConvertClientId(v === "none" ? "" : v)}>
+                  <SelectTrigger className="mt-1.5"><SelectValue placeholder="No client" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">No client</SelectItem>
+                    {clients.map((c) => <SelectItem key={c.id} value={c.id}>{c.business_name}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+            {convertAction === "meeting" && (
+              <div>
+                <Label>Date</Label>
+                <Input type="date" value={convertDate} onChange={(e) => setConvertDate(e.target.value)} className="mt-1.5" />
+              </div>
+            )}
+            {convertAction === "calendar" && (
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label>Date</Label>
+                  <Input type="date" value={convertDate} onChange={(e) => setConvertDate(e.target.value)} className="mt-1.5" />
+                </div>
+                <div>
+                  <Label>Platform</Label>
+                  <Select value={convertPlatform} onValueChange={setConvertPlatform}>
+                    <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {["instagram", "facebook", "twitter", "linkedin", "tiktok", "youtube", "blog"].map((p) =>
+                        <SelectItem key={p} value={p}>{p}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            )}
+            {convertAction === "ai_campaign" && (
+              <p className="text-xs text-muted-foreground">AI will generate campaign ideas from this message and save them as a new campaign draft.</p>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConvertMsg(null)}>Cancel</Button>
+            <Button onClick={runConvert} disabled={convertBusy}>
+              {convertBusy ? <><Loader2 className="size-4 animate-spin" /> Creating…</> : "Create"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
+
   );
 }
