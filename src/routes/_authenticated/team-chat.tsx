@@ -289,8 +289,10 @@ function TeamChatPage() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["chat-members", me] }),
   });
 
+  type SendVars = { content: string; parentId?: string | null; attachments?: Message["attachments"]; type?: string; tempId?: string };
+
   const sendMessage = useMutation({
-    mutationFn: async (v: { content: string; parentId?: string | null; attachments?: Message["attachments"]; type?: string }) => {
+    mutationFn: async (v: SendVars) => {
       if (!me || !activeId) throw new Error("no channel");
       const mentions = Array.from(v.content.matchAll(/@([0-9a-f-]{8,})/g)).map((m) => m[1]);
       const { error } = await (supabase.from("chat_messages") as any).insert({
@@ -301,8 +303,46 @@ function TeamChatPage() {
       if (error) throw error;
       await (supabase.from("chat_audit_log") as any).insert({ user_id: me, channel_id: activeId, action: "message.send" });
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onMutate: async (v) => {
+      if (!me || !activeId || v.parentId) return { tempId: v.tempId };
+      const tempId = v.tempId ?? `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const optimistic: Message = {
+        id: tempId, channel_id: activeId, user_id: me, parent_id: null,
+        content: v.content.trim(), message_type: v.type ?? "text",
+        attachments: v.attachments ?? [], mentions: [], ai_generated: false, edited: false,
+        created_at: new Date().toISOString(),
+      };
+      setPendingMessages((prev) => [...prev, optimistic]);
+      setFailedMessages((prev) => prev.filter((f) => f.tempId !== tempId));
+      return { tempId };
+    },
+    onSuccess: (_d, _v, ctx) => {
+      if (ctx?.tempId) setPendingMessages((prev) => prev.filter((p) => p.id !== ctx.tempId));
+      qc.invalidateQueries({ queryKey: ["chat-messages", activeId] });
+    },
+    onError: (e, v, ctx) => {
+      if (ctx?.tempId) {
+        setPendingMessages((prev) => prev.filter((p) => p.id !== ctx.tempId));
+        setFailedMessages((prev) => [...prev, { tempId: ctx.tempId!, content: v.content, parentId: v.parentId ?? null, attachments: v.attachments, type: v.type }]);
+      }
+      toast.error(e instanceof Error ? e.message : "Send failed — tap retry");
+    },
   });
+
+  const retryFailed = (f: { tempId: string; content: string; parentId: string | null; attachments?: Message["attachments"]; type?: string }) => {
+    setFailedMessages((prev) => prev.filter((x) => x.tempId !== f.tempId));
+    sendMessage.mutate({ content: f.content, parentId: f.parentId, attachments: f.attachments, type: f.type, tempId: f.tempId });
+  };
+
+  const broadcastTyping = useCallback(() => {
+    if (!channelRef.current || !me) return;
+    const now = Date.now();
+    if (now - lastSentTypingRef.current < 2000) return;
+    lastSentTypingRef.current = now;
+    channelRef.current.send({ type: "broadcast", event: "typing", payload: { user_id: me } });
+  }, [me]);
+
+
 
   const deleteMessage = useMutation({
     mutationFn: async (id: string) => {
