@@ -48,6 +48,7 @@ function AuthedLayout() {
     { to: "/team-chat", label: "Team Chat", icon: MessageSquare, group: "Workspace" },
     { to: "/blog", label: "Daily Blog", icon: BookOpen, group: "Workspace" },
     { to: "/auto-campaign", label: "AI Auto Campaign", icon: Wand2, group: "Marketing Tools" },
+    { to: "/ai-strategy-consultant", label: "AI Strategy Consultant", icon: Brain, group: "Marketing Tools" },
     { to: "/ai-writer", label: "AI Writer", icon: Sparkles, group: "Marketing Tools" },
     { to: "/ai-studio", label: "AI Creative Studio", icon: ImageIcon, group: "Marketing Tools" },
     { to: "/ai-video-studio", label: "AI Video Studio", icon: Clapperboard, group: "Marketing Tools" },
