@@ -47,6 +47,8 @@ type PostRow = {
   scheduled_at: string;
   status: "draft" | "pending" | "approved" | "scheduled" | "published" | "failed" | "rejected";
   notes: string | null;
+  ai_generated?: boolean | null;
+  source_module?: string | null;
 };
 
 type MediaRow = {
