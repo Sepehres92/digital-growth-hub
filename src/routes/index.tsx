@@ -357,15 +357,15 @@ function TrustedBy() {
 // ---------------- 4. Core Features ----------------
 
 const features = [
-  { icon: PenLine, title: "AI Copywriting", desc: "Generate captions, ads, and emails in your brand voice instantly.", color: "from-violet-500 to-purple-500" },
-  { icon: ImageIcon, title: "AI Image Generation", desc: "Studio-quality visuals from a single prompt, every time.", color: "from-pink-500 to-rose-500" },
-  { icon: Film, title: "AI Video Studio", desc: "Scripts, voiceovers, subtitles, and renders — fully automated.", color: "from-orange-500 to-red-500" },
-  { icon: Users, title: "CRM & Leads", desc: "Capture, qualify, and convert leads in a unified pipeline.", color: "from-emerald-500 to-teal-500" },
-  { icon: CalendarDays, title: "Content Calendar", desc: "Plan months ahead with drag-and-drop scheduling.", color: "from-blue-500 to-cyan-500" },
-  { icon: Send, title: "Social Scheduler", desc: "Publish to every platform with one click and approval flows.", color: "from-indigo-500 to-blue-500" },
-  { icon: MessagesSquare, title: "Team Collaboration", desc: "Chat, meetings, tasks, and shared notes in one workspace.", color: "from-amber-500 to-orange-500" },
-  { icon: UserCircle2, title: "Client Portal", desc: "White-label portal for approvals, reports, and updates.", color: "from-fuchsia-500 to-pink-500" },
-  { icon: Bot, title: "AI Chatbot", desc: "24/7 client assistant trained on each client's data safely.", color: "from-cyan-500 to-sky-500" },
+  { icon: PenLine, title: "AI Copywriting", desc: "Generate captions, ads, and emails in your brand voice instantly.", color: "from-violet-500 to-purple-500", anchor: "#showcase" },
+  { icon: ImageIcon, title: "AI Image Generation", desc: "Studio-quality visuals from a single prompt, every time.", color: "from-pink-500 to-rose-500", anchor: "#showcase" },
+  { icon: Film, title: "AI Video Studio", desc: "Scripts, voiceovers, subtitles, and renders — fully automated.", color: "from-orange-500 to-red-500", anchor: "#video-studio" },
+  { icon: Users, title: "CRM & Leads", desc: "Capture, qualify, and convert leads in a unified pipeline.", color: "from-emerald-500 to-teal-500", anchor: "#automation" },
+  { icon: CalendarDays, title: "Content Calendar", desc: "Plan months ahead with drag-and-drop scheduling.", color: "from-blue-500 to-cyan-500", anchor: "#calendar" },
+  { icon: Send, title: "Social Scheduler", desc: "Publish to every platform with one click and approval flows.", color: "from-indigo-500 to-blue-500", anchor: "#calendar" },
+  { icon: MessagesSquare, title: "Team Collaboration", desc: "Chat, meetings, tasks, and shared notes in one workspace.", color: "from-amber-500 to-orange-500", anchor: "#team" },
+  { icon: UserCircle2, title: "Client Portal", desc: "White-label portal for approvals, reports, and updates.", color: "from-fuchsia-500 to-pink-500", anchor: "#portal" },
+  { icon: Bot, title: "AI Chatbot", desc: "24/7 client assistant trained on each client's data safely.", color: "from-cyan-500 to-sky-500", anchor: "#portal" },
 ];
 
 function CoreFeatures() {
@@ -383,9 +383,10 @@ function CoreFeatures() {
         </div>
         <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {features.map((f) => (
-            <div
+            <a
               key={f.title}
-              className="group relative overflow-hidden rounded-2xl border border-border/70 bg-card p-6 transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5"
+              href={f.anchor}
+              className="group relative block overflow-hidden rounded-2xl border border-border/70 bg-card p-6 transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5"
             >
               <div className={`inline-flex size-11 items-center justify-center rounded-xl bg-gradient-to-br ${f.color} text-white shadow-lg`}>
                 <f.icon className="size-5" />
@@ -404,7 +405,7 @@ function CoreFeatures() {
                   </div>
                 </div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>
@@ -517,7 +518,7 @@ function AIContentShowcase() {
 
 function VideoStudio() {
   return (
-    <section className="py-24">
+    <section id="video-studio" className="py-24">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 lg:grid-cols-2">
         <div>
           <SectionLabel>AI Video Studio</SectionLabel>
@@ -594,7 +595,7 @@ function CalendarShowcase() {
     { d: 5, t: "16:00", l: "YouTube", c: "bg-red-500/20 text-red-600" },
   ];
   return (
-    <section className="bg-surface/60 py-24">
+    <section id="calendar" className="bg-surface/60 py-24">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 lg:grid-cols-2">
         <GlassCard className="order-2 overflow-hidden p-0 lg:order-1">
           <div className="border-b border-border/60 bg-card p-3">
@@ -657,7 +658,7 @@ function CalendarShowcase() {
 
 function TeamCollab() {
   return (
-    <section className="py-24">
+    <section id="team" className="py-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <SectionLabel>Team Collaboration</SectionLabel>
@@ -738,7 +739,7 @@ function TeamCollab() {
 
 function ClientPortal() {
   return (
-    <section className="bg-surface/60 py-24">
+    <section id="portal" className="bg-surface/60 py-24">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 lg:grid-cols-2">
         <div>
           <SectionLabel>Client Portal</SectionLabel>
@@ -857,7 +858,7 @@ function Automation() {
     { i: BarChart3, l: "Analytics", c: "from-indigo-500 to-blue-500" },
   ];
   return (
-    <section className="bg-navy py-24 text-navy-foreground">
+    <section id="automation" className="bg-navy py-24 text-navy-foreground">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <SectionLabel>Workflows on autopilot</SectionLabel>
