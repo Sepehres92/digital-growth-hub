@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, Megaphone, KanbanSquare, Settings as SettingsIcon, Search, BarChart3, FileSearch, Share2, Globe, BookOpen, Sparkles, ImageIcon, CalendarDays, Wand2, Video, Clapperboard, MessageSquare, Bot, LifeBuoy, Brain } from "lucide-react";
+import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, Megaphone, KanbanSquare, Settings as SettingsIcon, Search, BarChart3, FileSearch, Share2, Globe, BookOpen, Sparkles, ImageIcon, CalendarDays, Wand2, Video, Clapperboard, MessageSquare, Bot, LifeBuoy, Brain, FolderOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ClientChatbot } from "@/components/ClientChatbot";
@@ -43,6 +43,7 @@ function AuthedLayout() {
     { to: "/leads", label: "Leads", icon: Users, group: "Workspace" },
     { to: "/clients", label: "Clients", icon: Briefcase, group: "Workspace" },
     { to: "/campaigns", label: "Campaigns", icon: Megaphone, group: "Workspace" },
+    { to: "/campaign-folders", label: "Campaign Folders", icon: FolderOpen, group: "Workspace" },
     { to: "/tasks", label: "Tasks", icon: KanbanSquare, group: "Workspace" },
     { to: "/meetings", label: "Meetings", icon: Video, group: "Workspace" },
     { to: "/team-chat", label: "Team Chat", icon: MessageSquare, group: "Workspace" },

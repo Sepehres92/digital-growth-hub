@@ -16,33 +16,47 @@ export type Database = {
     Tables: {
       ai_copies: {
         Row: {
+          campaign_folder_id: string | null
           content_type: string
           created_at: string
           id: string
           output: string
           prompt_inputs: Json | null
+          source_type: Database["public"]["Enums"]["campaign_source_type"]
           user_id: string
           variation: string | null
         }
         Insert: {
+          campaign_folder_id?: string | null
           content_type: string
           created_at?: string
           id?: string
           output: string
           prompt_inputs?: Json | null
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
           user_id: string
           variation?: string | null
         }
         Update: {
+          campaign_folder_id?: string | null
           content_type?: string
           created_at?: string
           id?: string
           output?: string
           prompt_inputs?: Json | null
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
           user_id?: string
           variation?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "ai_copies_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       ai_images: {
         Row: {
@@ -152,8 +166,84 @@ export type Database = {
         }
         Relationships: []
       }
+      campaign_folders: {
+        Row: {
+          assigned_team_members: string[]
+          campaign_id: string | null
+          client_id: string | null
+          client_notes: string | null
+          created_at: string
+          folder_type: Database["public"]["Enums"]["campaign_folder_type"]
+          goal: string | null
+          human_request_id: string | null
+          id: string
+          name: string
+          seo_ppc_consultation_id: string | null
+          source_type: Database["public"]["Enums"]["campaign_source_type"]
+          status: Database["public"]["Enums"]["campaign_folder_status"]
+          strategy_consultation_id: string | null
+          strategy_summary: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_team_members?: string[]
+          campaign_id?: string | null
+          client_id?: string | null
+          client_notes?: string | null
+          created_at?: string
+          folder_type?: Database["public"]["Enums"]["campaign_folder_type"]
+          goal?: string | null
+          human_request_id?: string | null
+          id?: string
+          name: string
+          seo_ppc_consultation_id?: string | null
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
+          status?: Database["public"]["Enums"]["campaign_folder_status"]
+          strategy_consultation_id?: string | null
+          strategy_summary?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_team_members?: string[]
+          campaign_id?: string | null
+          client_id?: string | null
+          client_notes?: string | null
+          created_at?: string
+          folder_type?: Database["public"]["Enums"]["campaign_folder_type"]
+          goal?: string | null
+          human_request_id?: string | null
+          id?: string
+          name?: string
+          seo_ppc_consultation_id?: string | null
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
+          status?: Database["public"]["Enums"]["campaign_folder_status"]
+          strategy_consultation_id?: string | null
+          strategy_summary?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_folders_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_folders_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       campaigns: {
         Row: {
+          campaign_folder_id: string | null
           client_id: string | null
           created_at: string
           end_date: string | null
@@ -162,6 +252,7 @@ export type Database = {
           monthly_budget: number | null
           name: string
           results_notes: string | null
+          source_type: Database["public"]["Enums"]["campaign_source_type"]
           start_date: string | null
           status: Database["public"]["Enums"]["campaign_status"]
           type: Database["public"]["Enums"]["campaign_type"]
@@ -169,6 +260,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          campaign_folder_id?: string | null
           client_id?: string | null
           created_at?: string
           end_date?: string | null
@@ -177,6 +269,7 @@ export type Database = {
           monthly_budget?: number | null
           name: string
           results_notes?: string | null
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
           start_date?: string | null
           status?: Database["public"]["Enums"]["campaign_status"]
           type?: Database["public"]["Enums"]["campaign_type"]
@@ -184,6 +277,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          campaign_folder_id?: string | null
           client_id?: string | null
           created_at?: string
           end_date?: string | null
@@ -192,6 +286,7 @@ export type Database = {
           monthly_budget?: number | null
           name?: string
           results_notes?: string | null
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
           start_date?: string | null
           status?: Database["public"]["Enums"]["campaign_status"]
           type?: Database["public"]["Enums"]["campaign_type"]
@@ -199,6 +294,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "campaigns_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "campaigns_client_id_fkey"
             columns: ["client_id"]
@@ -680,6 +782,7 @@ export type Database = {
       competitor_research: {
         Row: {
           ad_observations: Json | null
+          campaign_folder_id: string | null
           competitor_name: string | null
           competitor_url: string | null
           consultation_id: string
@@ -692,6 +795,7 @@ export type Database = {
         }
         Insert: {
           ad_observations?: Json | null
+          campaign_folder_id?: string | null
           competitor_name?: string | null
           competitor_url?: string | null
           consultation_id: string
@@ -704,6 +808,7 @@ export type Database = {
         }
         Update: {
           ad_observations?: Json | null
+          campaign_folder_id?: string | null
           competitor_name?: string | null
           competitor_url?: string | null
           consultation_id?: string
@@ -715,6 +820,13 @@ export type Database = {
           observed_weaknesses?: Json | null
         }
         Relationships: [
+          {
+            foreignKeyName: "competitor_research_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "competitor_research_consultation_id_fkey"
             columns: ["consultation_id"]
@@ -762,6 +874,7 @@ export type Database = {
       content_calendar: {
         Row: {
           calendar_date: string
+          campaign_folder_id: string | null
           created_at: string
           id: string
           platform: string
@@ -771,6 +884,7 @@ export type Database = {
         }
         Insert: {
           calendar_date: string
+          campaign_folder_id?: string | null
           created_at?: string
           id?: string
           platform: string
@@ -780,6 +894,7 @@ export type Database = {
         }
         Update: {
           calendar_date?: string
+          campaign_folder_id?: string | null
           created_at?: string
           id?: string
           platform?: string
@@ -788,6 +903,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "content_calendar_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "content_calendar_post_id_fkey"
             columns: ["post_id"]
@@ -800,6 +922,7 @@ export type Database = {
       content_posts: {
         Row: {
           ai_generated: boolean
+          campaign_folder_id: string | null
           campaign_id: string | null
           caption: string
           client_id: string | null
@@ -810,12 +933,14 @@ export type Database = {
           platform: string
           published_at: string | null
           scheduled_for: string | null
+          source_type: Database["public"]["Enums"]["campaign_source_type"]
           status: string
           title: string | null
           user_id: string
         }
         Insert: {
           ai_generated?: boolean
+          campaign_folder_id?: string | null
           campaign_id?: string | null
           caption?: string
           client_id?: string | null
@@ -826,12 +951,14 @@ export type Database = {
           platform: string
           published_at?: string | null
           scheduled_for?: string | null
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
           status?: string
           title?: string | null
           user_id: string
         }
         Update: {
           ai_generated?: boolean
+          campaign_folder_id?: string | null
           campaign_id?: string | null
           caption?: string
           client_id?: string | null
@@ -842,11 +969,20 @@ export type Database = {
           platform?: string
           published_at?: string | null
           scheduled_for?: string | null
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
           status?: string
           title?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "content_posts_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       content_rights_acknowledgements: {
         Row: {
@@ -925,6 +1061,7 @@ export type Database = {
       }
       generated_images: {
         Row: {
+          campaign_folder_id: string | null
           campaign_id: string | null
           client_id: string | null
           created_at: string
@@ -934,11 +1071,13 @@ export type Database = {
           prompt: string
           size: string | null
           source_image_id: string | null
+          source_type: Database["public"]["Enums"]["campaign_source_type"]
           storage_path: string | null
           style: string | null
           user_id: string
         }
         Insert: {
+          campaign_folder_id?: string | null
           campaign_id?: string | null
           client_id?: string | null
           created_at?: string
@@ -948,11 +1087,13 @@ export type Database = {
           prompt: string
           size?: string | null
           source_image_id?: string | null
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
           storage_path?: string | null
           style?: string | null
           user_id: string
         }
         Update: {
+          campaign_folder_id?: string | null
           campaign_id?: string | null
           client_id?: string | null
           created_at?: string
@@ -962,15 +1103,25 @@ export type Database = {
           prompt?: string
           size?: string | null
           source_image_id?: string | null
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
           storage_path?: string | null
           style?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "generated_images_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       generated_strategy_content: {
         Row: {
           approval_status: Database["public"]["Enums"]["strategy_approval_status"]
+          campaign_folder_id: string | null
           campaign_id: string | null
           caption: string | null
           client_id: string | null
@@ -983,11 +1134,13 @@ export type Database = {
           image_prompt: string | null
           platform: string
           scheduled_date: string | null
+          source_type: Database["public"]["Enums"]["campaign_source_type"]
           title: string | null
           video_script: string | null
         }
         Insert: {
           approval_status?: Database["public"]["Enums"]["strategy_approval_status"]
+          campaign_folder_id?: string | null
           campaign_id?: string | null
           caption?: string | null
           client_id?: string | null
@@ -1000,11 +1153,13 @@ export type Database = {
           image_prompt?: string | null
           platform: string
           scheduled_date?: string | null
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
           title?: string | null
           video_script?: string | null
         }
         Update: {
           approval_status?: Database["public"]["Enums"]["strategy_approval_status"]
+          campaign_folder_id?: string | null
           campaign_id?: string | null
           caption?: string | null
           client_id?: string | null
@@ -1017,10 +1172,18 @@ export type Database = {
           image_prompt?: string | null
           platform?: string
           scheduled_date?: string | null
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
           title?: string | null
           video_script?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "generated_strategy_content_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "generated_strategy_content_consultation_id_fkey"
             columns: ["consultation_id"]
@@ -1033,6 +1196,7 @@ export type Database = {
       human_seo_ppc_requests: {
         Row: {
           assigned_to: string | null
+          campaign_folder_id: string | null
           client_id: string | null
           consultation_id: string | null
           created_at: string
@@ -1046,6 +1210,7 @@ export type Database = {
         }
         Insert: {
           assigned_to?: string | null
+          campaign_folder_id?: string | null
           client_id?: string | null
           consultation_id?: string | null
           created_at?: string
@@ -1059,6 +1224,7 @@ export type Database = {
         }
         Update: {
           assigned_to?: string | null
+          campaign_folder_id?: string | null
           client_id?: string | null
           consultation_id?: string | null
           created_at?: string
@@ -1072,6 +1238,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "human_seo_ppc_requests_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "human_seo_ppc_requests_consultation_id_fkey"
             columns: ["consultation_id"]
             isOneToOne: false
@@ -1083,6 +1256,7 @@ export type Database = {
       human_strategy_requests: {
         Row: {
           assigned_to: string | null
+          campaign_folder_id: string | null
           client_id: string | null
           consultation_id: string | null
           created_at: string
@@ -1096,6 +1270,7 @@ export type Database = {
         }
         Insert: {
           assigned_to?: string | null
+          campaign_folder_id?: string | null
           client_id?: string | null
           consultation_id?: string | null
           created_at?: string
@@ -1109,6 +1284,7 @@ export type Database = {
         }
         Update: {
           assigned_to?: string | null
+          campaign_folder_id?: string | null
           client_id?: string | null
           consultation_id?: string | null
           created_at?: string
@@ -1121,6 +1297,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "human_strategy_requests_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "human_strategy_requests_consultation_id_fkey"
             columns: ["consultation_id"]
@@ -1440,6 +1623,7 @@ export type Database = {
       meetings: {
         Row: {
           agenda: string | null
+          campaign_folder_id: string | null
           campaign_id: string | null
           client_id: string | null
           created_at: string
@@ -1450,6 +1634,7 @@ export type Database = {
           location: string | null
           meeting_date: string
           notes: string | null
+          source_type: Database["public"]["Enums"]["campaign_source_type"]
           start_time: string | null
           status: string
           title: string
@@ -1459,6 +1644,7 @@ export type Database = {
         }
         Insert: {
           agenda?: string | null
+          campaign_folder_id?: string | null
           campaign_id?: string | null
           client_id?: string | null
           created_at?: string
@@ -1469,6 +1655,7 @@ export type Database = {
           location?: string | null
           meeting_date: string
           notes?: string | null
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
           start_time?: string | null
           status?: string
           title: string
@@ -1478,6 +1665,7 @@ export type Database = {
         }
         Update: {
           agenda?: string | null
+          campaign_folder_id?: string | null
           campaign_id?: string | null
           client_id?: string | null
           created_at?: string
@@ -1488,6 +1676,7 @@ export type Database = {
           location?: string | null
           meeting_date?: string
           notes?: string | null
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
           start_time?: string | null
           status?: string
           title?: string
@@ -1495,11 +1684,20 @@ export type Database = {
           user_id?: string
           video_link?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "meetings_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       ppc_keywords: {
         Row: {
           ad_group: string | null
+          campaign_folder_id: string | null
           consultation_id: string
           created_at: string
           estimated_cpc: number | null
@@ -1511,6 +1709,7 @@ export type Database = {
         }
         Insert: {
           ad_group?: string | null
+          campaign_folder_id?: string | null
           consultation_id: string
           created_at?: string
           estimated_cpc?: number | null
@@ -1522,6 +1721,7 @@ export type Database = {
         }
         Update: {
           ad_group?: string | null
+          campaign_folder_id?: string | null
           consultation_id?: string
           created_at?: string
           estimated_cpc?: number | null
@@ -1532,6 +1732,13 @@ export type Database = {
           priority?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "ppc_keywords_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "ppc_keywords_consultation_id_fkey"
             columns: ["consultation_id"]
@@ -1546,6 +1753,7 @@ export type Database = {
           ab_testing_plan: Json | null
           ad_copy_recommendations: Json | null
           budget_allocation: Json | null
+          campaign_folder_id: string | null
           campaign_structure: Json | null
           consultation_id: string
           conversion_tracking_checklist: Json | null
@@ -1562,6 +1770,7 @@ export type Database = {
           ab_testing_plan?: Json | null
           ad_copy_recommendations?: Json | null
           budget_allocation?: Json | null
+          campaign_folder_id?: string | null
           campaign_structure?: Json | null
           consultation_id: string
           conversion_tracking_checklist?: Json | null
@@ -1578,6 +1787,7 @@ export type Database = {
           ab_testing_plan?: Json | null
           ad_copy_recommendations?: Json | null
           budget_allocation?: Json | null
+          campaign_folder_id?: string | null
           campaign_structure?: Json | null
           consultation_id?: string
           conversion_tracking_checklist?: Json | null
@@ -1591,6 +1801,13 @@ export type Database = {
           sources_used?: Json | null
         }
         Relationships: [
+          {
+            foreignKeyName: "ppc_recommendations_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "ppc_recommendations_consultation_id_fkey"
             columns: ["consultation_id"]
@@ -1629,6 +1846,7 @@ export type Database = {
       }
       seo_keywords: {
         Row: {
+          campaign_folder_id: string | null
           consultation_id: string
           created_at: string
           difficulty_score: number | null
@@ -1640,6 +1858,7 @@ export type Database = {
           search_volume: number | null
         }
         Insert: {
+          campaign_folder_id?: string | null
           consultation_id: string
           created_at?: string
           difficulty_score?: number | null
@@ -1651,6 +1870,7 @@ export type Database = {
           search_volume?: number | null
         }
         Update: {
+          campaign_folder_id?: string | null
           consultation_id?: string
           created_at?: string
           difficulty_score?: number | null
@@ -1662,6 +1882,13 @@ export type Database = {
           search_volume?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "seo_keywords_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "seo_keywords_consultation_id_fkey"
             columns: ["consultation_id"]
@@ -1758,6 +1985,7 @@ export type Database = {
         Row: {
           business_goal: string | null
           business_name: string
+          campaign_folder_id: string | null
           campaign_id: string | null
           client_id: string | null
           competitors: string | null
@@ -1791,6 +2019,7 @@ export type Database = {
         Insert: {
           business_goal?: string | null
           business_name: string
+          campaign_folder_id?: string | null
           campaign_id?: string | null
           client_id?: string | null
           competitors?: string | null
@@ -1824,6 +2053,7 @@ export type Database = {
         Update: {
           business_goal?: string | null
           business_name?: string
+          campaign_folder_id?: string | null
           campaign_id?: string | null
           client_id?: string | null
           competitors?: string | null
@@ -1854,11 +2084,20 @@ export type Database = {
           user_id?: string
           website_url?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "seo_ppc_consultations_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       seo_recommendations: {
         Row: {
           backlink_recommendations: Json | null
+          campaign_folder_id: string | null
           competitor_gap_summary: Json | null
           consultation_id: string
           content_recommendations: Json | null
@@ -1876,6 +2115,7 @@ export type Database = {
         }
         Insert: {
           backlink_recommendations?: Json | null
+          campaign_folder_id?: string | null
           competitor_gap_summary?: Json | null
           consultation_id: string
           content_recommendations?: Json | null
@@ -1893,6 +2133,7 @@ export type Database = {
         }
         Update: {
           backlink_recommendations?: Json | null
+          campaign_folder_id?: string | null
           competitor_gap_summary?: Json | null
           consultation_id?: string
           content_recommendations?: Json | null
@@ -1909,6 +2150,13 @@ export type Database = {
           technical_seo_recommendations?: Json | null
         }
         Relationships: [
+          {
+            foreignKeyName: "seo_recommendations_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "seo_recommendations_consultation_id_fkey"
             columns: ["consultation_id"]
@@ -1954,6 +2202,7 @@ export type Database = {
       social_posts: {
         Row: {
           ai_generated: boolean
+          campaign_folder_id: string | null
           campaign_id: string | null
           campaign_name: string | null
           caption: string
@@ -1971,12 +2220,14 @@ export type Database = {
           source_module: string | null
           source_post_id: string | null
           source_strategy_id: string | null
+          source_type: Database["public"]["Enums"]["campaign_source_type"]
           status: string
           updated_at: string
           user_id: string
         }
         Insert: {
           ai_generated?: boolean
+          campaign_folder_id?: string | null
           campaign_id?: string | null
           campaign_name?: string | null
           caption?: string
@@ -1994,12 +2245,14 @@ export type Database = {
           source_module?: string | null
           source_post_id?: string | null
           source_strategy_id?: string | null
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
           status?: string
           updated_at?: string
           user_id: string
         }
         Update: {
           ai_generated?: boolean
+          campaign_folder_id?: string | null
           campaign_id?: string | null
           campaign_name?: string | null
           caption?: string
@@ -2017,11 +2270,20 @@ export type Database = {
           source_module?: string | null
           source_post_id?: string | null
           source_strategy_id?: string | null
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
           status?: string
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "social_posts_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       strategy_admin_settings: {
         Row: {
@@ -2104,6 +2366,7 @@ export type Database = {
         Row: {
           business_goal: string | null
           business_name: string
+          campaign_folder_id: string | null
           client_id: string | null
           consultation_type: Database["public"]["Enums"]["consultation_type"]
           created_at: string
@@ -2121,6 +2384,7 @@ export type Database = {
         Insert: {
           business_goal?: string | null
           business_name: string
+          campaign_folder_id?: string | null
           client_id?: string | null
           consultation_type?: Database["public"]["Enums"]["consultation_type"]
           created_at?: string
@@ -2138,6 +2402,7 @@ export type Database = {
         Update: {
           business_goal?: string | null
           business_name?: string
+          campaign_folder_id?: string | null
           client_id?: string | null
           consultation_type?: Database["public"]["Enums"]["consultation_type"]
           created_at?: string
@@ -2152,11 +2417,20 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "strategy_consultations_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       strategy_recommendations: {
         Row: {
           best_practices_summary: string | null
+          campaign_folder_id: string | null
           consultation_id: string
           created_at: string
           id: string
@@ -2170,6 +2444,7 @@ export type Database = {
         }
         Insert: {
           best_practices_summary?: string | null
+          campaign_folder_id?: string | null
           consultation_id: string
           created_at?: string
           id?: string
@@ -2183,6 +2458,7 @@ export type Database = {
         }
         Update: {
           best_practices_summary?: string | null
+          campaign_folder_id?: string | null
           consultation_id?: string
           created_at?: string
           id?: string
@@ -2195,6 +2471,13 @@ export type Database = {
           sources_used?: Json
         }
         Relationships: [
+          {
+            foreignKeyName: "strategy_recommendations_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "strategy_recommendations_consultation_id_fkey"
             columns: ["consultation_id"]
@@ -2249,6 +2532,7 @@ export type Database = {
       tasks: {
         Row: {
           assigned_to: string | null
+          campaign_folder_id: string | null
           campaign_id: string | null
           client_id: string | null
           created_at: string
@@ -2257,6 +2541,7 @@ export type Database = {
           meeting_id: string | null
           notes: string | null
           priority: Database["public"]["Enums"]["task_priority"]
+          source_type: Database["public"]["Enums"]["campaign_source_type"]
           status: Database["public"]["Enums"]["task_status"]
           title: string
           updated_at: string
@@ -2264,6 +2549,7 @@ export type Database = {
         }
         Insert: {
           assigned_to?: string | null
+          campaign_folder_id?: string | null
           campaign_id?: string | null
           client_id?: string | null
           created_at?: string
@@ -2272,6 +2558,7 @@ export type Database = {
           meeting_id?: string | null
           notes?: string | null
           priority?: Database["public"]["Enums"]["task_priority"]
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
           status?: Database["public"]["Enums"]["task_status"]
           title: string
           updated_at?: string
@@ -2279,6 +2566,7 @@ export type Database = {
         }
         Update: {
           assigned_to?: string | null
+          campaign_folder_id?: string | null
           campaign_id?: string | null
           client_id?: string | null
           created_at?: string
@@ -2287,12 +2575,20 @@ export type Database = {
           meeting_id?: string | null
           notes?: string | null
           priority?: Database["public"]["Enums"]["task_priority"]
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
           status?: Database["public"]["Enums"]["task_status"]
           title?: string
           updated_at?: string
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "tasks_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "tasks_client_id_fkey"
             columns: ["client_id"]
@@ -2406,6 +2702,7 @@ export type Database = {
       }
       video_projects: {
         Row: {
+          campaign_folder_id: string | null
           campaign_id: string | null
           client_id: string | null
           created_at: string
@@ -2415,6 +2712,7 @@ export type Database = {
           output: string
           output_json: Json
           platform: string
+          source_type: Database["public"]["Enums"]["campaign_source_type"]
           status: string
           style: string
           title: string
@@ -2423,6 +2721,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          campaign_folder_id?: string | null
           campaign_id?: string | null
           client_id?: string | null
           created_at?: string
@@ -2432,6 +2731,7 @@ export type Database = {
           output?: string
           output_json?: Json
           platform?: string
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
           status?: string
           style?: string
           title?: string
@@ -2440,6 +2740,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          campaign_folder_id?: string | null
           campaign_id?: string | null
           client_id?: string | null
           created_at?: string
@@ -2449,6 +2750,7 @@ export type Database = {
           output?: string
           output_json?: Json
           platform?: string
+          source_type?: Database["public"]["Enums"]["campaign_source_type"]
           status?: string
           style?: string
           title?: string
@@ -2456,7 +2758,15 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "video_projects_campaign_folder_id_fkey"
+            columns: ["campaign_folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       video_renders: {
         Row: {
@@ -2669,6 +2979,27 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "member"
+      campaign_folder_status:
+        | "draft"
+        | "ai_generating"
+        | "pending_client_approval"
+        | "pending_human_review"
+        | "human_review_required"
+        | "approved"
+        | "scheduled"
+        | "active"
+        | "completed"
+        | "paused"
+        | "rejected"
+      campaign_folder_type:
+        | "social_media"
+        | "seo"
+        | "ppc"
+        | "combined"
+        | "human_assisted"
+        | "ai_generated"
+        | "ai_human_review"
+      campaign_source_type: "ai" | "human" | "ai_human_review"
       campaign_status:
         | "planned"
         | "active"
@@ -2834,6 +3165,29 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "member"],
+      campaign_folder_status: [
+        "draft",
+        "ai_generating",
+        "pending_client_approval",
+        "pending_human_review",
+        "human_review_required",
+        "approved",
+        "scheduled",
+        "active",
+        "completed",
+        "paused",
+        "rejected",
+      ],
+      campaign_folder_type: [
+        "social_media",
+        "seo",
+        "ppc",
+        "combined",
+        "human_assisted",
+        "ai_generated",
+        "ai_human_review",
+      ],
+      campaign_source_type: ["ai", "human", "ai_human_review"],
       campaign_status: [
         "planned",
         "active",
