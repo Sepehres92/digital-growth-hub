@@ -268,7 +268,7 @@ Campaign focus: ${cz.campaignFocus ?? "n/a"}`;
         user_id: userId,
         client_id: c.client_id,
         name: `AI Strategy — ${c.business_name}`,
-        type: "social",
+        type: "social_media",
         status: "active",
         goal: c.goal,
         start_date: startIso,
