@@ -68,6 +68,19 @@ function TeamChatPage() {
   const activeChannelNameRef = useRef<string>("");
   const PAGE = 30;
 
+  type ConvertAction = "task" | "meeting" | "calendar" | "client_note" | "ai_campaign";
+  const [convertMsg, setConvertMsg] = useState<Message | null>(null);
+  const [convertAction, setConvertAction] = useState<ConvertAction>("task");
+  const [convertClientId, setConvertClientId] = useState<string>("");
+  const [convertPlatform, setConvertPlatform] = useState<string>("instagram");
+  const [convertDate, setConvertDate] = useState<string>(() => new Date().toISOString().slice(0, 10));
+  const [convertBusy, setConvertBusy] = useState(false);
+  const openConvert = (m: Message, a: ConvertAction) => {
+    setConvertMsg(m); setConvertAction(a);
+    setConvertClientId(""); setConvertPlatform("instagram");
+    setConvertDate(new Date().toISOString().slice(0, 10));
+  };
+
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setMe(data.user?.id ?? null));
   }, []);
