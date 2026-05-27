@@ -57,9 +57,9 @@ function AuthedLayout() {
     { to: "/search-console", label: "Search Console", icon: Search, group: "Marketing Tools" },
     { to: "/social", label: "Social", icon: Share2, group: "Marketing Tools" },
     { to: "/help-support", label: "Help & Support", icon: LifeBuoy, group: "Workspace" },
-    { to: "/chatbot-admin", label: "Chatbot Admin", icon: Bot, group: "Workspace" },
+    ...(isAdmin ? [{ to: "/chatbot-admin", label: "Chatbot Admin", icon: Bot, group: "Workspace" }] : []),
     { to: "/settings", label: "Settings", icon: SettingsIcon, group: "Workspace" },
-  ] as const;
+  ] as { to: string; label: string; icon: typeof LayoutDashboard; group: string }[];
 
   const groups = Array.from(new Set(nav.map((n) => n.group)));
 
