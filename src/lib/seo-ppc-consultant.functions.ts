@@ -108,7 +108,7 @@ export const saveSeoPpcIntake = createServerFn({ method: "POST" })
           };
     const { data: inserted, error } = await supabase
       .from("seo_ppc_consultations")
-      .insert(row)
+      .insert(row as never)
       .select("id")
       .single();
     if (error) throw new Error(error.message);
