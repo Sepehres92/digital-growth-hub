@@ -134,7 +134,9 @@ export const updateCampaignFolderStatus = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => UpdateStatusSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
-    const patch: Record<string, unknown> = { status: data.status };
+    const patch: { status: typeof data.status; client_notes?: string } = {
+      status: data.status,
+    };
     if (data.clientNotes !== undefined) patch.client_notes = data.clientNotes;
     const { data: folder, error } = await supabase
       .from("campaign_folders")
