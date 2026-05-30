@@ -13,6 +13,7 @@ import { Route as Char91indexChar93RouteImport } from './routes/[index]'
 import { Route as UploadOwnershipPolicyRouteImport } from './routes/upload-ownership-policy'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SocialRouteImport } from './routes/social'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SeoAuditRouteImport } from './routes/seo-audit'
 import { Route as SemrushRouteImport } from './routes/semrush'
 import { Route as SecurityRouteImport } from './routes/security'
@@ -72,6 +73,11 @@ const TermsRoute = TermsRouteImport.update({
 const SocialRoute = SocialRouteImport.update({
   id: '/social',
   path: '/social',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SeoAuditRoute = SeoAuditRouteImport.update({
@@ -303,6 +309,7 @@ export interface FileRoutesByFullPath {
   '/security': typeof SecurityRoute
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/social': typeof SocialRoute
   '/terms': typeof TermsRoute
   '/upload-ownership-policy': typeof UploadOwnershipPolicyRoute
@@ -348,6 +355,7 @@ export interface FileRoutesByTo {
   '/security': typeof SecurityRoute
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/social': typeof SocialRoute
   '/terms': typeof TermsRoute
   '/upload-ownership-policy': typeof UploadOwnershipPolicyRoute
@@ -395,6 +403,7 @@ export interface FileRoutesById {
   '/security': typeof SecurityRoute
   '/semrush': typeof SemrushRoute
   '/seo-audit': typeof SeoAuditRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/social': typeof SocialRoute
   '/terms': typeof TermsRoute
   '/upload-ownership-policy': typeof UploadOwnershipPolicyRoute
@@ -442,6 +451,7 @@ export interface FileRouteTypes {
     | '/security'
     | '/semrush'
     | '/seo-audit'
+    | '/sitemap.xml'
     | '/social'
     | '/terms'
     | '/upload-ownership-policy'
@@ -487,6 +497,7 @@ export interface FileRouteTypes {
     | '/security'
     | '/semrush'
     | '/seo-audit'
+    | '/sitemap.xml'
     | '/social'
     | '/terms'
     | '/upload-ownership-policy'
@@ -533,6 +544,7 @@ export interface FileRouteTypes {
     | '/security'
     | '/semrush'
     | '/seo-audit'
+    | '/sitemap.xml'
     | '/social'
     | '/terms'
     | '/upload-ownership-policy'
@@ -580,6 +592,7 @@ export interface RootRouteChildren {
   SecurityRoute: typeof SecurityRoute
   SemrushRoute: typeof SemrushRoute
   SeoAuditRoute: typeof SeoAuditRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SocialRoute: typeof SocialRoute
   TermsRoute: typeof TermsRoute
   UploadOwnershipPolicyRoute: typeof UploadOwnershipPolicyRoute
@@ -614,6 +627,13 @@ declare module '@tanstack/react-router' {
       path: '/social'
       fullPath: '/social'
       preLoaderRoute: typeof SocialRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/seo-audit': {
@@ -975,6 +995,7 @@ const rootRouteChildren: RootRouteChildren = {
   SecurityRoute: SecurityRoute,
   SemrushRoute: SemrushRoute,
   SeoAuditRoute: SeoAuditRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   SocialRoute: SocialRoute,
   TermsRoute: TermsRoute,
   UploadOwnershipPolicyRoute: UploadOwnershipPolicyRoute,
