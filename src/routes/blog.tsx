@@ -260,7 +260,7 @@ function BlogPage() {
 
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button type="button" variant="ghost" size="icon">
+                  <Button type="button" variant="ghost" size="icon" aria-label="Insert emoji">
                     <Smile className="size-4" />
                   </Button>
                 </PopoverTrigger>
