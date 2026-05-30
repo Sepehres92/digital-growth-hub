@@ -263,6 +263,8 @@ export const buildVideoFromMedia = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => FromMediaInput.parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
+    assertOptionalUUID(data.clientId, "client ID");
+    assertOptionalUUID(data.campaignId, "campaign ID");
     const brand = await loadBrand(supabase, data.clientId);
 
     const sys = `You are a video editor. Given a set of uploaded media assets (referenced by index), produce a finished video plan as JSON:
