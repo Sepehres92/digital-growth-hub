@@ -1,6 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { isValidUUID } from "@/lib/utils";
+
+function assertOptionalUUID(value: string | null | undefined, label: string) {
+  if (value == null || value === "") return;
+  if (!isValidUUID(value)) throw new Error(`Valid ${label} is required`);
+}
 
 const STYLE_HINTS: Record<string, string> = {
   photorealistic: "ultra photorealistic, 50mm lens, natural lighting, sharp detail",
@@ -79,6 +85,8 @@ export const generateOrEditImage = createServerFn({ method: "POST" })
     const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) throw new Error("LOVABLE_API_KEY not configured");
     const { supabase, userId } = context;
+    assertOptionalUUID(data.clientId, "client ID");
+    assertOptionalUUID(data.campaignId, "campaign ID");
 
     const styleHint = data.style ? (STYLE_HINTS[data.style] ?? data.style) : "";
     const sizeHint = SIZE_LABEL[data.size] ?? "";
