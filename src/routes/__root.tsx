@@ -73,24 +73,38 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Digital Growth Hub" },
-      { name: "description", content: "AI and human managed digital marketing service — Digital Growth Hub." },
-      { name: "author", content: "Digital Growth Hub" },
-      { property: "og:title", content: "Digital Growth Hub" },
-      { property: "og:description", content: "AI and human managed digital marketing service — Digital Growth Hub." },
+      { title: "Digital Agency OS" },
+      { name: "description", content: "AI-powered platform for modern marketing agencies — clients, content, video, scheduling, automation." },
+      { name: "author", content: "Digital Agency OS" },
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "Digital Growth Hub" },
+      { property: "og:site_name", content: "Digital Agency OS" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@DigitalGrowthHub" },
-      { name: "twitter:title", content: "Digital Growth Hub" },
-      { name: "twitter:description", content: "AI and human managed digital marketing service — Digital Growth Hub." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/649f9f81-80c6-4f8c-9435-e90c7ac7e0fe/id-preview-eec258d4--aa4cf870-7c47-48cc-93af-c3de6a023022.lovable.app-1780110609891.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/649f9f81-80c6-4f8c-9435-e90c7ac7e0fe/id-preview-eec258d4--aa4cf870-7c47-48cc-93af-c3de6a023022.lovable.app-1780110609891.png" },
+      { name: "twitter:site", content: "@DigitalAgencyOS" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              name: "Digital Agency OS",
+              url: "https://impact-reach-tool.lovable.app",
+            },
+            {
+              "@type": "WebSite",
+              name: "Digital Agency OS",
+              url: "https://impact-reach-tool.lovable.app",
+            },
+          ],
+        }),
       },
     ],
   }),

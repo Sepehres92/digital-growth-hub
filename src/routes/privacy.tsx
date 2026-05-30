@@ -6,6 +6,8 @@ export const Route = createFileRoute("/privacy")({
     meta: [
       { title: "Privacy Policy — Digital Agency OS" },
       { name: "description", content: "How Digital Agency OS collects, uses, and protects your personal data." },
+      { property: "og:title", content: "Privacy Policy — Digital Agency OS" },
+      { property: "og:description", content: "How Digital Agency OS collects, uses, and protects your personal data under GDPR, PIPEDA, and CCPA." },
     ],
   }),
   component: PrivacyPage,

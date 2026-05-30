@@ -5,7 +5,9 @@ export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
       { title: "Contact — Digital Agency OS" },
-      { name: "description", content: "Get in touch with the Digital Agency OS team." },
+      { name: "description", content: "Get in touch with the Digital Agency OS team — sales, support, privacy and legal." },
+      { property: "og:title", content: "Contact — Digital Agency OS" },
+      { property: "og:description", content: "Reach the Digital Agency OS team for sales, support, and privacy requests." },
     ],
   }),
   component: ContactPage,

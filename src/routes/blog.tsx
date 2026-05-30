@@ -42,6 +42,26 @@ export const Route = createFileRoute("/blog")({
         content:
           "Share daily updates, ideas, and stories on the Digital Agency OS community blog.",
       },
+      { property: "og:title", content: "Daily Blog – Digital Agency OS" },
+      {
+        property: "og:description",
+        content:
+          "Daily updates, ideas, and stories from the Digital Agency OS community.",
+      },
+      { property: "og:type", content: "article" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Blog",
+          name: "Daily Blog – Digital Agency OS",
+          url: "https://impact-reach-tool.lovable.app/blog",
+          author: { "@type": "Organization", name: "Digital Agency OS" },
+          publisher: { "@type": "Organization", name: "Digital Agency OS" },
+        }),
+      },
     ],
   }),
 });
@@ -197,13 +217,13 @@ function BlogPage() {
 
             {/* Toolbar */}
             <div className="flex flex-wrap items-center gap-1 rounded-md border border-border bg-background p-2">
-              <Button type="button" variant="ghost" size="icon" onClick={() => exec("bold")}>
+              <Button type="button" variant="ghost" size="icon" aria-label="Bold" onClick={() => exec("bold")}>
                 <Bold className="size-4" />
               </Button>
-              <Button type="button" variant="ghost" size="icon" onClick={() => exec("italic")}>
+              <Button type="button" variant="ghost" size="icon" aria-label="Italic" onClick={() => exec("italic")}>
                 <Italic className="size-4" />
               </Button>
-              <Button type="button" variant="ghost" size="icon" onClick={() => exec("underline")}>
+              <Button type="button" variant="ghost" size="icon" aria-label="Underline" onClick={() => exec("underline")}>
                 <Underline className="size-4" />
               </Button>
 
@@ -240,7 +260,7 @@ function BlogPage() {
 
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button type="button" variant="ghost" size="icon">
+                  <Button type="button" variant="ghost" size="icon" aria-label="Insert emoji">
                     <Smile className="size-4" />
                   </Button>
                 </PopoverTrigger>
@@ -264,6 +284,7 @@ function BlogPage() {
                 type="button"
                 variant="ghost"
                 size="icon"
+                aria-label="Insert image"
                 onClick={() => fileRef.current?.click()}
                 title="Insert image"
               >
@@ -311,7 +332,7 @@ function BlogPage() {
                   </p>
                 </div>
                 {p.user_id && p.user_id === userId && (
-                  <Button variant="ghost" size="icon" onClick={() => remove(p.id)}>
+                  <Button variant="ghost" size="icon" aria-label="Delete post" onClick={() => remove(p.id)}>
                     <Trash2 className="size-4" />
                   </Button>
                 )}

@@ -17,11 +17,16 @@ import {
 export const Route = createFileRoute("/search-console")({
   head: () => ({
     meta: [
-      { title: "Search Console — Vektra" },
+      { title: "Search Console — Digital Agency OS" },
       {
         name: "description",
         content:
           "Live Google Search Console data: clicks, impressions, CTR, and top queries for your verified properties.",
+      },
+      { property: "og:title", content: "Search Console — Digital Agency OS" },
+      {
+        property: "og:description",
+        content: "Clicks, impressions, CTR, and top queries from your verified Search Console properties.",
       },
     ],
   }),
