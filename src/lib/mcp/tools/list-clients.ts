@@ -1,6 +1,8 @@
 import { defineTool } from "mcp-tanstack-start";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { getMcpTargetUserId } from "@/lib/mcp/target-user";
+
 
 export const listClientsTool = defineTool({
   name: "list_clients",
