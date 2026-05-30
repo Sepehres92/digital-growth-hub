@@ -85,7 +85,7 @@ export const generateOrEditImage = createServerFn({ method: "POST" })
     const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) throw new Error("LOVABLE_API_KEY not configured");
     const { supabase, userId } = context;
-    console.log("UUID DEBUG ai-studio", { userId, clientId: data.clientId, campaignId: data.campaignId });
+    
     if (!isValidUUID(userId)) throw new Error(`Invalid user ID: "${userId}"`);
     assertOptionalUUID(data.clientId, "client ID");
     assertOptionalUUID(data.campaignId, "campaign ID");

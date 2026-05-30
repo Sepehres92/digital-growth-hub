@@ -32,7 +32,7 @@ function HelpSupportPage() {
   const kb = useQuery({
     queryKey: ["kb-public"], enabled: !!me,
     queryFn: async () => {
-      const { data } = await (supabase.from("chatbot_kb_articles") as any).select("*").eq("published", true).order("category");
+      const { data } = await (supabase.from("chatbot_kb_articles") as any).select("*").eq("user_id", me!).eq("published", true).order("category");
       return data ?? [];
     },
   });
