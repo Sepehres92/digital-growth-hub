@@ -29,7 +29,9 @@ const authenticated = withMcpAuth(
     const expected = process.env.MCP_SHARED_TOKEN;
     if (!expected) return null;
     const header = request.headers.get("Authorization") ?? "";
-    const token = header.replace(/^Bearer\s+/i, "").trim();
+    const headerToken = header.replace(/^Bearer\s+/i, "").trim();
+    const queryToken = (new URL(request.url).searchParams.get("token") ?? "").trim();
+    const token = headerToken || queryToken;
     if (!token || token !== expected) return null;
     return { token };
   },
