@@ -8,6 +8,15 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
+const faqs = [
+  { q: "How does AI content work?", a: "Our AI Copywriter, Image Generator, and Video Studio are trained on each client's brand voice, audience, and assets. You describe what you need; we generate on-brand variants in seconds. You stay in full creative control." },
+  { q: "Can clients log in?", a: "Yes. Every client gets a white-label portal where they can view campaigns, approve content, read meeting summaries, and chat with an AI assistant trained on their account." },
+  { q: "Does it support social posting?", a: "Yes. Schedule and publish to Instagram, TikTok, LinkedIn, X, YouTube, Facebook, and Pinterest. Built-in approval flows and multi-platform calendars included." },
+  { q: "Can my team collaborate?", a: "Absolutely. Real-time team chat, meeting scheduling, task boards, shared notes, and live activity indicators — all in one workspace." },
+  { q: "Is my data secure?", a: "We use HTTPS/TLS in transit, encrypted storage at rest, role-based access control, and Row-Level Security so each client's data is isolated. See our Security page for full details." },
+  { q: "Does it support AI videos?", a: "Yes. The AI Video Studio handles scripts, voiceovers, subtitles, B-roll, and exports in 9:16 (TikTok, Reels, Shorts), 16:9 (YouTube), and square formats." },
+];
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -23,6 +32,20 @@ export const Route = createFileRoute("/")({
       { property: "og:url", content: "/" },
     ],
     links: [{ rel: "canonical", href: "/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqs.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }),
+      },
+    ],
   }),
   component: Landing,
 });
