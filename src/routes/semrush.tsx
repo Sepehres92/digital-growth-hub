@@ -13,11 +13,16 @@ import type { SemrushTable } from "@/lib/semrush.server";
 export const Route = createFileRoute("/semrush")({
   head: () => ({
     meta: [
-      { title: "Semrush — Vektra" },
+      { title: "Semrush — Digital Agency OS" },
       {
         name: "description",
         content:
           "Live Semrush data: keyword rankings, backlink profile, and competitor comparison for any domain.",
+      },
+      { property: "og:title", content: "Semrush — Digital Agency OS" },
+      {
+        property: "og:description",
+        content: "Keyword rankings, backlinks, and competitor comparison powered by Semrush.",
       },
     ],
   }),
