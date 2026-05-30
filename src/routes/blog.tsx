@@ -332,7 +332,7 @@ function BlogPage() {
                   </p>
                 </div>
                 {p.user_id && p.user_id === userId && (
-                  <Button variant="ghost" size="icon" onClick={() => remove(p.id)}>
+                  <Button variant="ghost" size="icon" aria-label="Delete post" onClick={() => remove(p.id)}>
                     <Trash2 className="size-4" />
                   </Button>
                 )}
