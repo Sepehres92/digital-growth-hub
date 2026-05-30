@@ -42,6 +42,26 @@ export const Route = createFileRoute("/blog")({
         content:
           "Share daily updates, ideas, and stories on the Digital Agency OS community blog.",
       },
+      { property: "og:title", content: "Daily Blog – Digital Agency OS" },
+      {
+        property: "og:description",
+        content:
+          "Daily updates, ideas, and stories from the Digital Agency OS community.",
+      },
+      { property: "og:type", content: "article" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Blog",
+          name: "Daily Blog – Digital Agency OS",
+          url: "https://impact-reach-tool.lovable.app/blog",
+          author: { "@type": "Organization", name: "Digital Agency OS" },
+          publisher: { "@type": "Organization", name: "Digital Agency OS" },
+        }),
+      },
     ],
   }),
 });
