@@ -284,6 +284,7 @@ function BlogPage() {
                 type="button"
                 variant="ghost"
                 size="icon"
+                aria-label="Insert image"
                 onClick={() => fileRef.current?.click()}
                 title="Insert image"
               >
