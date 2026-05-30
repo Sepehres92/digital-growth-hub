@@ -11,8 +11,8 @@ export const listUpcomingContentTool = defineTool({
     days: z.number().int().min(1).max(90).default(14).optional(),
   }),
   execute: async ({ days }) => {
-    const userId = process.env.MCP_TARGET_USER_ID;
-    if (!userId) throw new Error("MCP_TARGET_USER_ID not configured");
+    const userId = getMcpTargetUserId();
+
     const horizon = new Date();
     horizon.setDate(horizon.getDate() + (days ?? 14));
     const { data, error } = await supabaseAdmin
