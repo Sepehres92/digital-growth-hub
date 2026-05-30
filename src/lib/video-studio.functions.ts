@@ -1,6 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { isValidUUID } from "@/lib/utils";
+
+function assertOptionalUUID(value: string | null | undefined, label: string) {
+  if (value == null || value === "") return;
+  if (!isValidUUID(value)) throw new Error(`Valid ${label} is required`);
+}
 
 const GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const MODEL = "google/gemini-2.5-flash";
