@@ -217,13 +217,13 @@ function BlogPage() {
 
             {/* Toolbar */}
             <div className="flex flex-wrap items-center gap-1 rounded-md border border-border bg-background p-2">
-              <Button type="button" variant="ghost" size="icon" onClick={() => exec("bold")}>
+              <Button type="button" variant="ghost" size="icon" aria-label="Bold" onClick={() => exec("bold")}>
                 <Bold className="size-4" />
               </Button>
-              <Button type="button" variant="ghost" size="icon" onClick={() => exec("italic")}>
+              <Button type="button" variant="ghost" size="icon" aria-label="Italic" onClick={() => exec("italic")}>
                 <Italic className="size-4" />
               </Button>
-              <Button type="button" variant="ghost" size="icon" onClick={() => exec("underline")}>
+              <Button type="button" variant="ghost" size="icon" aria-label="Underline" onClick={() => exec("underline")}>
                 <Underline className="size-4" />
               </Button>
 
