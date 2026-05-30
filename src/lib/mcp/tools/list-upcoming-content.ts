@@ -1,6 +1,8 @@
 import { defineTool } from "mcp-tanstack-start";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { getMcpTargetUserId } from "@/lib/mcp/target-user";
+
 
 export const listUpcomingContentTool = defineTool({
   name: "list_upcoming_content",
@@ -9,8 +11,8 @@ export const listUpcomingContentTool = defineTool({
     days: z.number().int().min(1).max(90).default(14).optional(),
   }),
   execute: async ({ days }) => {
-    const userId = process.env.MCP_TARGET_USER_ID;
-    if (!userId) throw new Error("MCP_TARGET_USER_ID not configured");
+    const userId = getMcpTargetUserId();
+
     const horizon = new Date();
     horizon.setDate(horizon.getDate() + (days ?? 14));
     const { data, error } = await supabaseAdmin
