@@ -12,8 +12,8 @@ export const listCampaignsTool = defineTool({
     limit: z.number().int().min(1).max(100).default(25).optional(),
   }),
   execute: async ({ client_id, limit }) => {
-    const userId = process.env.MCP_TARGET_USER_ID;
-    if (!userId) throw new Error("MCP_TARGET_USER_ID not configured");
+    const userId = getMcpTargetUserId();
+
     let q = supabaseAdmin
       .from("campaigns")
       .select("id, name, type, status, goal, monthly_budget, start_date, end_date, client_id")
