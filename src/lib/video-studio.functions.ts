@@ -156,6 +156,8 @@ export const generateVideoConcept = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => ConceptInput.parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
+    assertOptionalUUID(data.clientId, "client ID");
+    assertOptionalUUID(data.campaignId, "campaign ID");
     const brand = await loadBrand(supabase, data.clientId);
 
     const sys = `You are an elite short-form video director. Output ONLY valid JSON matching:
