@@ -13,18 +13,37 @@ const mcp = createMcpServer({
   tools: [getBusinessProfileTool, listClientsTool, listCampaignsTool, listUpcomingContentTool],
 });
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers":
+    "Authorization, Content-Type, Accept, Origin, X-Requested-With, Mcp-Session-Id, Last-Event-ID",
+  "Access-Control-Expose-Headers": "Mcp-Session-Id",
+  "Access-Control-Max-Age": "86400",
+};
+
+const withCors = (response: Response) => {
+  const headers = new Headers(response.headers);
+  Object.entries(corsHeaders).forEach(([key, value]) => headers.set(key, value));
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+};
+
 const methodNotAllowed = () =>
-  new Response(
+  withCors(new Response(
     JSON.stringify({
       jsonrpc: "2.0",
       error: { code: -32000, message: "Method not allowed." },
       id: null,
     }),
     { status: 405, headers: { "Content-Type": "application/json", Allow: "POST, OPTIONS" } },
-  );
+  ));
 
 const unauthorized = (message: string) =>
-  new Response(
+  withCors(new Response(
     JSON.stringify({
       jsonrpc: "2.0",
       error: { code: -32001, message },
@@ -37,7 +56,7 @@ const unauthorized = (message: string) =>
         "WWW-Authenticate": 'Bearer realm="MCP Server"',
       },
     },
-  );
+  ));
 
 const authenticated = async (request: Request) => {
   const expected = process.env.MCP_SHARED_TOKEN;
@@ -50,24 +69,20 @@ const authenticated = async (request: Request) => {
 
   if (!token || token !== expected) return unauthorized("Invalid or missing authorization token");
 
-  return mcp.handleRequest(request, {
+  const response = await mcp.handleRequest(request, {
     auth: {
       token,
       claims: {},
       scopes: [],
     },
   });
+  return withCors(response);
 };
 
 const corsResponse = () =>
   new Response(null, {
     status: 204,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Authorization, Content-Type, Accept",
-      "Access-Control-Max-Age": "86400",
-    },
+    headers: corsHeaders,
   });
 
 export const Route = createFileRoute("/api/public/mcp")({
