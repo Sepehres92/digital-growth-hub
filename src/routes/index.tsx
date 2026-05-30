@@ -1213,20 +1213,22 @@ export function Landing() {
     <div className="min-h-screen scroll-smooth bg-background text-foreground">
       <AnnouncementBar />
       <TopNav />
-      <Hero />
-      <TrustedBy />
-      <CoreFeatures />
-      <AIContentShowcase />
-      <VideoStudio />
-      <CalendarShowcase />
-      <TeamCollab />
-      <ClientPortal />
-      <Security />
-      <Automation />
-      <Pricing />
-      <Testimonials />
-      <FAQ />
-      <FinalCTA />
+      <main>
+        <Hero />
+        <TrustedBy />
+        <CoreFeatures />
+        <AIContentShowcase />
+        <VideoStudio />
+        <CalendarShowcase />
+        <TeamCollab />
+        <ClientPortal />
+        <Security />
+        <Automation />
+        <Pricing />
+        <Testimonials />
+        <FAQ />
+        <FinalCTA />
+      </main>
       <Footer />
     </div>
   );
