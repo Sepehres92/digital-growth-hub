@@ -1,0 +1,20 @@
+# Digital Agency OS
+
+> AI-powered platform for modern marketing agencies — CRM, AI content, video studio, scheduling, team chat, and client portal in one workspace.
+
+## Pages
+
+- [Home](/): Product overview, features, pricing, and FAQ.
+- [Blog](/blog): Daily updates, ideas, and stories from the community.
+- [Book a demo](/book-demo): Schedule a guided walkthrough.
+- [Demo](/demo): Self-serve product demo.
+- [Contact](/contact): Sales, support, and privacy contacts.
+- [Security](/security): Security practices and data protection.
+
+## Optional
+
+- [Privacy Policy](/privacy)
+- [Terms](/terms)
+- [Cookies](/cookies)
+- [AI Content Policy](/ai-content-policy)
+- [Upload & Ownership Policy](/upload-ownership-policy)
