@@ -1,6 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { isValidUUID } from "@/lib/utils";
+
+function assertOptionalUUID(value: string | null | undefined, label: string) {
+  if (value == null || value === "") return;
+  if (!isValidUUID(value)) throw new Error(`Valid ${label} is required`);
+}
 
 const STYLE_HINTS: Record<string, string> = {
   photorealistic: "ultra photorealistic, 50mm lens, natural lighting, sharp detail",
