@@ -73,14 +73,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "digital agency" },
+      { name: "description", content: "ai and human managed digital marketing service" },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "digital agency" },
+      { property: "og:description", content: "ai and human managed digital marketing service" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "digital agency" },
+      { name: "twitter:description", content: "ai and human managed digital marketing service" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/649f9f81-80c6-4f8c-9435-e90c7ac7e0fe/id-preview-eec258d4--aa4cf870-7c47-48cc-93af-c3de6a023022.lovable.app-1780110609891.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/649f9f81-80c6-4f8c-9435-e90c7ac7e0fe/id-preview-eec258d4--aa4cf870-7c47-48cc-93af-c3de6a023022.lovable.app-1780110609891.png" },
     ],
     links: [
       {
