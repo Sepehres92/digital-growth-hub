@@ -68,8 +68,7 @@ const corsResponse = () =>
       "Access-Control-Allow-Headers": "Authorization, Content-Type, Accept",
       "Access-Control-Max-Age": "86400",
     },
-  },
-  );
+  });
 
 export const Route = createFileRoute("/api/public/mcp")({
   server: {
