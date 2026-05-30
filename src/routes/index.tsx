@@ -366,7 +366,7 @@ function TrustedBy() {
         </p>
         <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-6">
           {types.map((t) => (
-            <div key={t.l} className="flex items-center justify-center gap-2 text-muted-foreground/70 transition-colors hover:text-foreground">
+            <div key={t.l} className="flex items-center justify-center gap-2 text-muted-foreground transition-colors hover:text-foreground">
               <t.i className="size-5" />
               <span className="text-sm font-semibold">{t.l}</span>
             </div>
