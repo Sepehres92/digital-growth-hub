@@ -11,8 +11,8 @@ export const listClientsTool = defineTool({
     limit: z.number().int().min(1).max(100).default(25).optional(),
   }),
   execute: async ({ limit }) => {
-    const userId = process.env.MCP_TARGET_USER_ID;
-    if (!userId) throw new Error("MCP_TARGET_USER_ID not configured");
+    const userId = getMcpTargetUserId();
+
     const { data, error } = await supabaseAdmin
       .from("clients")
       .select("id, name, industry, website, created_at")
