@@ -10,8 +10,8 @@ export const getBusinessProfileTool = defineTool({
     "Return the saved marketing/business profile (industry, audience, brand voice, platforms, SEO/PPC settings) for the configured user.",
   parameters: z.object({}),
   execute: async () => {
-    const userId = process.env.MCP_TARGET_USER_ID;
-    if (!userId) throw new Error("MCP_TARGET_USER_ID not configured");
+    const userId = getMcpTargetUserId();
+
     const { data, error } = await supabaseAdmin
       .from("onboarding_profiles")
       .select("*")
