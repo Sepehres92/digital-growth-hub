@@ -8,16 +8,16 @@ import type { SeoAuditResult } from "@/lib/seo-audit.server";
 export const Route = createFileRoute("/seo-audit")({
   head: () => ({
     meta: [
-      { title: "SEO Audit — Vektra" },
+      { title: "SEO Audit — Digital Agency OS" },
       {
         name: "description",
         content:
           "Run a live SEO audit on any URL. Inspect title tags, meta description, Open Graph, headings, alt text, and indexability.",
       },
-      { property: "og:title", content: "SEO Audit — Vektra" },
+      { property: "og:title", content: "SEO Audit — Digital Agency OS" },
       {
         property: "og:description",
-        content: "Live SEO audit powered by Vektra — score any URL in seconds.",
+        content: "Live SEO audit — score any URL in seconds.",
       },
       { property: "og:url", content: "/seo-audit" },
     ],
