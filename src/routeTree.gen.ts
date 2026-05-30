@@ -52,6 +52,7 @@ import { Route as AuthenticatedAiStudioRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedAiStrategyConsultantRouteImport } from './routes/_authenticated/ai-strategy-consultant'
 import { Route as AuthenticatedAiSeoPpcConsultantRouteImport } from './routes/_authenticated/ai-seo-ppc-consultant'
 import { Route as AuthenticatedAccountPrivacyRouteImport } from './routes/_authenticated/account-privacy'
+import { Route as ApiPublicMcpRouteImport } from './routes/api/public/mcp'
 
 const Char91indexChar93Route = Char91indexChar93RouteImport.update({
   id: '/index',
@@ -280,6 +281,11 @@ const AuthenticatedAccountPrivacyRoute =
     path: '/account-privacy',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const ApiPublicMcpRoute = ApiPublicMcpRouteImport.update({
+  id: '/api/public/mcp',
+  path: '/api/public/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -324,6 +330,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
   '/team-chat': typeof AuthenticatedTeamChatRoute
+  '/api/public/mcp': typeof ApiPublicMcpRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -368,6 +375,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
   '/team-chat': typeof AuthenticatedTeamChatRoute
+  '/api/public/mcp': typeof ApiPublicMcpRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -414,6 +422,7 @@ export interface FileRoutesById {
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
   '/_authenticated/team-chat': typeof AuthenticatedTeamChatRoute
+  '/api/public/mcp': typeof ApiPublicMcpRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -460,6 +469,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/tasks'
     | '/team-chat'
+    | '/api/public/mcp'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -504,6 +514,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/tasks'
     | '/team-chat'
+    | '/api/public/mcp'
   id:
     | '__root__'
     | '/'
@@ -549,6 +560,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/_authenticated/tasks'
     | '/_authenticated/team-chat'
+    | '/api/public/mcp'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -571,6 +583,7 @@ export interface RootRouteChildren {
   SocialRoute: typeof SocialRoute
   TermsRoute: typeof TermsRoute
   UploadOwnershipPolicyRoute: typeof UploadOwnershipPolicyRoute
+  ApiPublicMcpRoute: typeof ApiPublicMcpRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -876,6 +889,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAccountPrivacyRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/api/public/mcp': {
+      id: '/api/public/mcp'
+      path: '/api/public/mcp'
+      fullPath: '/api/public/mcp'
+      preLoaderRoute: typeof ApiPublicMcpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -958,6 +978,7 @@ const rootRouteChildren: RootRouteChildren = {
   SocialRoute: SocialRoute,
   TermsRoute: TermsRoute,
   UploadOwnershipPolicyRoute: UploadOwnershipPolicyRoute,
+  ApiPublicMcpRoute: ApiPublicMcpRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
