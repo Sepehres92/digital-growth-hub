@@ -85,6 +85,8 @@ export const generateOrEditImage = createServerFn({ method: "POST" })
     const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) throw new Error("LOVABLE_API_KEY not configured");
     const { supabase, userId } = context;
+    assertOptionalUUID(data.clientId, "client ID");
+    assertOptionalUUID(data.campaignId, "campaign ID");
 
     const styleHint = data.style ? (STYLE_HINTS[data.style] ?? data.style) : "";
     const sizeHint = SIZE_LABEL[data.size] ?? "";
