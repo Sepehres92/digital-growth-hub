@@ -70,6 +70,9 @@ export const generateAiImage = createServerFn({ method: "POST" })
     const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) throw new Error("LOVABLE_API_KEY not configured");
     const { supabase, userId } = context;
+    assertOptionalUUID(data.client_id, "client ID");
+    assertOptionalUUID(data.campaign_id, "campaign ID");
+    assertOptionalUUID(data.source_image_id, "source image ID");
 
     const styleHint = data.style ? (STYLE_HINTS[data.style] ?? data.style) : "";
     const sizeHint = SIZE_LABEL[data.size] ?? "";
