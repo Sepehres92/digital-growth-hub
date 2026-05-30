@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createMcpServer, withMcpAuth } from "mcp-tanstack-start";
+import { createMcpServer } from "mcp-tanstack-start";
 import { getBusinessProfileTool } from "@/lib/mcp/tools/get-business-profile";
 import { listClientsTool } from "@/lib/mcp/tools/list-clients";
 import { listCampaignsTool } from "@/lib/mcp/tools/list-campaigns";
@@ -23,19 +23,53 @@ const methodNotAllowed = () =>
     { status: 405, headers: { "Content-Type": "application/json", Allow: "POST, OPTIONS" } },
   );
 
-const authenticated = withMcpAuth(
-  async (request, auth) => mcp.handleRequest(request, { auth }),
-  async (request) => {
-    const expected = process.env.MCP_SHARED_TOKEN;
-    if (!expected) return null;
-    const header = request.headers.get("Authorization") ?? "";
-    const headerToken = header.replace(/^Bearer\s+/i, "").trim();
-    const queryToken = (new URL(request.url).searchParams.get("token") ?? "").trim();
-    const token = headerToken || queryToken;
-    if (!token || token !== expected) return null;
-    return { token };
+const unauthorized = (message: string) =>
+  new Response(
+    JSON.stringify({
+      jsonrpc: "2.0",
+      error: { code: -32001, message },
+      id: null,
+    }),
+    {
+      status: 401,
+      headers: {
+        "Content-Type": "application/json",
+        "WWW-Authenticate": 'Bearer realm="MCP Server"',
+      },
+    },
+  );
+
+const authenticated = async (request: Request) => {
+  const expected = process.env.MCP_SHARED_TOKEN;
+  if (!expected) return unauthorized("MCP server token is not configured");
+
+  const header = request.headers.get("Authorization") ?? "";
+  const headerToken = header.replace(/^Bearer\s+/i, "").trim();
+  const queryToken = (new URL(request.url).searchParams.get("token") ?? "").trim();
+  const token = headerToken || queryToken;
+
+  if (!token || token !== expected) return unauthorized("Invalid or missing authorization token");
+
+  return mcp.handleRequest(request, {
+    auth: {
+      token,
+      claims: {},
+      scopes: [],
+    },
+  });
+};
+
+const corsResponse = () =>
+  new Response(null, {
+    status: 204,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Authorization, Content-Type, Accept",
+      "Access-Control-Max-Age": "86400",
+    },
   },
-);
+  );
 
 export const Route = createFileRoute("/api/public/mcp")({
   server: {
@@ -43,6 +77,7 @@ export const Route = createFileRoute("/api/public/mcp")({
       POST: async ({ request }) => authenticated(request),
       GET: async () => methodNotAllowed(),
       DELETE: async () => methodNotAllowed(),
+      OPTIONS: async () => corsResponse(),
     },
   },
 });
