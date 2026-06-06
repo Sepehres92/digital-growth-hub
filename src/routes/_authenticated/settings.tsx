@@ -94,6 +94,26 @@ function SettingsPage() {
               <Label>Email</Label>
               <Input className="mt-1.5" value={email} disabled />
             </div>
+            <div className="sm:col-span-2">
+              <Label>User ID (use for MCP_TARGET_USER_ID)</Label>
+              <div className="mt-1.5 flex gap-2">
+                <Input value={profile?.id ?? ""} readOnly className="font-mono text-xs" />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    if (!profile?.id) return;
+                    navigator.clipboard.writeText(profile.id);
+                    toast.success("User ID copied");
+                  }}
+                >
+                  Copy
+                </Button>
+              </div>
+              <p className="mt-1.5 text-xs text-muted-foreground">
+                Paste this UUID into the MCP_TARGET_USER_ID secret in Lovable Cloud.
+              </p>
+            </div>
           </div>
         </div>
 
