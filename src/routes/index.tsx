@@ -1100,7 +1100,7 @@ function Footer() {
 
 export function Landing() {
   return (
-    <div className="min-h-screen scroll-smooth bg-background text-foreground">
+    <div className="min-h-dvh scroll-smooth bg-background text-foreground">
       <AnnouncementBar />
       <TopNav />
       <main>
