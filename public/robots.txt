@@ -2,3 +2,7 @@ User-agent: *
 Allow: /
 
 Sitemap: https://impact-reach-tool.lovable.app/sitemap.xml
+
+Disallow: /auth
+Disallow: /auth/callback
+Disallow: /dashboard
