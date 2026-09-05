@@ -90,21 +90,30 @@ function BookDemoPage() {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <Label htmlFor="name">Full name</Label>
-                <Input id="name" required className="mt-1.5" />
+                <Input id="name" name="name" required minLength={2} maxLength={120} className="mt-1.5" />
               </div>
               <div>
                 <Label htmlFor="company">Company</Label>
-                <Input id="company" required className="mt-1.5" />
+                <Input id="company" name="company" required maxLength={160} className="mt-1.5" />
               </div>
             </div>
             <div>
               <Label htmlFor="email">Work email</Label>
-              <Input id="email" type="email" required className="mt-1.5" />
+              <Input id="email" name="email" type="email" required maxLength={200} className="mt-1.5" />
             </div>
             <div>
               <Label htmlFor="message">What would you like to see?</Label>
-              <Textarea id="message" rows={4} className="mt-1.5" />
+              <Textarea id="message" name="message" rows={4} maxLength={2000} className="mt-1.5" />
             </div>
+            <div aria-hidden="true" className="absolute left-[-9999px] h-0 w-0 overflow-hidden">
+              <label htmlFor="website">Leave this field empty</label>
+              <input id="website" name="website" tabIndex={-1} autoComplete="off" />
+            </div>
+            {error && (
+              <p className="rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
+                {error}
+              </p>
+            )}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Sending..." : "Request demo"}
             </Button>
