@@ -29,6 +29,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AiContentPolicyRouteImport } from './routes/ai-content-policy'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AuthenticatedTeamChatRouteImport } from './routes/_authenticated/team-chat'
 import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
@@ -153,6 +154,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/callback',
+  path: '/callback',
+  getParentRoute: () => AuthRoute,
 } as any)
 const AuthenticatedTeamChatRoute = AuthenticatedTeamChatRouteImport.update({
   id: '/team-chat',
@@ -296,7 +302,7 @@ const ApiPublicMcpRoute = ApiPublicMcpRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/ai-content-policy': typeof AiContentPolicyRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/blog': typeof BlogRoute
   '/book-demo': typeof BookDemoRoute
   '/contact': typeof ContactRoute
@@ -337,12 +343,13 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
   '/team-chat': typeof AuthenticatedTeamChatRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ai-content-policy': typeof AiContentPolicyRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/blog': typeof BlogRoute
   '/book-demo': typeof BookDemoRoute
   '/contact': typeof ContactRoute
@@ -383,6 +390,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
   '/team-chat': typeof AuthenticatedTeamChatRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
 }
 export interface FileRoutesById {
@@ -390,7 +398,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/ai-content-policy': typeof AiContentPolicyRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/blog': typeof BlogRoute
   '/book-demo': typeof BookDemoRoute
   '/contact': typeof ContactRoute
@@ -431,6 +439,7 @@ export interface FileRoutesById {
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
   '/_authenticated/team-chat': typeof AuthenticatedTeamChatRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/api/public/mcp': typeof ApiPublicMcpRoute
 }
 export interface FileRouteTypes {
@@ -479,6 +488,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/tasks'
     | '/team-chat'
+    | '/auth/callback'
     | '/api/public/mcp'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -525,6 +535,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/tasks'
     | '/team-chat'
+    | '/auth/callback'
     | '/api/public/mcp'
   id:
     | '__root__'
@@ -572,6 +583,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/_authenticated/tasks'
     | '/_authenticated/team-chat'
+    | '/auth/callback'
     | '/api/public/mcp'
   fileRoutesById: FileRoutesById
 }
@@ -579,7 +591,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AiContentPolicyRoute: typeof AiContentPolicyRoute
-  AuthRoute: typeof AuthRoute
+  AuthRoute: typeof AuthRouteWithChildren
   BlogRoute: typeof BlogRoute
   BookDemoRoute: typeof BookDemoRoute
   ContactRoute: typeof ContactRoute
@@ -740,6 +752,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/_authenticated/team-chat': {
       id: '/_authenticated/team-chat'
@@ -978,11 +997,21 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
+interface AuthRouteChildren {
+  AuthCallbackRoute: typeof AuthCallbackRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthCallbackRoute: AuthCallbackRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AiContentPolicyRoute: AiContentPolicyRoute,
-  AuthRoute: AuthRoute,
+  AuthRoute: AuthRouteWithChildren,
   BlogRoute: BlogRoute,
   BookDemoRoute: BookDemoRoute,
   ContactRoute: ContactRoute,
