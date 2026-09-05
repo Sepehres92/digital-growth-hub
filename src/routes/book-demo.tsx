@@ -62,7 +62,7 @@ function BookDemoPage() {
           <Link to="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
             <ArrowLeft className="size-4" /> Back to home
           </Link>
-          <Link to="/auth" className="text-sm font-medium">Sign in</Link>
+          <Link to="/auth" className="inline-flex min-h-11 items-center text-sm font-medium">Sign in</Link>
         </div>
       </header>
       <main className="mx-auto max-w-2xl px-6 py-16">
@@ -111,7 +111,7 @@ function BookDemoPage() {
                 {error}
               </p>
             )}
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="min-h-11 w-full" disabled={loading}>
               {loading ? "Sending..." : "Request demo"}
             </Button>
             <p className="text-center text-xs text-muted-foreground">
