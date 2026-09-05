@@ -23,7 +23,7 @@ export const Route = createFileRoute("/")({
       path: "/",
       title: "Digital Agency OS — AI-Powered Marketing Agency Platform",
       description:
-        "Run your entire digital marketing agency from one AI-powered platform: CRM, AI content, video studio, scheduling, team chat, and a client portal.",
+        "Run your digital marketing agency from one AI-powered workspace: CRM, AI content, video scripts, content scheduling, team chat and campaign planning.",
     }),
     scripts: [
       {
@@ -98,9 +98,9 @@ function AnnouncementBar() {
         <div className="flex items-center gap-2">
           <Sparkles className="size-4 text-primary" />
           <span className="hidden opacity-90 sm:inline">
-            Now powered by AI Content, AI Video, and Social Automation
+            Now powered by AI content, AI video scripts and content planning
           </span>
-          <span className="opacity-90 sm:hidden">AI content, video &amp; social automation</span>
+          <span className="opacity-90 sm:hidden">AI content, video scripts &amp; planning</span>
         </div>
         <div className="flex items-center gap-2">
           <Link
@@ -171,8 +171,8 @@ function Hero() {
             </span>
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-pretty text-base text-muted-foreground sm:text-lg md:mt-6 md:text-xl">
-            Manage clients, create AI content, generate videos, schedule posts,
-            collaborate with your team, and automate campaigns — all from one dashboard.
+            Manage clients, draft AI content, script videos, schedule posts,
+            collaborate with your team, and plan campaigns — all from one dashboard.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 md:mt-10">
             <Link
@@ -561,7 +561,7 @@ function VideoStudio() {
         </div>
         <GlassCard className="overflow-hidden p-0">
           <div className="border-b border-border/60 bg-card p-3 text-xs font-medium">
-Illustrative mockup • editing timeline is a planned capability
+            Illustrative mockup • editing timeline is a planned capability
           </div>
           <div className="space-y-3 bg-gradient-to-br from-card to-surface p-5">
             {/* Video preview */}
@@ -759,12 +759,12 @@ function ClientPortal() {
     <section id="portal" className="bg-surface/60 py-24">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 lg:grid-cols-2">
         <div>
-          <SectionLabel>Client Portal</SectionLabel>
+          <SectionLabel>Client Workspace</SectionLabel>
           <h2 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
-            Give your clients a world-class experience.
+Keep every client's work in one place.
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-Track campaigns, approve content and keep meeting summaries per client in your workspace. A client-facing login is a planned capability — the panel below is an illustrative mockup.
+            Track campaigns, approve content and keep meeting summaries per client in your workspace. A client-facing login is a planned capability — the panel below is an illustrative mockup.
           </p>
           <ul className="mt-6 space-y-3">
             {[
@@ -878,7 +878,7 @@ function Automation() {
     <section id="automation" className="bg-navy py-24 text-navy-foreground">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <SectionLabel>Workflows on autopilot</SectionLabel>
+          <SectionLabel>Connected workflow</SectionLabel>
           <h2 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
 Connect the whole client workflow.
           </h2>
