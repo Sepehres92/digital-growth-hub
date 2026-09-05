@@ -105,3 +105,63 @@
     -webkit-font-smoothing: antialiased;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Tap targets (WCAG 2.5.5 / 2.5.8)
+
+   `.tap-link` grows an inline text link's hit box to 44x44 CSS px using
+   padding balanced by negative margins, so the sentence it sits in keeps its
+   original line height and spacing.
+
+   `.tap-checkbox` renders a 44x44 checkbox whose visible box stays 20x20,
+   drawn with pseudo-elements on an appearance-none input.
+--------------------------------------------------------------------------- */
+@layer components {
+  .tap-link {
+    padding-block: 0.875rem;
+    padding-inline: 0.375rem;
+    margin-block: -0.875rem;
+    margin-inline: -0.375rem;
+  }
+
+  .tap-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    position: relative;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    flex: none;
+    margin: -0.75rem;
+    background: transparent;
+    border: 0;
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
+  .tap-checkbox::before {
+    content: "";
+    position: absolute;
+    inset: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.25rem;
+    background: var(--color-background);
+  }
+  .tap-checkbox:checked::before {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+  .tap-checkbox:checked::after {
+    content: "";
+    position: absolute;
+    inset-inline-start: 1.1rem;
+    inset-block-start: 1.3rem;
+    inline-size: 0.55rem;
+    block-size: 0.3rem;
+    border-inline-start: 2px solid var(--color-primary-foreground);
+    border-block-end: 2px solid var(--color-primary-foreground);
+    transform: rotate(-45deg);
+  }
+  .tap-checkbox:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -0.5rem;
+  }
+}
