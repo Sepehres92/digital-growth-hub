@@ -12,12 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as Char91indexChar93RouteImport } from './routes/[index]'
 import { Route as UploadOwnershipPolicyRouteImport } from './routes/upload-ownership-policy'
 import { Route as TermsRouteImport } from './routes/terms'
-import { Route as SocialRouteImport } from './routes/social'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as SeoAuditRouteImport } from './routes/seo-audit'
-import { Route as SemrushRouteImport } from './routes/semrush'
 import { Route as SecurityRouteImport } from './routes/security'
-import { Route as SearchConsoleRouteImport } from './routes/search-console'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as DemoRouteImport } from './routes/demo'
@@ -32,7 +28,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AuthenticatedTeamChatRouteImport } from './routes/_authenticated/team-chat'
 import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
+import { Route as AuthenticatedSocialRouteImport } from './routes/_authenticated/social'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedSeoAuditRouteImport } from './routes/_authenticated/seo-audit'
+import { Route as AuthenticatedSemrushRouteImport } from './routes/_authenticated/semrush'
+import { Route as AuthenticatedSearchConsoleRouteImport } from './routes/_authenticated/search-console'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedMeetingsRouteImport } from './routes/_authenticated/meetings'
 import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated/leads'
@@ -71,34 +71,14 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SocialRoute = SocialRouteImport.update({
-  id: '/social',
-  path: '/social',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SeoAuditRoute = SeoAuditRouteImport.update({
-  id: '/seo-audit',
-  path: '/seo-audit',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SemrushRoute = SemrushRouteImport.update({
-  id: '/semrush',
-  path: '/semrush',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SecurityRoute = SecurityRouteImport.update({
   id: '/security',
   path: '/security',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SearchConsoleRoute = SearchConsoleRouteImport.update({
-  id: '/search-console',
-  path: '/search-console',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -170,11 +150,32 @@ const AuthenticatedTasksRoute = AuthenticatedTasksRouteImport.update({
   path: '/tasks',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedSocialRoute = AuthenticatedSocialRouteImport.update({
+  id: '/social',
+  path: '/social',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedSeoAuditRoute = AuthenticatedSeoAuditRouteImport.update({
+  id: '/seo-audit',
+  path: '/seo-audit',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedSemrushRoute = AuthenticatedSemrushRouteImport.update({
+  id: '/semrush',
+  path: '/semrush',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedSearchConsoleRoute =
+  AuthenticatedSearchConsoleRouteImport.update({
+    id: '/search-console',
+    path: '/search-console',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
@@ -311,12 +312,8 @@ export interface FileRoutesByFullPath {
   '/index': typeof Char91indexChar93Route
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/search-console': typeof SearchConsoleRoute
   '/security': typeof SecurityRoute
-  '/semrush': typeof SemrushRoute
-  '/seo-audit': typeof SeoAuditRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/social': typeof SocialRoute
   '/terms': typeof TermsRoute
   '/upload-ownership-policy': typeof UploadOwnershipPolicyRoute
   '/account-privacy': typeof AuthenticatedAccountPrivacyRoute
@@ -340,7 +337,11 @@ export interface FileRoutesByFullPath {
   '/leads': typeof AuthenticatedLeadsRoute
   '/meetings': typeof AuthenticatedMeetingsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/search-console': typeof AuthenticatedSearchConsoleRoute
+  '/semrush': typeof AuthenticatedSemrushRoute
+  '/seo-audit': typeof AuthenticatedSeoAuditRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/social': typeof AuthenticatedSocialRoute
   '/tasks': typeof AuthenticatedTasksRoute
   '/team-chat': typeof AuthenticatedTeamChatRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -358,12 +359,8 @@ export interface FileRoutesByTo {
   '/index': typeof Char91indexChar93Route
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/search-console': typeof SearchConsoleRoute
   '/security': typeof SecurityRoute
-  '/semrush': typeof SemrushRoute
-  '/seo-audit': typeof SeoAuditRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/social': typeof SocialRoute
   '/terms': typeof TermsRoute
   '/upload-ownership-policy': typeof UploadOwnershipPolicyRoute
   '/account-privacy': typeof AuthenticatedAccountPrivacyRoute
@@ -387,7 +384,11 @@ export interface FileRoutesByTo {
   '/leads': typeof AuthenticatedLeadsRoute
   '/meetings': typeof AuthenticatedMeetingsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/search-console': typeof AuthenticatedSearchConsoleRoute
+  '/semrush': typeof AuthenticatedSemrushRoute
+  '/seo-audit': typeof AuthenticatedSeoAuditRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/social': typeof AuthenticatedSocialRoute
   '/tasks': typeof AuthenticatedTasksRoute
   '/team-chat': typeof AuthenticatedTeamChatRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -407,12 +408,8 @@ export interface FileRoutesById {
   '/index': typeof Char91indexChar93Route
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/search-console': typeof SearchConsoleRoute
   '/security': typeof SecurityRoute
-  '/semrush': typeof SemrushRoute
-  '/seo-audit': typeof SeoAuditRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/social': typeof SocialRoute
   '/terms': typeof TermsRoute
   '/upload-ownership-policy': typeof UploadOwnershipPolicyRoute
   '/_authenticated/account-privacy': typeof AuthenticatedAccountPrivacyRoute
@@ -436,7 +433,11 @@ export interface FileRoutesById {
   '/_authenticated/leads': typeof AuthenticatedLeadsRoute
   '/_authenticated/meetings': typeof AuthenticatedMeetingsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
+  '/_authenticated/search-console': typeof AuthenticatedSearchConsoleRoute
+  '/_authenticated/semrush': typeof AuthenticatedSemrushRoute
+  '/_authenticated/seo-audit': typeof AuthenticatedSeoAuditRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/social': typeof AuthenticatedSocialRoute
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
   '/_authenticated/team-chat': typeof AuthenticatedTeamChatRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -456,12 +457,8 @@ export interface FileRouteTypes {
     | '/index'
     | '/privacy'
     | '/reset-password'
-    | '/search-console'
     | '/security'
-    | '/semrush'
-    | '/seo-audit'
     | '/sitemap.xml'
-    | '/social'
     | '/terms'
     | '/upload-ownership-policy'
     | '/account-privacy'
@@ -485,7 +482,11 @@ export interface FileRouteTypes {
     | '/leads'
     | '/meetings'
     | '/onboarding'
+    | '/search-console'
+    | '/semrush'
+    | '/seo-audit'
     | '/settings'
+    | '/social'
     | '/tasks'
     | '/team-chat'
     | '/auth/callback'
@@ -503,12 +504,8 @@ export interface FileRouteTypes {
     | '/index'
     | '/privacy'
     | '/reset-password'
-    | '/search-console'
     | '/security'
-    | '/semrush'
-    | '/seo-audit'
     | '/sitemap.xml'
-    | '/social'
     | '/terms'
     | '/upload-ownership-policy'
     | '/account-privacy'
@@ -532,7 +529,11 @@ export interface FileRouteTypes {
     | '/leads'
     | '/meetings'
     | '/onboarding'
+    | '/search-console'
+    | '/semrush'
+    | '/seo-audit'
     | '/settings'
+    | '/social'
     | '/tasks'
     | '/team-chat'
     | '/auth/callback'
@@ -551,12 +552,8 @@ export interface FileRouteTypes {
     | '/index'
     | '/privacy'
     | '/reset-password'
-    | '/search-console'
     | '/security'
-    | '/semrush'
-    | '/seo-audit'
     | '/sitemap.xml'
-    | '/social'
     | '/terms'
     | '/upload-ownership-policy'
     | '/_authenticated/account-privacy'
@@ -580,7 +577,11 @@ export interface FileRouteTypes {
     | '/_authenticated/leads'
     | '/_authenticated/meetings'
     | '/_authenticated/onboarding'
+    | '/_authenticated/search-console'
+    | '/_authenticated/semrush'
+    | '/_authenticated/seo-audit'
     | '/_authenticated/settings'
+    | '/_authenticated/social'
     | '/_authenticated/tasks'
     | '/_authenticated/team-chat'
     | '/auth/callback'
@@ -600,12 +601,8 @@ export interface RootRouteChildren {
   Char91indexChar93Route: typeof Char91indexChar93Route
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
-  SearchConsoleRoute: typeof SearchConsoleRoute
   SecurityRoute: typeof SecurityRoute
-  SemrushRoute: typeof SemrushRoute
-  SeoAuditRoute: typeof SeoAuditRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  SocialRoute: typeof SocialRoute
   TermsRoute: typeof TermsRoute
   UploadOwnershipPolicyRoute: typeof UploadOwnershipPolicyRoute
   ApiPublicMcpRoute: typeof ApiPublicMcpRoute
@@ -634,13 +631,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/social': {
-      id: '/social'
-      path: '/social'
-      fullPath: '/social'
-      preLoaderRoute: typeof SocialRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -648,32 +638,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/seo-audit': {
-      id: '/seo-audit'
-      path: '/seo-audit'
-      fullPath: '/seo-audit'
-      preLoaderRoute: typeof SeoAuditRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/semrush': {
-      id: '/semrush'
-      path: '/semrush'
-      fullPath: '/semrush'
-      preLoaderRoute: typeof SemrushRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/security': {
       id: '/security'
       path: '/security'
       fullPath: '/security'
       preLoaderRoute: typeof SecurityRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/search-console': {
-      id: '/search-console'
-      path: '/search-console'
-      fullPath: '/search-console'
-      preLoaderRoute: typeof SearchConsoleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -774,11 +743,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTasksRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/social': {
+      id: '/_authenticated/social'
+      path: '/social'
+      fullPath: '/social'
+      preLoaderRoute: typeof AuthenticatedSocialRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/seo-audit': {
+      id: '/_authenticated/seo-audit'
+      path: '/seo-audit'
+      fullPath: '/seo-audit'
+      preLoaderRoute: typeof AuthenticatedSeoAuditRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/semrush': {
+      id: '/_authenticated/semrush'
+      path: '/semrush'
+      fullPath: '/semrush'
+      preLoaderRoute: typeof AuthenticatedSemrushRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/search-console': {
+      id: '/_authenticated/search-console'
+      path: '/search-console'
+      fullPath: '/search-console'
+      preLoaderRoute: typeof AuthenticatedSearchConsoleRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/onboarding': {
@@ -960,7 +957,11 @@ interface AuthenticatedRouteChildren {
   AuthenticatedLeadsRoute: typeof AuthenticatedLeadsRoute
   AuthenticatedMeetingsRoute: typeof AuthenticatedMeetingsRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
+  AuthenticatedSearchConsoleRoute: typeof AuthenticatedSearchConsoleRoute
+  AuthenticatedSemrushRoute: typeof AuthenticatedSemrushRoute
+  AuthenticatedSeoAuditRoute: typeof AuthenticatedSeoAuditRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedSocialRoute: typeof AuthenticatedSocialRoute
   AuthenticatedTasksRoute: typeof AuthenticatedTasksRoute
   AuthenticatedTeamChatRoute: typeof AuthenticatedTeamChatRoute
 }
@@ -988,7 +989,11 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedLeadsRoute: AuthenticatedLeadsRoute,
   AuthenticatedMeetingsRoute: AuthenticatedMeetingsRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
+  AuthenticatedSearchConsoleRoute: AuthenticatedSearchConsoleRoute,
+  AuthenticatedSemrushRoute: AuthenticatedSemrushRoute,
+  AuthenticatedSeoAuditRoute: AuthenticatedSeoAuditRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedSocialRoute: AuthenticatedSocialRoute,
   AuthenticatedTasksRoute: AuthenticatedTasksRoute,
   AuthenticatedTeamChatRoute: AuthenticatedTeamChatRoute,
 }
@@ -1020,12 +1025,8 @@ const rootRouteChildren: RootRouteChildren = {
   Char91indexChar93Route: Char91indexChar93Route,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
-  SearchConsoleRoute: SearchConsoleRoute,
   SecurityRoute: SecurityRoute,
-  SemrushRoute: SemrushRoute,
-  SeoAuditRoute: SeoAuditRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  SocialRoute: SocialRoute,
   TermsRoute: TermsRoute,
   UploadOwnershipPolicyRoute: UploadOwnershipPolicyRoute,
   ApiPublicMcpRoute: ApiPublicMcpRoute,
