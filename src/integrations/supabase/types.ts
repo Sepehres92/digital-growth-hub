@@ -3428,6 +3428,10 @@ export type Database = {
         Returns: boolean
       }
       purge_user_data: { Args: { _user_id: string }; Returns: Json }
+      shares_chat_channel: {
+        Args: { _a: string; _b: string }
+        Returns: boolean
+      }
       user_data_tables: {
         Args: never
         Returns: {
