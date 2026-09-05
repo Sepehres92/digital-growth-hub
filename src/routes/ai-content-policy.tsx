@@ -46,7 +46,7 @@ function AIPolicyPage() {
       <p>Subject to the underlying model provider's terms, you retain ownership of your prompts and the outputs you generate. We don't claim ownership of your AI output.</p>
 
       <h2>Enforcement</h2>
-      <p>We may remove content and suspend accounts that violate this policy. Repeated or severe violations may result in termination. Report abuse to <a href="mailto:trust@example.com">trust@example.com</a>.</p>
+      <p>We may remove content and suspend accounts that violate this policy. Repeated or severe violations may result in termination. Report abuse through the <a className="tap-link" href="/contact">contact form</a>.</p>
     </LegalLayout>
   );
 }

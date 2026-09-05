@@ -17,7 +17,7 @@ function ContactPage() {
     <div className="min-h-dvh bg-background text-foreground">
       <header className="border-b border-border/60">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4">
-          <Link to="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+          <Link to="/" className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
             <ArrowLeft className="size-4" /> Back to home
           </Link>
         </div>
@@ -41,7 +41,7 @@ function ContactPage() {
               </p>
               <Link
                 to="/book-demo"
-                className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+                className="mt-3 inline-flex min-h-11 items-center gap-1.5 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
               >
                 Open the contact form <ArrowRight className="size-3.5" />
               </Link>

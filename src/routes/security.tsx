@@ -36,10 +36,10 @@ function SecurityPage() {
         <li>On-upload virus scanning</li>
         <li>Penetration test reports</li>
       </ul>
-      <p>If your organization requires any of the above, contact us at <a href="mailto:privacy@example.com">privacy@example.com</a> and we'll discuss what's possible.</p>
+      <p>If your organization requires any of the above, reach us through the <a className="tap-link" href="/contact">contact form</a> and we'll discuss what's possible.</p>
 
       <h2>Reporting a vulnerability</h2>
-      <p>If you believe you've found a security issue, email <a href="mailto:security@example.com">security@example.com</a> with steps to reproduce. Please do not publicly disclose the issue until we've had a reasonable chance to investigate.</p>
+      <p>If you believe you've found a security issue, report it through the <a className="tap-link" href="/contact">contact form</a> with steps to reproduce. Please do not publicly disclose the issue until we've had a reasonable chance to investigate.</p>
 
       <h2>Your responsibilities</h2>
       <ul>

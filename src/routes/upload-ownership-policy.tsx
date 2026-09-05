@@ -40,7 +40,7 @@ function UploadPolicyPage() {
       <p>When you upload content on behalf of a client, you confirm you have authority from that client to do so. Each client's content is stored in an isolated scope and is not accessible to other clients.</p>
 
       <h2>Reporting infringement</h2>
-      <p>If you believe content on the platform infringes your rights, send a takedown request to <a href="mailto:legal@example.com">legal@example.com</a> with: a description of the work, the URL or file at issue, your contact details, and a statement made under penalty of perjury that you're authorized to act.</p>
+      <p>If you believe content on the platform infringes your rights, send a takedown request through the <a className="tap-link" href="/contact">contact form</a> with: a description of the work, the URL or file at issue, your contact details, and a statement made under penalty of perjury that you're authorized to act.</p>
 
       <h2>Removal and termination</h2>
       <p>We may remove content that violates this policy or applicable law, and may suspend or terminate accounts that repeatedly infringe third-party rights.</p>
