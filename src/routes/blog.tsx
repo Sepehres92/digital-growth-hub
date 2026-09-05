@@ -196,13 +196,17 @@ function BlogPage() {
           <CardContent className="space-y-3">
             <div className="grid gap-3 sm:grid-cols-2">
               <Input
+                className="h-11"
                 placeholder="Your name"
+                aria-label="Your name"
                 value={authorName}
                 onChange={(e) => setAuthorName(e.target.value)}
                 maxLength={80}
               />
               <Input
+                className="h-11"
                 placeholder="Post title"
+                aria-label="Post title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 maxLength={200}
