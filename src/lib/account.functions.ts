@@ -69,11 +69,11 @@ export const exportMyData = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
 
-    const tables: Record<string, unknown[]> = {};
+    const tables: Record<string, any[]> = {};
     const failures: { source: string; error: string }[] = [];
 
     for (const [table, ownerColumn] of OWNED_TABLES) {
-      const { data, error } = await (supabase.from(table) as any)
+      const { data, error } = await (supabase as any).from(table)
         .select("*")
         .eq(ownerColumn, userId);
       if (error) failures.push({ source: `table:${table}`, error: error.message });
@@ -87,7 +87,7 @@ export const exportMyData = createServerFn({ method: "POST" })
     if (profileError) failures.push({ source: "table:profiles", error: profileError.message });
     else tables["profiles"] = profile ?? [];
 
-    let storageObjects: unknown[] = [];
+    let storageObjects: any[] = [];
     const { data: storage, error: storageError } = await (supabase.rpc as any)(
       "export_my_storage_objects",
     );
