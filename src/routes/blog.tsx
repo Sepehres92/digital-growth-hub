@@ -269,7 +269,8 @@ function BlogPage() {
                       <button
                         key={e}
                         type="button"
-                        className="rounded p-1 text-xl hover:bg-accent"
+                        aria-label={`Insert ${e}`}
+                        className="flex size-11 items-center justify-center rounded text-xl hover:bg-accent"
                         onClick={() => insertHTML(e)}
                       >
                         {e}
@@ -283,6 +284,7 @@ function BlogPage() {
                 type="button"
                 variant="ghost"
                 size="icon"
+                className="size-11"
                 aria-label="Insert image"
                 onClick={() => fileRef.current?.click()}
                 title="Insert image"
