@@ -10,7 +10,7 @@ import { pageHead } from "@/lib/seo";
 
 const faqs = [
   { q: "How does AI content work?", a: "Our AI Copywriter, Image Generator, and Video Studio are trained on each client's brand voice, audience, and assets. You describe what you need; we generate on-brand variants in seconds. You stay in full creative control." },
-  { q: "Can clients log in?", a: "Yes. Every client gets a white-label portal where they can view campaigns, approve content, read meeting summaries, and chat with an AI assistant trained on their account." },
+  { q: "Can clients log in?", a: "Yes. Every client gets a portal where they can view campaigns, approve content, read meeting summaries, and chat with an assistant that answers from the articles you publish to their knowledge base." },
   { q: "Does it support social posting?", a: "Yes. Schedule and publish to Instagram, TikTok, LinkedIn, X, YouTube, Facebook, and Pinterest. Built-in approval flows and multi-platform calendars included." },
   { q: "Can my team collaborate?", a: "Absolutely. Real-time team chat, meeting scheduling, task boards, shared notes, and live activity indicators — all in one workspace." },
   { q: "Is my data secure?", a: "We use HTTPS/TLS in transit, encrypted storage at rest, role-based access control, and Row-Level Security so each client's data is isolated. See our Security page for full details." },
@@ -184,10 +184,10 @@ function Hero() {
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <Link
-              to="/demo"
+              to="/book-demo"
               className="inline-flex min-h-12 items-center gap-2 rounded-xl border border-border bg-card/60 px-6 text-sm font-semibold backdrop-blur hover:bg-card"
             >
-              <Play className="size-4" /> Watch Demo
+              Book a demo
             </Link>
           </div>
           <p className="mt-4 text-xs text-muted-foreground">
