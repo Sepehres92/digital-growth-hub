@@ -3359,6 +3359,18 @@ export type Database = {
         Args: { _meeting_id: string; _user_id: string }
         Returns: boolean
       }
+      export_my_storage_objects: {
+        Args: never
+        Returns: {
+          bucket_id: string
+          created_at: string
+          last_accessed_at: string
+          mime_type: string
+          name: string
+          size: number
+          updated_at: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
