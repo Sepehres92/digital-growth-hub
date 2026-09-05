@@ -47,7 +47,14 @@ function HelpSupportPage() {
   });
 
   return (
-    <div className="grid gap-6 md:grid-cols-2">
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">Help &amp; support</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Open a ticket with our team or search the knowledge base.
+        </p>
+      </div>
+      <div className="grid gap-6 md:grid-cols-2">
       <Card className="p-5">
         <h2 className="mb-1 flex items-center gap-2 text-lg font-semibold"><LifeBuoy className="size-4 text-primary" /> Create a support ticket</h2>
         <p className="mb-4 text-xs text-muted-foreground">Need help from a real human? Open a ticket and the team will follow up.</p>
@@ -104,6 +111,7 @@ function HelpSupportPage() {
           ))}
         </div>
       </Card>
+      </div>
     </div>
   );
 }

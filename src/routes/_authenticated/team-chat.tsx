@@ -602,7 +602,7 @@ function TeamChatPage() {
               <header className="flex items-center gap-3 border-b border-border bg-card px-4 py-3">
                 <div className="flex min-w-0 items-center gap-2">
                   {activeChannel.channel_type === "private" ? <Lock className="size-4" /> : <Hash className="size-4" />}
-                  <h2 className="truncate font-semibold">{activeChannel.name}</h2>
+                  <h1 className="truncate font-semibold">{activeChannel.name}</h1>
                   <span className="hidden truncate text-xs text-muted-foreground md:inline">{activeChannel.description}</span>
                   {connState !== "connected" && (
                     <span className="ml-1 inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-medium text-amber-600">
