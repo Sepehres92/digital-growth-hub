@@ -801,7 +801,7 @@ function ClientPortal() {
                   <div className="font-medium">November Reels — 4 posts</div>
                   <div className="text-muted-foreground">Review before Fri</div>
                 </div>
-                <button className="rounded bg-emerald-500/10 px-2 py-1 text-[10px] font-semibold text-emerald-600">Approve</button>
+                <span aria-hidden="true" className="rounded bg-emerald-500/10 px-2 py-1 text-[10px] font-semibold text-emerald-600">Approve</span>
               </div>
             </div>
             <div className="rounded-xl border border-primary/30 bg-primary/5 p-3">
@@ -842,7 +842,7 @@ function Security() {
             Security and privacy, built in.
           </h2>
           <p className="mt-3 text-sm text-muted-foreground">
-            See full details on our <Link to="/security" className="text-primary hover:underline">Security</Link> page.
+            See full details on our <Link to="/security" className="tap-link text-primary hover:underline">Security</Link> page.
           </p>
         </div>
         <div className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
