@@ -110,11 +110,12 @@ function AuthedLayout() {
                     to={item.to as "/dashboard"}
                     onClick={() => setOpen(false)}
                     className={cn(
-                      "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                      "flex min-h-11 items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors md:min-h-9",
                       active
                         ? "bg-primary/10 text-primary"
                         : "text-muted-foreground hover:bg-accent hover:text-foreground",
                     )}
+
                   >
                     <item.icon className="size-4" />
                     {item.label}
