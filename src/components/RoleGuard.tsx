@@ -34,7 +34,7 @@ export function RoleGuard({ role, anyOf, children, fallback }: RoleGuardProps) {
             <ShieldAlert className="size-7" />
           </div>
           <div className="max-w-md space-y-1">
-            <h2 className="text-lg font-semibold">Access restricted</h2>
+            <h1 className="text-lg font-semibold">Access restricted</h1>
             <p className="text-sm text-muted-foreground">
               You don't have permission to view this page. Ask an admin to grant
               you access, or head back to your dashboard.
