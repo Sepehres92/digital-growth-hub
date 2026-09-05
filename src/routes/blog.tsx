@@ -226,7 +226,7 @@ function BlogPage() {
               </Button>
 
               <Select onValueChange={(v) => exec("fontName", v)}>
-                <SelectTrigger className="h-8 w-32 text-xs">
+                <SelectTrigger className="h-11 w-32 text-xs" aria-label="Font">
                   <SelectValue placeholder="Font" />
                 </SelectTrigger>
                 <SelectContent>
@@ -239,7 +239,7 @@ function BlogPage() {
               </Select>
 
               <Select onValueChange={(v) => exec("fontSize", v)}>
-                <SelectTrigger className="h-8 w-20 text-xs">
+                <SelectTrigger className="h-11 w-20 text-xs" aria-label="Text size">
                   <SelectValue placeholder="Size" />
                 </SelectTrigger>
                 <SelectContent>
@@ -252,8 +252,9 @@ function BlogPage() {
               <input
                 type="color"
                 onChange={(e) => exec("foreColor", e.target.value)}
-                className="size-8 cursor-pointer rounded border border-border bg-background"
+                className="size-11 cursor-pointer rounded border border-border bg-background p-1"
                 title="Text color"
+                aria-label="Text color"
               />
 
               <Popover>
