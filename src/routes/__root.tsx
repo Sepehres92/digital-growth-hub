@@ -11,6 +11,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { cleanAuthUrl } from "@/lib/clean-auth-url";
+import { consumePendingConsent } from "@/lib/consent-pending";
+import { recordConsent } from "@/lib/consent.functions";
 
 import appCss from "../styles.css?url";
 
@@ -144,7 +146,18 @@ function RootComponent() {
     // Strip any OAuth/recovery credentials from the address bar + history
     // as soon as the app mounts, and again once the session is established.
     cleanAuthUrl();
-    const { data: sub } = supabase.auth.onAuthStateChange(() => cleanAuthUrl());
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      cleanAuthUrl();
+      // Persist the agreement captured on the sign-up screen once the session exists.
+      if (session && (event === "SIGNED_IN" || event === "INITIAL_SESSION")) {
+        const pending = consumePendingConsent();
+        if (pending) {
+          void recordConsent({
+            data: { policyVersion: pending.policyVersion, source: pending.source },
+          }).catch(() => undefined);
+        }
+      }
+    });
     return () => sub.subscription.unsubscribe();
   }, []);
 

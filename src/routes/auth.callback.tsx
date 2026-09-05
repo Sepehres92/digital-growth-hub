@@ -19,15 +19,28 @@ function AuthCallback() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Strip any token/code material from the URL before anything else runs.
-    cleanAuthUrl();
-
     let cancelled = false;
     const go = (to: "/dashboard" | "/auth") => {
       if (!cancelled) navigate({ to, replace: true });
     };
 
-    supabase.auth.getSession().then(({ data }) => {
+    const start = async () => {
+      // Complete a PKCE exchange if the provider returned a code, then strip
+      // every token/code fragment from the address bar and history.
+      const url = new URL(window.location.href);
+      const code = url.searchParams.get("code");
+      if (code) {
+        try {
+          await supabase.auth.exchangeCodeForSession(code);
+        } catch {
+          /* falls through to the session checks below */
+        }
+      }
+      cleanAuthUrl();
+      return supabase.auth.getSession();
+    };
+
+    start().then(({ data }) => {
       if (data.session) return go("/dashboard");
       // The session may land a tick later via the auth listener.
       const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
