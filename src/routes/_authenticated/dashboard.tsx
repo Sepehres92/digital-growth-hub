@@ -59,7 +59,7 @@ function Dashboard() {
   return (
     <div className="mx-auto max-w-6xl space-y-8">
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">Agency dashboard</h1>
         <p className="mt-1 text-sm text-muted-foreground">A snapshot of your agency. Demo and sample records are excluded from these figures.</p>
       </div>
 
