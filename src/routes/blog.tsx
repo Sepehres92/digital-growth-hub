@@ -175,11 +175,11 @@ function BlogPage() {
     <div className="min-h-dvh bg-surface">
       <header className="border-b border-border bg-card">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
-          <Link to="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+          <Link to="/" className="inline-flex min-h-11 min-w-11 items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
             <ArrowLeft className="size-4" /> Home
           </Link>
           <h1 className="text-lg font-semibold">Daily Blog</h1>
-          <Link to="/auth" className="text-sm text-primary hover:underline">
+          <Link to="/auth" className="inline-flex min-h-11 min-w-11 items-center justify-center text-sm text-primary hover:underline">
             Sign in
           </Link>
         </div>
@@ -196,13 +196,17 @@ function BlogPage() {
           <CardContent className="space-y-3">
             <div className="grid gap-3 sm:grid-cols-2">
               <Input
+                className="h-11"
                 placeholder="Your name"
+                aria-label="Your name"
                 value={authorName}
                 onChange={(e) => setAuthorName(e.target.value)}
                 maxLength={80}
               />
               <Input
+                className="h-11"
                 placeholder="Post title"
+                aria-label="Post title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 maxLength={200}
@@ -222,7 +226,7 @@ function BlogPage() {
               </Button>
 
               <Select onValueChange={(v) => exec("fontName", v)}>
-                <SelectTrigger className="h-8 w-32 text-xs">
+                <SelectTrigger className="h-11 w-32 text-xs" aria-label="Font">
                   <SelectValue placeholder="Font" />
                 </SelectTrigger>
                 <SelectContent>
@@ -235,7 +239,7 @@ function BlogPage() {
               </Select>
 
               <Select onValueChange={(v) => exec("fontSize", v)}>
-                <SelectTrigger className="h-8 w-20 text-xs">
+                <SelectTrigger className="h-11 w-20 text-xs" aria-label="Text size">
                   <SelectValue placeholder="Size" />
                 </SelectTrigger>
                 <SelectContent>
@@ -248,8 +252,9 @@ function BlogPage() {
               <input
                 type="color"
                 onChange={(e) => exec("foreColor", e.target.value)}
-                className="size-8 cursor-pointer rounded border border-border bg-background"
+                className="size-11 cursor-pointer rounded border border-border bg-background p-1"
                 title="Text color"
+                aria-label="Text color"
               />
 
               <Popover>
@@ -258,13 +263,14 @@ function BlogPage() {
                     <Smile className="size-4" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-64 p-2">
-                  <div className="grid grid-cols-8 gap-1">
+                <PopoverContent className="w-[19rem] p-2">
+                  <div className="grid grid-cols-6 gap-1">
                     {EMOJIS.map((e) => (
                       <button
                         key={e}
                         type="button"
-                        className="rounded p-1 text-xl hover:bg-accent"
+                        aria-label={`Insert ${e}`}
+                        className="flex size-11 items-center justify-center rounded text-xl hover:bg-accent"
                         onClick={() => insertHTML(e)}
                       >
                         {e}
@@ -278,6 +284,7 @@ function BlogPage() {
                 type="button"
                 variant="ghost"
                 size="icon"
+                className="size-11"
                 aria-label="Insert image"
                 onClick={() => fileRef.current?.click()}
                 title="Insert image"
