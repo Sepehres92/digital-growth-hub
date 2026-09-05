@@ -62,7 +62,7 @@ function AuthCallback() {
   }, [navigate]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-surface px-4">
+    <div className="flex min-h-dvh items-center justify-center bg-surface px-4">
       <p className="text-sm text-muted-foreground">Signing you in…</p>
     </div>
   );

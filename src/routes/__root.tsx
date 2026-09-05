@@ -78,14 +78,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      // Fallbacks only — every route sets its own title/description and a
+      // complete social card via pageHead() in src/lib/seo.ts.
       { title: "Digital Agency OS" },
       { name: "description", content: "AI-powered platform for modern marketing agencies — clients, content, video, scheduling, automation." },
       { name: "author", content: "Digital Agency OS" },
-      { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "Digital Agency OS" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@DigitalAgencyOS" },
     ],
+
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
