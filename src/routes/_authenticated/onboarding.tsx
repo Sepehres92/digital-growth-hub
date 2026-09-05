@@ -35,21 +35,33 @@ function OnboardingPage() {
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [completed, setCompleted] = useState(false);
   const [p, setP] = useState<ProfileState>({});
 
   useEffect(() => {
     getProfile({})
       .then((r) => {
         if (r.profile) {
-          setP(r.profile as ProfileState);
-          if ((r.profile as { onboarding_step?: number }).onboarding_step != null) {
-            setStep((r.profile as { onboarding_step: number }).onboarding_step);
+          const prof = r.profile as ProfileState & {
+            onboarding_step?: number;
+            onboarding_completed?: boolean;
+          };
+          setP(prof);
+          if (prof.onboarding_completed) {
+            // Setup already finished — the wizard is not the place to land.
+            setCompleted(true);
+            navigate({ to: "/business-profile" });
+            return;
+          }
+          if (prof.onboarding_step != null) {
+            setStep(Math.min(prof.onboarding_step, 4));
             setChose("real");
           }
         }
       })
       .finally(() => setLoading(false));
-  }, [getProfile]);
+  }, [getProfile, navigate]);
+
 
   const set = (k: string, v: unknown) => setP((prev) => ({ ...prev, [k]: v }));
   const toggleArr = (k: string, v: string) => {
