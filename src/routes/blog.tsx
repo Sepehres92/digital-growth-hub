@@ -98,6 +98,8 @@ function BlogPage() {
   const [userId, setUserId] = useState<string | null>(null);
   const editorRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const publishPost = useServerFn(createBlogPost);
+  const removePost = useServerFn(deleteBlogPost);
 
   const load = async () => {
     const { data, error } = await supabase
