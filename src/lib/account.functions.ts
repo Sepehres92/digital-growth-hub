@@ -1,6 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { logAudit } from "./audit.server";
 
 export const EXPORT_SCHEMA_VERSION = 2;
@@ -102,6 +101,14 @@ export const exportMyData = createServerFn({ method: "POST" })
       );
     }
 
+    // Demo/sample rows stay in the export for completeness, but are flagged so
+    // they are never mistaken for real business data.
+    const demoSummary: Record<string, number> = {};
+    for (const table of ["clients", "campaigns", "campaign_folders", "content_posts", "social_posts"]) {
+      const rows = (tables[table] ?? []) as { is_demo?: boolean }[];
+      demoSummary[table] = rows.filter((r) => r?.is_demo === true).length;
+    }
+
     await logAudit({ userId, action: "data.export" });
 
     return {
@@ -115,6 +122,7 @@ export const exportMyData = createServerFn({ method: "POST" })
           new Set((storageObjects as { bucket_id?: string }[]).map((o) => o.bucket_id ?? "")),
         ).filter(Boolean),
       },
+      demo_records: demoSummary,
       tables,
       storage_objects: storageObjects,
     };
@@ -123,29 +131,82 @@ export const exportMyData = createServerFn({ method: "POST" })
 export const deleteMyAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { userId } = context;
+    const { supabase, userId } = context;
 
     await logAudit({ userId, action: "account.delete" });
 
-    const userOwned = [
-      "ai_copies",
-      "ai_images",
-      "generated_images",
-      "client_images",
-      "creative_projects",
-      "tasks",
-      "leads",
-      "campaigns",
-      "clients",
-    ] as const;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    for (const t of userOwned) {
-      await (supabaseAdmin.from(t) as any).delete().eq("user_id", userId);
+    // 1. Collect the storage objects this user owns BEFORE their rows disappear.
+    const { data: storage, error: storageListError } = await (supabase.rpc as any)(
+      "export_my_storage_objects",
+    );
+    if (storageListError) {
+      throw new Error(
+        `Deletion stopped before anything was removed — we could not list your stored files (${storageListError.message}). Nothing was deleted; please try again.`,
+      );
     }
-    await supabaseAdmin.from("profiles").delete().eq("id", userId);
+    const objects = (storage ?? []) as { bucket_id: string; name: string }[];
 
+    // 2. Remove every database row across all user-owned tables, in dependency order.
+    const { data: deleted, error: purgeError } = await (supabaseAdmin.rpc as any)(
+      "purge_user_data",
+      { _user_id: userId },
+    );
+    if (purgeError) {
+      throw new Error(
+        `Deletion failed part-way through (${purgeError.message}). Your account has NOT been removed — contact us so we can finish it.`,
+      );
+    }
+
+    // 3. Remove the files.
+    const byBucket = new Map<string, string[]>();
+    for (const o of objects) {
+      if (!o?.bucket_id || !o?.name) continue;
+      byBucket.set(o.bucket_id, [...(byBucket.get(o.bucket_id) ?? []), o.name]);
+    }
+    const storageFailures: string[] = [];
+    for (const [bucket, paths] of byBucket) {
+      const { error } = await supabaseAdmin.storage.from(bucket).remove(paths);
+      if (error) storageFailures.push(`${bucket} (${error.message})`);
+    }
+    if (storageFailures.length > 0) {
+      throw new Error(
+        `Your records were deleted but some stored files could not be removed: ${storageFailures.join("; ")}. Your account has NOT been closed — contact us so we can finish it.`,
+      );
+    }
+
+    // 4. Verify nothing is left behind before closing the account.
+    const { data: remaining, error: verifyError } = await (supabaseAdmin.rpc as any)(
+      "count_user_records",
+      { _user_id: userId },
+    );
+    if (verifyError) {
+      throw new Error(
+        `We could not confirm that everything was deleted (${verifyError.message}). Your account has NOT been closed — contact us so we can verify it.`,
+      );
+    }
+    const leftovers = Object.entries((remaining ?? {}) as Record<string, number>);
+    if (leftovers.length > 0) {
+      throw new Error(
+        `Deletion is incomplete — data still remains in: ${leftovers
+          .map(([t, n]) => `${t} (${n})`)
+          .join(", ")}. Your account has NOT been closed.`,
+      );
+    }
+
+    // 5. Finally close the login itself.
     const { error } = await supabaseAdmin.auth.admin.deleteUser(userId);
-    if (error) throw new Error(error.message);
+    if (error) {
+      throw new Error(
+        `All of your data was deleted, but the login could not be closed (${error.message}). Contact us so we can finish it.`,
+      );
+    }
 
-    return { ok: true };
+    return {
+      ok: true,
+      deleted_rows: (deleted ?? {}) as Record<string, number>,
+      deleted_files: objects.length,
+      verified_empty: true,
+    };
   });
