@@ -175,7 +175,9 @@ function GlobalDashboard() {
       <div>
         <h1 className="text-3xl font-semibold tracking-tight">Global Dashboard</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Every client, campaign, task, and marketing tool — in one view.
+          Every client, campaign, task, and marketing tool — in one view. Demo and sample
+          records are excluded from these figures.
+
         </p>
       </div>
 
