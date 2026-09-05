@@ -78,7 +78,7 @@ function Dashboard() {
       <div className="rounded-xl border border-border bg-card p-6">
         <div className="flex items-center justify-between">
           <h2 className="font-semibold">Recent leads</h2>
-          <Link to="/leads" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+          <Link to="/leads" className="tap-link inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
             View all <ArrowRight className="size-4" />
           </Link>
         </div>
@@ -97,7 +97,7 @@ function Dashboard() {
           {leads.length === 0 && (
             <p className="py-8 text-center text-sm text-muted-foreground">
               No leads yet.{" "}
-              <Link to="/leads" className="font-medium text-primary hover:underline">Add your first lead</Link>
+              <Link to="/leads" className="tap-link font-medium text-primary hover:underline">Add your first lead</Link>
             </p>
           )}
         </div>

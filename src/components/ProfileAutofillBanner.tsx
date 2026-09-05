@@ -63,7 +63,7 @@ export function ProfileAutofillBanner({
       </div>
       <Link
         to="/business-profile"
-        className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-primary hover:underline"
+        className="tap-link shrink-0 items-center gap-1 text-xs font-medium text-primary hover:underline"
       >
         <Pencil className="size-3" /> Edit profile
       </Link>

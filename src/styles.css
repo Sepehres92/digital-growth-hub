@@ -104,6 +104,24 @@
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
   }
+
+  /* WCAG 2.5.8 — minimum 44x44 hit box for interactive controls.
+     Excludes visually hidden natives, hidden inputs, and the custom
+     .tap-checkbox / .tap-link helpers which manage their own boxes. */
+  button:not(.sr-only),
+  [role="button"],
+  select:not(.sr-only),
+  textarea,
+  input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not(.sr-only):not(.tap-checkbox) {
+    min-block-size: 2.75rem;
+    box-sizing: border-box;
+  }
+
+  button:not(.sr-only),
+  [role="button"],
+  select:not(.sr-only) {
+    min-inline-size: 2.75rem;
+  }
 }
 
 /* ---------------------------------------------------------------------------

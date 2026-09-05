@@ -209,7 +209,7 @@ function GlobalDashboard() {
             <h2 className="font-semibold">Recent leads</h2>
             <Link
               to="/leads"
-              className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+              className="tap-link items-center gap-1 text-sm font-medium text-primary hover:underline"
             >
               View all <ArrowRight className="size-4" />
             </Link>
@@ -241,7 +241,7 @@ function GlobalDashboard() {
             <h2 className="font-semibold">Active campaigns</h2>
             <Link
               to="/campaigns"
-              className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+              className="tap-link items-center gap-1 text-sm font-medium text-primary hover:underline"
             >
               View all <ArrowRight className="size-4" />
             </Link>
@@ -277,7 +277,7 @@ function GlobalDashboard() {
           <h2 className="font-semibold">Tasks due soon</h2>
           <Link
             to="/tasks"
-            className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+            className="tap-link items-center gap-1 text-sm font-medium text-primary hover:underline"
           >
             Open board <ArrowRight className="size-4" />
           </Link>
