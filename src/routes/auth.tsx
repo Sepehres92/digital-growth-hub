@@ -46,10 +46,11 @@ function AuthPage() {
     setLoading(true);
     try {
       if (mode === "signup") {
+        setPendingConsent("email_signup");
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: `${window.location.origin}/dashboard` },
+          options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
         });
         if (error) throw error;
         toast.success("Check your email to confirm your account.");
@@ -67,9 +68,15 @@ function AuthPage() {
 
 
   const handleGoogle = async () => {
+    // Google sign-in can create a brand-new account, so consent is required here too.
+    if (!consent) {
+      toast.error("Please agree to the Terms and Privacy Policy before continuing with Google.");
+      return;
+    }
     setLoading(true);
+    setPendingConsent("google_oauth");
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: `${window.location.origin}/dashboard`,
+      redirect_uri: `${window.location.origin}/auth/callback`,
     });
     if (result.error) {
       toast.error("Google sign-in failed");
@@ -77,8 +84,9 @@ function AuthPage() {
       return;
     }
     if (result.redirected) return;
-    navigate({ to: "/dashboard" });
+    navigate({ to: "/auth/callback" });
   };
+
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-surface px-4 py-12">
