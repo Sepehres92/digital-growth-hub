@@ -2541,35 +2541,67 @@ export type Database = {
           },
         ]
       }
-      social_accounts: {
+      social_account_tokens: {
         Row: {
           access_token: string | null
+          account_id: string
+          created_at: string
+          expires_at: string | null
+          refresh_token: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token?: string | null
+          account_id: string
+          created_at?: string
+          expires_at?: string | null
+          refresh_token?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string | null
+          account_id?: string
+          created_at?: string
+          expires_at?: string | null
+          refresh_token?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "social_account_tokens_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: true
+            referencedRelation: "social_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      social_accounts: {
+        Row: {
           account_name: string
           created_at: string
           expires_at: string | null
           id: string
           platform: string
-          refresh_token: string | null
           user_id: string
         }
         Insert: {
-          access_token?: string | null
           account_name: string
           created_at?: string
           expires_at?: string | null
           id?: string
           platform: string
-          refresh_token?: string | null
           user_id: string
         }
         Update: {
-          access_token?: string | null
           account_name?: string
           created_at?: string
           expires_at?: string | null
           id?: string
           platform?: string
-          refresh_token?: string | null
           user_id?: string
         }
         Relationships: []
