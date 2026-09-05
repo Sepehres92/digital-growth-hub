@@ -172,7 +172,7 @@ function BlogPage() {
   };
 
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-dvh bg-surface">
       <header className="border-b border-border bg-card">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
           <Link to="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
@@ -211,13 +211,13 @@ function BlogPage() {
 
             {/* Toolbar */}
             <div className="flex flex-wrap items-center gap-1 rounded-md border border-border bg-background p-2">
-              <Button type="button" variant="ghost" size="icon" aria-label="Bold" onClick={() => exec("bold")}>
+              <Button type="button" variant="ghost" size="icon" className="size-11" aria-label="Bold" onClick={() => exec("bold")}>
                 <Bold className="size-4" />
               </Button>
-              <Button type="button" variant="ghost" size="icon" aria-label="Italic" onClick={() => exec("italic")}>
+              <Button type="button" variant="ghost" size="icon" className="size-11" aria-label="Italic" onClick={() => exec("italic")}>
                 <Italic className="size-4" />
               </Button>
-              <Button type="button" variant="ghost" size="icon" aria-label="Underline" onClick={() => exec("underline")}>
+              <Button type="button" variant="ghost" size="icon" className="size-11" aria-label="Underline" onClick={() => exec("underline")}>
                 <Underline className="size-4" />
               </Button>
 
@@ -254,7 +254,7 @@ function BlogPage() {
 
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button type="button" variant="ghost" size="icon" aria-label="Insert emoji">
+                  <Button type="button" variant="ghost" size="icon" className="size-11" aria-label="Insert emoji">
                     <Smile className="size-4" />
                   </Button>
                 </PopoverTrigger>
@@ -305,7 +305,7 @@ function BlogPage() {
               data-placeholder="What's on your mind?"
             />
 
-            <Button onClick={submit} disabled={loading || !userId}>
+            <Button onClick={submit} className="min-h-11" disabled={loading || !userId}>
               {loading ? "Posting…" : userId ? "Publish" : "Sign in to publish"}
             </Button>
           </CardContent>
@@ -326,7 +326,7 @@ function BlogPage() {
                   </p>
                 </div>
                 {p.user_id && p.user_id === userId && (
-                  <Button variant="ghost" size="icon" aria-label="Delete post" onClick={() => remove(p.id)}>
+                  <Button variant="ghost" size="icon" className="size-11" aria-label="Delete post" onClick={() => remove(p.id)}>
                     <Trash2 className="size-4" />
                   </Button>
                 )}
