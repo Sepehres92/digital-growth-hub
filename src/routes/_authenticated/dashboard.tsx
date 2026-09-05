@@ -17,17 +17,17 @@ function Dashboard() {
     },
   });
   const { data: clients = [] } = useQuery({
-    queryKey: ["clients"],
+    queryKey: ["clients", "live"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("clients").select("*");
+      const { data, error } = await supabase.from("clients").select("*").eq("is_demo", false);
       if (error) throw error;
       return data;
     },
   });
   const { data: campaigns = [] } = useQuery({
-    queryKey: ["campaigns"],
+    queryKey: ["campaigns", "live"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("campaigns").select("*");
+      const { data, error } = await supabase.from("campaigns").select("*").eq("is_demo", false);
       if (error) throw error;
       return data;
     },
