@@ -68,7 +68,7 @@ function TermsPage() {
       <p>We may update these Terms. Material changes will be announced in-app. Continued use after changes constitutes acceptance.</p>
 
       <h2>13. Contact</h2>
-      <p>For legal questions, contact <a href="mailto:legal@example.com">legal@example.com</a>. For privacy and data requests, contact <a href="mailto:privacy@example.com">privacy@example.com</a>.</p>
+      <p>For legal questions, and for privacy or data requests, use the <a className="tap-link" href="/contact">contact form</a> and mark your message accordingly. We have not published a public email address yet.</p>
     </LegalLayout>
   );
 }
