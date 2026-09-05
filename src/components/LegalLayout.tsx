@@ -6,11 +6,11 @@ export function LegalLayout({ title, updated, children }: { title: string; updat
     <div className="min-h-screen bg-background text-foreground">
       <nav className="border-b border-border/60 bg-background/80 backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex min-h-11 items-center gap-2">
             <div className="size-7 rounded-md bg-primary" />
             <span className="font-semibold tracking-tight">Agency OS</span>
           </Link>
-          <Link to="/auth" className="text-sm font-medium text-muted-foreground hover:text-foreground">
+          <Link to="/auth" className="inline-flex min-h-11 items-center text-sm font-medium text-muted-foreground hover:text-foreground">
             Sign in
           </Link>
         </div>
@@ -22,10 +22,10 @@ export function LegalLayout({ title, updated, children }: { title: string; updat
           {children}
         </article>
         <footer className="mt-16 flex flex-wrap gap-x-6 gap-y-2 border-t border-border pt-6 text-sm text-muted-foreground">
-          <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
-          <Link to="/terms" className="hover:text-foreground">Terms</Link>
-          <Link to="/cookies" className="hover:text-foreground">Cookies</Link>
-          <span className="ml-auto">© 2026 Digital Agency OS</span>
+          <Link to="/privacy" className="inline-flex min-h-11 items-center hover:text-foreground">Privacy</Link>
+          <Link to="/terms" className="inline-flex min-h-11 items-center hover:text-foreground">Terms</Link>
+          <Link to="/cookies" className="inline-flex min-h-11 items-center hover:text-foreground">Cookies</Link>
+          <span className="ml-auto self-center">© 2026 Digital Agency OS</span>
         </footer>
       </main>
     </div>
