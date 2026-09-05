@@ -1,17 +1,23 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { ArrowLeft, Calendar } from "lucide-react";
+import { submitDemoRequest } from "@/lib/demo-requests.functions";
 
 export const Route = createFileRoute("/book-demo")({
   head: () => ({
     meta: [
       { title: "Book a Demo — Digital Agency OS" },
       { name: "description", content: "Book a personalized walkthrough of Digital Agency OS." },
+      { property: "og:title", content: "Book a Demo — Digital Agency OS" },
+      { property: "og:description", content: "Book a personalized walkthrough of Digital Agency OS." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: BookDemoPage,
@@ -20,15 +26,36 @@ export const Route = createFileRoute("/book-demo")({
 function BookDemoPage() {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const sendRequest = useServerFn(submitDemoRequest);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = new FormData(e.currentTarget);
+    setError(null);
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await sendRequest({
+        data: {
+          name: String(form.get("name") ?? ""),
+          company: String(form.get("company") ?? ""),
+          email: String(form.get("email") ?? ""),
+          message: String(form.get("message") ?? ""),
+          website: String(form.get("website") ?? ""),
+        },
+      });
       setSent(true);
       toast.success("Request received — we'll be in touch.");
-    }, 600);
+    } catch (err) {
+      const msg =
+        err instanceof Error && err.message
+          ? err.message
+          : "We couldn't send your request. Please try again.";
+      setError(msg);
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
