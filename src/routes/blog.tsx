@@ -127,10 +127,21 @@ function BlogPage() {
     document.execCommand("insertHTML", false, html);
   };
 
+  const ALLOWED_IMAGE_TYPES = ["image/png", "image/jpeg", "image/webp", "image/gif"];
+
   const onUpload = async (file: File) => {
+    if (!userId) return toast.error("Sign in to upload images");
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      return toast.error("Only PNG, JPEG, WebP or GIF images are allowed");
+    }
     if (file.size > 5 * 1024 * 1024) return toast.error("Image must be <5MB");
-    const ext = file.name.split(".").pop() || "png";
-    const path = `public/${crypto.randomUUID()}.${ext}`;
+    const extByType: Record<string, string> = {
+      "image/png": "png",
+      "image/jpeg": "jpg",
+      "image/webp": "webp",
+      "image/gif": "gif",
+    };
+    const path = `${userId}/${crypto.randomUUID()}.${extByType[file.type]}`;
     const { error } = await supabase.storage
       .from("blog-images")
       .upload(path, file, { contentType: file.type });
@@ -141,40 +152,41 @@ function BlogPage() {
     );
   };
 
-  const sanitize = (html: string) => {
-    // Strip scripts and inline event handlers
-    return html
-      .replace(/<script[\s\S]*?<\/script>/gi, "")
-      .replace(/ on\w+="[^"]*"/gi, "")
-      .replace(/ on\w+='[^']*'/gi, "")
-      .replace(/javascript:/gi, "");
-  };
-
   const submit = async () => {
-    const html = sanitize(editorRef.current?.innerHTML ?? "").trim();
+    if (!userId) return toast.error("Please sign in to publish a post");
+    const html = (editorRef.current?.innerHTML ?? "").trim();
     const plain = (editorRef.current?.innerText ?? "").trim();
     if (!title.trim()) return toast.error("Title required");
     if (!authorName.trim()) return toast.error("Your name is required");
     if (!plain) return toast.error("Write something");
+    if (plain.length > 20000) return toast.error("Post is too long");
     setLoading(true);
-    const { error } = await supabase.from("blog_posts").insert({
-      user_id: userId,
-      title: title.trim().slice(0, 200),
-      content: html.slice(0, 20000),
-      author_name: authorName.trim().slice(0, 80),
-    });
-    setLoading(false);
-    if (error) return toast.error(error.message);
-    setTitle("");
-    if (editorRef.current) editorRef.current.innerHTML = "";
-    toast.success("Posted!");
-    load();
+    try {
+      await publishPost({
+        data: {
+          title: title.trim().slice(0, 200),
+          authorName: authorName.trim().slice(0, 80),
+          html,
+        },
+      });
+      setTitle("");
+      if (editorRef.current) editorRef.current.innerHTML = "";
+      toast.success("Posted!");
+      load();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not publish your post");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const remove = async (id: string) => {
-    const { error } = await supabase.from("blog_posts").delete().eq("id", id);
-    if (error) return toast.error(error.message);
-    setPosts((p) => p.filter((x) => x.id !== id));
+    try {
+      await removePost({ data: { id } });
+      setPosts((p) => p.filter((x) => x.id !== id));
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not delete post");
+    }
   };
 
   return (
