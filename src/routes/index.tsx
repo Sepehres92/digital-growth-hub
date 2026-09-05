@@ -9,12 +9,12 @@ import { useState } from "react";
 import { pageHead } from "@/lib/seo";
 
 const faqs = [
-  { q: "How does AI content work?", a: "Our AI Copywriter, Image Generator, and Video Studio are trained on each client's brand voice, audience, and assets. You describe what you need; we generate on-brand variants in seconds. You stay in full creative control." },
-  { q: "Can clients log in?", a: "Yes. Every client gets a portal where they can view campaigns, approve content, read meeting summaries, and chat with an assistant that answers from the articles you publish to their knowledge base." },
-  { q: "Does it support social posting?", a: "Yes. Schedule and publish to Instagram, TikTok, LinkedIn, X, YouTube, Facebook, and Pinterest. Built-in approval flows and multi-platform calendars included." },
+  { q: "How does AI content work?", a: "The AI Copywriter, Image Generator and Video Studio take your prompt plus the business details you save in your profile, and draft variants you can edit. Nothing is generated without your input, and you stay in full creative control." },
+  { q: "Can clients log in?", a: "Not yet — a client-facing login is planned. Today you manage client records, campaigns, approvals and meeting summaries inside your own workspace, and the assistant answers from the knowledge-base articles you publish." },
+  { q: "Does it support social posting?", a: "You can plan and schedule posts per channel in the content calendar, and review them before they go out. Automatic publishing to the networks is not available yet — you post from the network itself." },
   { q: "Can my team collaborate?", a: "Absolutely. Real-time team chat, meeting scheduling, task boards, shared notes, and live activity indicators — all in one workspace." },
-  { q: "Is my data secure?", a: "We use HTTPS/TLS in transit, encrypted storage at rest, role-based access control, and Row-Level Security so each client's data is isolated. See our Security page for full details." },
-  { q: "Does it support AI videos?", a: "Yes. The AI Video Studio handles scripts, voiceovers, subtitles, B-roll, and exports in 9:16 (TikTok, Reels, Shorts), 16:9 (YouTube), and square formats." },
+  { q: "Is my data secure?", a: "We use HTTPS/TLS in transit, encrypted storage at rest, role-based access control, and Row-Level Security so each account's data is isolated. See our Security page for full details." },
+  { q: "Does it support AI videos?", a: "The AI Video Studio writes scripts, hooks, CTAs, voiceover scripts, shot lists and SRT subtitles for short-form video. It does not render or export finished video files." },
 ];
 
 export const Route = createFileRoute("/")({
@@ -23,7 +23,7 @@ export const Route = createFileRoute("/")({
       path: "/",
       title: "Digital Agency OS — AI-Powered Marketing Agency Platform",
       description:
-        "Run your entire digital marketing agency from one AI-powered platform: CRM, AI content, video studio, scheduling, team chat, and a client portal.",
+        "Run your digital marketing agency from one AI-powered workspace: CRM, AI content, video scripts, content scheduling, team chat and campaign planning.",
     }),
     scripts: [
       {
@@ -98,9 +98,9 @@ function AnnouncementBar() {
         <div className="flex items-center gap-2">
           <Sparkles className="size-4 text-primary" />
           <span className="hidden opacity-90 sm:inline">
-            Now powered by AI Content, AI Video, and Social Automation
+            Now powered by AI content, AI video scripts and content planning
           </span>
-          <span className="opacity-90 sm:hidden">AI content, video &amp; social automation</span>
+          <span className="opacity-90 sm:hidden">AI content, video scripts &amp; planning</span>
         </div>
         <div className="flex items-center gap-2">
           <Link
@@ -171,8 +171,8 @@ function Hero() {
             </span>
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-pretty text-base text-muted-foreground sm:text-lg md:mt-6 md:text-xl">
-            Manage clients, create AI content, generate videos, schedule posts,
-            collaborate with your team, and automate campaigns — all from one dashboard.
+            Manage clients, draft AI content, script videos, schedule posts,
+            collaborate with your team, and plan campaigns — all from one dashboard.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 md:mt-10">
             <Link
@@ -376,12 +376,12 @@ function TrustedBy() {
 const features = [
   { icon: PenLine, title: "AI Copywriting", desc: "Generate captions, ads, and emails in your brand voice instantly.", color: "from-violet-500 to-purple-500", anchor: "#showcase" },
   { icon: ImageIcon, title: "AI Image Generation", desc: "Studio-quality visuals from a single prompt, every time.", color: "from-pink-500 to-rose-500", anchor: "#showcase" },
-  { icon: Film, title: "AI Video Studio", desc: "Scripts, voiceovers, subtitles, and renders — fully automated.", color: "from-orange-500 to-red-500", anchor: "#video-studio" },
+  { icon: Film, title: "AI Video Studio", desc: "Scripts, voiceover scripts, shot lists, and SRT subtitles.", color: "from-orange-500 to-red-500", anchor: "#video-studio" },
   { icon: Users, title: "CRM & Leads", desc: "Capture, qualify, and convert leads in a unified pipeline.", color: "from-emerald-500 to-teal-500", anchor: "#automation" },
   { icon: CalendarDays, title: "Content Calendar", desc: "Plan months ahead with drag-and-drop scheduling.", color: "from-blue-500 to-cyan-500", anchor: "#calendar" },
-  { icon: Send, title: "Social Scheduler", desc: "Schedule posts to your connected social accounts from one calendar.", color: "from-indigo-500 to-blue-500", anchor: "#calendar" },
+  { icon: Send, title: "Social Planner", desc: "Plan and schedule posts per channel in one calendar.", color: "from-indigo-500 to-blue-500", anchor: "#calendar" },
   { icon: MessagesSquare, title: "Team Collaboration", desc: "Chat, meetings, tasks, and shared notes in one workspace.", color: "from-amber-500 to-orange-500", anchor: "#team" },
-  { icon: UserCircle2, title: "Client Portal", desc: "Client portal for approvals, reports, and updates.", color: "from-fuchsia-500 to-pink-500", anchor: "#portal" },
+  { icon: UserCircle2, title: "Client Workspace", desc: "Client records, approvals, reports and updates in one place.", color: "from-fuchsia-500 to-pink-500", anchor: "#portal" },
   { icon: Bot, title: "AI Chatbot", desc: "Client assistant that answers from the knowledge base you publish.", color: "from-cyan-500 to-sky-500", anchor: "#portal" },
 ];
 
@@ -395,7 +395,7 @@ function CoreFeatures() {
             One platform. Every agency workflow.
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Replace 12+ disconnected tools with a single AI-powered operating system.
+            Bring clients, campaigns, content and reporting into one AI-powered workspace.
           </p>
         </div>
         <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -445,7 +445,7 @@ function AIContentShowcase() {
             Brilliant content, in seconds — not days.
           </h2>
           <p className="mt-4 text-lg text-white/70">
-            Captions, ads, images, videos. Every format, every platform, every brand voice.
+            Captions, ad copy, images and video scripts — drafted from your prompt and business profile.
           </p>
         </div>
 
@@ -470,9 +470,9 @@ function AIContentShowcase() {
             <div className="mb-3 flex items-center gap-2 text-xs text-white/60">
               <Megaphone className="size-3.5" /> AI Ad Copy
             </div>
-            <div className="text-sm font-semibold">Get 30% More Leads This Month</div>
+            <div className="text-sm font-semibold">Book Your Free Site Audit</div>
             <p className="mt-2 text-sm text-white/80">
-              Local contractors are booking 3x more jobs with our automated funnel. See how →
+              A short walkthrough of what your local customers see when they search for you.
             </p>
             <div className="mt-4 inline-flex rounded-md bg-primary px-3 py-1.5 text-xs font-semibold">
               Book Free Audit
@@ -543,15 +543,15 @@ function VideoStudio() {
             From script to render, in one timeline.
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Generate scripts with AI, record voiceovers, auto-generate subtitles, and export
-            optimized for TikTok, Reels, Shorts, and YouTube — all from one studio.
+            Generate scripts, hooks and CTAs, write voiceover scripts, build shot lists, and
+            produce SRT subtitle files ready to drop into your editor.
           </p>
           <div className="mt-6 grid grid-cols-2 gap-3">
             {[
-              { i: Mic2, l: "AI Voiceovers" },
-              { i: Captions, l: "Auto Subtitles" },
-              { i: PenLine, l: "AI Scripts" },
-              { i: Smartphone, l: "Multi-format export" },
+              { i: Mic2, l: "Voiceover scripts" },
+              { i: Captions, l: "SRT subtitles" },
+              { i: PenLine, l: "AI scripts & hooks" },
+              { i: Smartphone, l: "Short-form shot lists" },
             ].map((x) => (
               <div key={x.l} className="flex items-center gap-2 rounded-lg border border-border/60 bg-card p-3 text-sm">
                 <x.i className="size-4 text-primary" /> {x.l}
@@ -561,7 +561,7 @@ function VideoStudio() {
         </div>
         <GlassCard className="overflow-hidden p-0">
           <div className="border-b border-border/60 bg-card p-3 text-xs font-medium">
-            Video timeline • product-launch-v2.mp4
+            Illustrative mockup • editing timeline is a planned capability
           </div>
           <div className="space-y-3 bg-gradient-to-br from-card to-surface p-5">
             {/* Video preview */}
@@ -588,7 +588,7 @@ function VideoStudio() {
             ))}
             {/* Export options */}
             <div className="flex flex-wrap gap-2 pt-2">
-              {["TikTok 9:16", "Reels 9:16", "YouTube 16:9", "Shorts 9:16"].map((p) => (
+              {["9:16 script", "16:9 script", "Hook list", "SRT file"].map((p) => (
                 <span key={p} className="rounded-full border border-border bg-background px-3 py-1 text-xs">{p}</span>
               ))}
             </div>
@@ -651,14 +651,14 @@ function CalendarShowcase() {
             Plan a month of content in an afternoon.
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Drag, drop, schedule. Approval workflows built-in, with publishing to your connected accounts.
+Drag, drop, schedule. Plan every channel in one place and review content before it goes out.
           </p>
           <ul className="mt-6 space-y-3">
             {[
-              "Drag-and-drop scheduling across platforms",
-              "Multi-platform publishing (Instagram, Facebook, TikTok, X, YouTube)",
-              "Client approval workflow for content sign-off",
-              "Recurring content templates and bulk scheduling",
+              "Drag-and-drop scheduling across channels",
+              "One calendar for content, campaigns and AI-generated drafts",
+              "Approval status tracked on every scheduled item",
+              "AI-generated content plans you can edit before scheduling",
             ].map((x) => (
               <li key={x} className="flex items-start gap-2 text-sm">
                 <Check className="mt-0.5 size-4 shrink-0 text-primary" /> {x}
@@ -759,18 +759,18 @@ function ClientPortal() {
     <section id="portal" className="bg-surface/60 py-24">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 lg:grid-cols-2">
         <div>
-          <SectionLabel>Client Portal</SectionLabel>
+          <SectionLabel>Client Workspace</SectionLabel>
           <h2 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
-            Give your clients a world-class experience.
+Keep every client's work in one place.
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            A client portal where clients track campaigns, approve content, read meeting summaries, and ask questions of an AI assistant.
+            Track campaigns, approve content and keep meeting summaries per client in your workspace. A client-facing login is a planned capability — the panel below is an illustrative mockup.
           </p>
           <ul className="mt-6 space-y-3">
             {[
-              "Live campaign tracking and reports",
-              "Content approvals",
-              "Auto-generated meeting summaries",
+              "Campaign tracking and reports per client",
+              "Content approval status on every item",
+              "AI-assisted meeting summaries",
               "AI chatbot that answers from the knowledge base you publish",
             ].map((x) => (
               <li key={x} className="flex items-start gap-2 text-sm">
@@ -781,7 +781,7 @@ function ClientPortal() {
         </div>
         <GlassCard className="overflow-hidden p-0">
           <div className="border-b border-border/60 bg-card p-3 text-xs">
-            <span className="font-medium">Acme Realty</span> <span className="text-muted-foreground">• Client view</span>
+            <span className="font-medium">Sample client</span> <span className="text-muted-foreground">• Illustrative mockup</span>
           </div>
           <div className="space-y-3 bg-gradient-to-br from-card to-surface p-4">
             <div className="rounded-xl border border-border/60 bg-background/60 p-3">
@@ -790,7 +790,7 @@ function ClientPortal() {
                 <div className="h-full w-3/4 rounded-full bg-gradient-to-r from-primary to-cyan-400" />
               </div>
               <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
-                <span>74% complete</span><span>$12k / $16k</span>
+                <span>Sample progress</span><span>Example data</span>
               </div>
             </div>
             <div className="rounded-xl border border-border/60 bg-background/60 p-3">
@@ -826,8 +826,8 @@ function Security() {
     { i: Lock, t: "Role-based access", d: "Roles stored in a separate table and checked server-side" },
     { i: ShieldCheck, t: "Encryption in transit & at rest", d: "HTTPS/TLS everywhere; encrypted storage by default" },
     { i: FileCheck2, t: "Row-level security", d: "Per-user and per-client data isolation at the database" },
-    { i: Eye, t: "Audit logs", d: "Sensitive actions are recorded for review" },
-    { i: UsersRound, t: "Privacy controls", d: "Granular permissions per team and client" },
+    { i: Eye, t: "Audit logging", d: "Account data exports and deletions are recorded" },
+    { i: UsersRound, t: "Privacy controls", d: "Export or delete your own account data at any time" },
     { i: Sparkles, t: "AI safety policy", d: "Clear rules for AI content — review before publish" },
   ];
   return (
@@ -871,19 +871,19 @@ function Automation() {
     { i: Wand2, l: "AI generation", c: "from-violet-500 to-purple-500" },
     { i: FileCheck2, l: "Approval", c: "from-amber-500 to-orange-500" },
     { i: CalendarDays, l: "Scheduling", c: "from-blue-500 to-cyan-500" },
-    { i: Send, l: "Publishing", c: "from-pink-500 to-rose-500" },
-    { i: BarChart3, l: "Analytics", c: "from-indigo-500 to-blue-500" },
+    { i: Send, l: "Review", c: "from-pink-500 to-rose-500" },
+    { i: BarChart3, l: "Reporting", c: "from-indigo-500 to-blue-500" },
   ];
   return (
     <section id="automation" className="bg-navy py-24 text-navy-foreground">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <SectionLabel>Workflows on autopilot</SectionLabel>
+          <SectionLabel>Connected workflow</SectionLabel>
           <h2 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
-            Automate the entire client lifecycle.
+Connect the whole client workflow.
           </h2>
           <p className="mt-4 text-lg text-white/70">
-            From the moment a client signs up to the moment they renew — every step is connected.
+Intake, AI drafts, approval, scheduling and reporting all live in the same workspace and stay linked.
           </p>
         </div>
         <div className="mt-14 grid grid-cols-2 gap-3 md:grid-cols-6">
@@ -906,10 +906,10 @@ function Automation() {
         </div>
         <div className="mt-10 flex flex-wrap justify-center gap-3 text-xs text-white/60">
           {[
-            { i: Workflow, l: "Visual workflow builder" },
-            { i: Zap, l: "Trigger-based automations" },
-            { i: GitBranch, l: "Conditional logic" },
-            { i: BellRing, l: "Real-time notifications" },
+            { i: Workflow, l: "Guided campaign wizard" },
+            { i: Zap, l: "AI-generated campaign plans" },
+            { i: GitBranch, l: "Linked campaign folders & assets" },
+            { i: BellRing, l: "Real-time updates" },
           ].map((t) => (
             <div key={t.l} className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5">
               <t.i className="size-3.5" /> {t.l}
