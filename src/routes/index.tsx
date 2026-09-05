@@ -169,7 +169,7 @@ function Hero() {
       <GradientBg />
       <div className="mx-auto max-w-7xl px-6 pt-16 pb-24 md:pt-24">
         <div className="mx-auto max-w-4xl text-center">
-          <SectionLabel>Launching: AI Video Studio v2</SectionLabel>
+          <SectionLabel>Includes the AI Video Studio</SectionLabel>
           <h1 className="mt-6 bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-5xl font-bold tracking-tight text-transparent md:text-7xl">
             Run Your Entire Digital Marketing Agency From One{" "}
             <span className="bg-gradient-to-r from-primary to-[oklch(0.6_0.18_220)] bg-clip-text text-transparent">
@@ -197,7 +197,7 @@ function Hero() {
             </Link>
           </div>
           <p className="mt-4 text-xs text-muted-foreground">
-            No credit card required • Free 14-day trial • Cancel anytime
+            Free to create an account while Agency OS is in early access — no billing, no card.
           </p>
         </div>
 
@@ -913,7 +913,7 @@ function Automation() {
         <div className="mt-10 flex flex-wrap justify-center gap-3 text-xs text-white/60">
           {[
             { i: Workflow, l: "Visual workflow builder" },
-            { i: Zap, l: "1,000+ automation triggers" },
+            { i: Zap, l: "Trigger-based automations" },
             { i: GitBranch, l: "Conditional logic" },
             { i: BellRing, l: "Real-time notifications" },
           ].map((t) => (
@@ -929,138 +929,33 @@ function Automation() {
 
 // ---------------- 12. Pricing ----------------
 
-const plans = [
-  {
-    name: "Starter", price: "49", desc: "For solo marketers and freelancers",
-    features: ["Up to 3 clients", "AI Copywriter (basic)", "Content calendar", "1 user", "Email support"],
-    cta: "Start free trial", featured: false,
-  },
-  {
-    name: "Agency", price: "149", desc: "For growing agencies",
-    features: ["Up to 25 clients", "All AI tools (unlimited)", "AI Video Studio", "Team chat & meetings", "Client portal", "Up to 10 users", "Priority support"],
-    cta: "Start free trial", featured: true,
-  },
-  {
-    name: "Enterprise", price: "Custom", desc: "For large agencies and teams",
-    features: ["Unlimited clients", "Unlimited users", "White-label portal", "SAML SSO + audit logs", "Dedicated success manager", "Custom integrations"],
-    cta: "Contact sales", featured: false,
-  },
-];
-
 function Pricing() {
   return (
     <section id="pricing" className="py-24">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="mx-auto max-w-2xl text-center">
-          <SectionLabel>Simple pricing</SectionLabel>
-          <h2 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
-            Pricing that scales with you.
-          </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            14-day free trial. No credit card required. Cancel anytime.
-          </p>
-          <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-700 dark:text-amber-400">
-            Placeholder pricing — billing is not yet active
-          </p>
-        </div>
-        <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3">
-          {plans.map((p) => (
-            <div
-              key={p.name}
-              className={`relative flex flex-col rounded-2xl border p-7 ${
-                p.featured
-                  ? "border-primary bg-gradient-to-b from-primary/10 to-transparent shadow-2xl shadow-primary/10 md:scale-105"
-                  : "border-border bg-card"
-              }`}
-            >
-              {p.featured && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-0.5 text-xs font-semibold text-primary-foreground">
-                  Most popular
-                </div>
-              )}
-              <div className="text-sm font-semibold">{p.name}</div>
-              <div className="mt-1 text-sm text-muted-foreground">{p.desc}</div>
-              <div className="mt-6 flex items-baseline gap-1">
-                {p.price === "Custom" ? (
-                  <span className="text-4xl font-bold">Custom</span>
-                ) : (
-                  <>
-                    <span className="text-5xl font-bold">${p.price}</span>
-                    <span className="text-sm text-muted-foreground">/mo</span>
-                  </>
-                )}
-              </div>
-              <ul className="mt-6 flex-1 space-y-3 text-sm">
-                {p.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2">
-                    <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              {p.name === "Enterprise" ? (
-                <Link
-                  to="/contact"
-                  className="mt-7 inline-flex items-center justify-center gap-1.5 rounded-xl border border-border bg-background px-5 py-3 text-sm font-semibold hover:bg-accent"
-                >
-                  {p.cta} <ArrowRight className="size-3.5" />
-                </Link>
-              ) : (
-                <Link
-                  to="/auth"
-                  search={{ mode: "signup", plan: p.name.toLowerCase() }}
-                  className={`mt-7 inline-flex items-center justify-center gap-1.5 rounded-xl px-5 py-3 text-sm font-semibold ${
-                    p.featured
-                      ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/30"
-                      : "border border-border bg-background hover:bg-accent"
-                  }`}
-                >
-                  {p.cta} <ArrowRight className="size-3.5" />
-                </Link>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ---------------- 13. Testimonials ----------------
-
-const testimonials = [
-  { quote: "Example testimonial placeholder — replace with a real customer quote before launch.", name: "Customer name", role: "Role, Company" },
-  { quote: "Example testimonial placeholder — replace with a real customer quote before launch.", name: "Customer name", role: "Role, Company" },
-  { quote: "Example testimonial placeholder — replace with a real customer quote before launch.", name: "Customer name", role: "Role, Company" },
-  { quote: "Example testimonial placeholder — replace with a real customer quote before launch.", name: "Customer name", role: "Role, Company" },
-];
-
-function Testimonials() {
-  return (
-    <section className="bg-surface/60 py-24">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="mx-auto max-w-2xl text-center">
-          <SectionLabel>Testimonials (placeholders)</SectionLabel>
-          <h2 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
-            Real teams. Real results.
-          </h2>
-          <p className="mt-3 text-sm text-muted-foreground">Replace with real customer quotes before launch.</p>
-        </div>
-        <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-2">
-          {testimonials.map((t, i) => (
-            <GlassCard key={`${t.name}-${i}`} className="p-6">
-              <p className="text-base leading-relaxed">"{t.quote}"</p>
-              <div className="mt-5 flex items-center gap-3">
-                <div className="grid size-10 place-items-center rounded-full bg-gradient-to-br from-primary to-navy text-sm font-semibold text-white">
-                  {t.name.split(" ").map((w) => w[0]).join("")}
-                </div>
-                <div>
-                  <div className="text-sm font-semibold">{t.name}</div>
-                  <div className="text-xs text-muted-foreground">{t.role}</div>
-                </div>
-              </div>
-            </GlassCard>
-          ))}
+      <div className="mx-auto max-w-3xl px-6 text-center">
+        <SectionLabel>Pricing</SectionLabel>
+        <h2 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
+          Pricing isn't published yet.
+        </h2>
+        <p className="mt-4 text-lg text-muted-foreground">
+          Agency OS is in early access. There are no paid plans, billing, or trials running
+          today — creating an account is free while we finish the commercial rollout. Talk to us
+          and we'll tell you exactly where pricing is heading before anything is charged.
+        </p>
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <Link
+            to="/auth"
+            search={{ mode: "signup" }}
+            className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/30 hover:bg-primary/90"
+          >
+            Create a free account <ArrowRight className="size-4" />
+          </Link>
+          <Link
+            to="/contact"
+            className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/60 px-6 py-3.5 text-sm font-semibold hover:bg-card"
+          >
+            Ask about pricing
+          </Link>
         </div>
       </div>
     </section>
@@ -1117,7 +1012,7 @@ function FinalCTA() {
               Build Your AI-Powered Marketing Agency Today
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-lg text-white/70">
-              Start your free 14-day trial. No credit card required.
+              Creating an account is free while Agency OS is in early access.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link to="/auth" search={{ mode: "signup" }} className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 text-sm font-semibold text-navy hover:bg-white/90">
@@ -1225,7 +1120,6 @@ export function Landing() {
         <Security />
         <Automation />
         <Pricing />
-        <Testimonials />
         <FAQ />
         <FinalCTA />
       </main>

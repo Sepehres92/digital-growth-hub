@@ -118,8 +118,9 @@ function BookDemoPage() {
               {loading ? "Sending..." : "Request demo"}
             </Button>
             <p className="text-center text-xs text-muted-foreground">
-              Prefer email? <a href="mailto:hello@example.com" className="text-primary hover:underline">hello@example.com</a>
+              Your request is stored securely and reviewed by our team.
             </p>
+
           </form>
         )}
       </main>

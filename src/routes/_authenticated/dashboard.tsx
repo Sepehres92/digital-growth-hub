@@ -17,17 +17,17 @@ function Dashboard() {
     },
   });
   const { data: clients = [] } = useQuery({
-    queryKey: ["clients"],
+    queryKey: ["clients", "live"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("clients").select("*");
+      const { data, error } = await supabase.from("clients").select("*").eq("is_demo", false);
       if (error) throw error;
       return data;
     },
   });
   const { data: campaigns = [] } = useQuery({
-    queryKey: ["campaigns"],
+    queryKey: ["campaigns", "live"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("campaigns").select("*");
+      const { data, error } = await supabase.from("campaigns").select("*").eq("is_demo", false);
       if (error) throw error;
       return data;
     },
@@ -60,7 +60,7 @@ function Dashboard() {
     <div className="mx-auto max-w-6xl space-y-8">
       <div>
         <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
-        <p className="mt-1 text-sm text-muted-foreground">A snapshot of your agency.</p>
+        <p className="mt-1 text-sm text-muted-foreground">A snapshot of your agency. Demo and sample records are excluded from these figures.</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">

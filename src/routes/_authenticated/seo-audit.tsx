@@ -1,11 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { auditUrl } from "@/lib/seo-audit.functions";
 import type { SeoAuditResult } from "@/lib/seo-audit.server";
 
-export const Route = createFileRoute("/seo-audit")({
+export const Route = createFileRoute("/_authenticated/seo-audit")({
   head: () => ({
     meta: [
       { title: "SEO Audit — Digital Agency OS" },
@@ -49,27 +49,7 @@ function SeoAuditPage() {
         : null;
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-body">
-      {/* Nav */}
-      <nav className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-md px-6 py-4 flex items-center justify-between">
-        <Link to="/" className="font-display text-xl tracking-tighter uppercase">
-          Vektra
-        </Link>
-        <div className="flex gap-4 text-xs font-bold uppercase tracking-widest">
-          <Link to="/search-console" className="text-muted-foreground hover:text-primary">
-            Search Console
-          </Link>
-          <Link to="/semrush" className="text-muted-foreground hover:text-primary">
-            Semrush
-          </Link>
-          <Link to="/social" className="text-muted-foreground hover:text-primary">
-            Social
-          </Link>
-          <Link to="/" className="text-muted-foreground hover:text-primary">
-            ← Back
-          </Link>
-        </div>
-      </nav>
+    <div className="font-body">
 
       {/* Hero / form */}
       <header className="relative pt-20 pb-12 px-6 overflow-hidden">

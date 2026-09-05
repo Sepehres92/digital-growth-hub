@@ -66,15 +66,70 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   return brandedErrorResponse();
 }
 
+
+const CSP = [
+  "default-src 'self'",
+  // TanStack Start injects inline hydration scripts; Tailwind emits inline styles.
+  "script-src 'self' 'unsafe-inline' https://cdn.gpteng.co",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' data: https://fonts.gstatic.com",
+  "img-src 'self' data: blob: https:",
+  "media-src 'self' data: blob: https:",
+  "connect-src 'self' https: wss:",
+  "worker-src 'self' blob:",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  // Only this app and the Lovable editor preview may frame the site.
+  "frame-ancestors 'self' https://lovable.dev https://*.lovable.dev https://*.lovable.app",
+  "upgrade-insecure-requests",
+].join("; ");
+
+const PERMISSIONS_POLICY = [
+  "accelerometer=()",
+  "autoplay=(self)",
+  "camera=()",
+  "display-capture=()",
+  "geolocation=()",
+  "gyroscope=()",
+  "magnetometer=()",
+  "microphone=()",
+  "payment=()",
+  "usb=()",
+  "interest-cohort=()",
+].join(", ");
+
+function withSecurityHeaders(response: Response): Response {
+  const headers = new Headers(response.headers);
+  headers.set("X-Content-Type-Options", "nosniff");
+  headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  headers.set("Permissions-Policy", PERMISSIONS_POLICY);
+  headers.set("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
+  headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+
+  const contentType = headers.get("content-type") ?? "";
+  if (contentType.includes("text/html")) {
+    // Clickjacking protection lives in frame-ancestors (X-Frame-Options cannot
+    // express the Lovable preview allowance and is superseded by CSP).
+    headers.set("Content-Security-Policy", CSP);
+  }
+
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      return withSecurityHeaders(await normalizeCatastrophicSsrResponse(response));
     } catch (error) {
       console.error(error);
-      return brandedErrorResponse();
+      return withSecurityHeaders(brandedErrorResponse());
     }
   },
 };

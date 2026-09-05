@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
@@ -10,7 +10,7 @@ import {
 } from "@/lib/semrush.functions";
 import type { SemrushTable } from "@/lib/semrush.server";
 
-export const Route = createFileRoute("/semrush")({
+export const Route = createFileRoute("/_authenticated/semrush")({
   head: () => ({
     meta: [
       { title: "Semrush — Digital Agency OS" },
@@ -102,24 +102,7 @@ function SemrushPage() {
     tab === "keywords" ? kw : tab === "backlinks" ? bl : tab === "competitors" ? co : cmp;
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-body">
-      <nav className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-md px-6 py-4 flex items-center justify-between">
-        <Link to="/" className="font-display text-xl tracking-tighter uppercase">
-          Vektra
-        </Link>
-        <div className="flex gap-4 text-xs font-bold uppercase tracking-widest">
-          <Link to="/seo-audit" className="text-muted-foreground hover:text-primary">
-            SEO Audit
-          </Link>
-          <Link to="/search-console" className="text-muted-foreground hover:text-primary">
-            Search Console
-          </Link>
-          <span className="text-primary">Semrush</span>
-          <Link to="/social" className="text-muted-foreground hover:text-primary">
-            Social
-          </Link>
-        </div>
-      </nav>
+    <div className="font-body">
 
       <main className="max-w-6xl mx-auto px-6 py-12">
         <header className="mb-10">

@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -14,7 +14,7 @@ import {
   Legend,
 } from "recharts";
 
-export const Route = createFileRoute("/search-console")({
+export const Route = createFileRoute("/_authenticated/search-console")({
   head: () => ({
     meta: [
       { title: "Search Console — Digital Agency OS" },
@@ -130,24 +130,7 @@ function GscPage() {
   });
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-body">
-      <nav className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-md px-6 py-4 flex items-center justify-between">
-        <Link to="/" className="font-display text-xl tracking-tighter uppercase">
-          Vektra
-        </Link>
-        <div className="flex gap-4 text-xs font-bold uppercase tracking-widest">
-          <Link to="/seo-audit" className="text-muted-foreground hover:text-primary">
-            SEO Audit
-          </Link>
-          <span className="text-primary">Search Console</span>
-          <Link to="/semrush" className="text-muted-foreground hover:text-primary">
-            Semrush
-          </Link>
-          <Link to="/social" className="text-muted-foreground hover:text-primary">
-            Social
-          </Link>
-        </div>
-      </nav>
+    <div className="font-body">
 
       <main className="max-w-6xl mx-auto px-6 py-12">
         <header className="mb-10">

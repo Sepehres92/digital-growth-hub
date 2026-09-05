@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
@@ -9,10 +9,10 @@ import {
   getTwitchUser,
 } from "@/lib/social.functions";
 
-export const Route = createFileRoute("/social")({
+export const Route = createFileRoute("/_authenticated/social")({
   head: () => ({
     meta: [
-      { title: "Social Crawler — Vektra" },
+      { title: "Social Crawler — Digital Agency OS" },
       {
         name: "description",
         content:
@@ -81,24 +81,7 @@ function SocialPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-body">
-      <nav className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-md px-6 py-4 flex items-center justify-between">
-        <Link to="/" className="font-display text-xl tracking-tighter uppercase">
-          Vektra
-        </Link>
-        <div className="flex gap-4 text-xs font-bold uppercase tracking-widest">
-          <Link to="/seo-audit" className="text-muted-foreground hover:text-primary">
-            SEO Audit
-          </Link>
-          <Link to="/search-console" className="text-muted-foreground hover:text-primary">
-            Search Console
-          </Link>
-          <Link to="/semrush" className="text-muted-foreground hover:text-primary">
-            Semrush
-          </Link>
-          <span className="text-primary">Social</span>
-        </div>
-      </nav>
+    <div className="font-body">
 
       <main className="max-w-6xl mx-auto px-6 py-12">
         <header className="mb-10">
