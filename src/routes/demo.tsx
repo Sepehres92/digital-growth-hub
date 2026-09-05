@@ -1,13 +1,14 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Play } from "lucide-react";
 
 export const Route = createFileRoute("/demo")({
-  head: () => ({
-    meta: [
-      { title: "Product Demo — Digital Agency OS" },
-      { name: "description", content: "Watch a guided product tour of Digital Agency OS." },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/demo",
+      title: "Product Demo — Digital Agency OS",
+      description: "Watch a guided product tour of Digital Agency OS: clients, AI content, video studio, scheduling, and reporting.",
+    }),
   component: DemoPage,
 });
 

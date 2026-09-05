@@ -1,13 +1,14 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { LegalLayout } from "@/components/LegalLayout";
 
 export const Route = createFileRoute("/terms")({
-  head: () => ({
-    meta: [
-      { title: "Terms of Service — Digital Agency OS" },
-      { name: "description", content: "Terms governing your use of Digital Agency OS, including AI-content disclaimers and acceptable use." },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/terms",
+      title: "Terms of Service — Digital Agency OS",
+      description: "The terms that govern your use of the Digital Agency OS platform, accounts, content, and AI features.",
+    }),
   component: TermsPage,
 });
 

@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
@@ -37,36 +38,12 @@ import {
 
 export const Route = createFileRoute("/blog")({
   component: BlogPage,
-  head: () => ({
-    meta: [
-      { title: "Daily Blog – Digital Agency OS" },
-      {
-        name: "description",
-        content:
-          "Share daily updates, ideas, and stories on the Digital Agency OS community blog.",
-      },
-      { property: "og:title", content: "Daily Blog – Digital Agency OS" },
-      {
-        property: "og:description",
-        content:
-          "Daily updates, ideas, and stories from the Digital Agency OS community.",
-      },
-      { property: "og:type", content: "article" },
-    ],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Blog",
-          name: "Daily Blog – Digital Agency OS",
-          url: "https://impact-reach-tool.lovable.app/blog",
-          author: { "@type": "Organization", name: "Digital Agency OS" },
-          publisher: { "@type": "Organization", name: "Digital Agency OS" },
-        }),
-      },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/blog",
+      title: "Daily Blog — Digital Agency OS",
+      description: "Marketing insights, AI content tips, and product updates from the Digital Agency OS team.",
+    }),
 });
 
 type Post = {

@@ -1,13 +1,14 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { LegalLayout } from "@/components/LegalLayout";
 
 export const Route = createFileRoute("/security")({
-  head: () => ({
-    meta: [
-      { title: "Security — Digital Agency OS" },
-      { name: "description", content: "How Digital Agency OS protects your data." },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/security",
+      title: "Security — Digital Agency OS",
+      description: "How Digital Agency OS protects your data: encryption in transit, access control, row-level isolation, and vulnerability reporting.",
+    }),
   component: SecurityPage,
 });
 

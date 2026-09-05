@@ -1,13 +1,14 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { LegalLayout } from "@/components/LegalLayout";
 
 export const Route = createFileRoute("/cookies")({
-  head: () => ({
-    meta: [
-      { title: "Cookie Policy — Digital Agency OS" },
-      { name: "description", content: "How Digital Agency OS uses cookies and local storage." },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/cookies",
+      title: "Cookie Policy — Digital Agency OS",
+      description: "Which cookies and browser storage Digital Agency OS uses, why, and how to manage them.",
+    }),
   component: CookiesPage,
 });
 

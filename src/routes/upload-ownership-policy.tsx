@@ -1,13 +1,14 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { LegalLayout } from "@/components/LegalLayout";
 
 export const Route = createFileRoute("/upload-ownership-policy")({
-  head: () => ({
-    meta: [
-      { title: "Upload & Ownership Policy — Digital Agency OS" },
-      { name: "description", content: "Who owns the content you upload, and the rights you grant." },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/upload-ownership-policy",
+      title: "Upload & Ownership Policy — Digital Agency OS",
+      description: "Who owns uploaded files and AI output in Digital Agency OS, and the licence you grant when you upload.",
+    }),
   component: UploadPolicyPage,
 });
 
