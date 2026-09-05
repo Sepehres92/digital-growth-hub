@@ -137,6 +137,14 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    // Strip any OAuth/recovery credentials from the address bar + history
+    // as soon as the app mounts, and again once the session is established.
+    cleanAuthUrl();
+    const { data: sub } = supabase.auth.onAuthStateChange(() => cleanAuthUrl());
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
