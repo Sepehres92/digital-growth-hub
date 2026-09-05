@@ -651,7 +651,7 @@ function CalendarShowcase() {
             Plan a month of content in an afternoon.
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-Drag, drop, schedule. Plan — plan every channel in one place and review content before it goes out.
+Drag, drop, schedule. Plan every channel in one place and review content before it goes out.
           </p>
           <ul className="mt-6 space-y-3">
             {[
