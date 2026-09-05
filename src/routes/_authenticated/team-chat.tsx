@@ -760,7 +760,8 @@ function TeamChatPage() {
             <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
               <div className="text-center">
                 <MessageSquare className="mx-auto size-10 opacity-40" />
-                <p className="mt-2">Select or create a channel to start chatting</p>
+                <h1 className="mt-2 text-base font-semibold text-foreground">Team chat</h1>
+                <p className="mt-1">Select or create a channel to start chatting</p>
                 <Button className="mt-3" onClick={() => setNewChanOpen(true)}><Plus className="size-4" /> New channel</Button>
               </div>
             </div>
