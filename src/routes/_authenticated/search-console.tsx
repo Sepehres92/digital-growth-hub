@@ -166,7 +166,7 @@ function GscPage() {
               <select
                 value={site}
                 onChange={(e) => setSite(e.target.value)}
-                className="w-full bg-background border border-border rounded-sm px-3 py-2 text-sm"
+                className="min-h-11 w-full bg-background border border-border rounded-sm px-3 py-2 text-sm"
               >
                 {sitesQuery.data.sites.map((s) => (
                   <option key={s.siteUrl} value={s.siteUrl}>
@@ -183,7 +183,7 @@ function GscPage() {
             <select
               value={days}
               onChange={(e) => setDays(Number(e.target.value))}
-              className="bg-background border border-border rounded-sm px-3 py-2 text-sm"
+              className="min-h-11 bg-background border border-border rounded-sm px-3 py-2 text-sm"
             >
               <option value={7}>Last 7 days</option>
               <option value={28}>Last 28 days</option>
