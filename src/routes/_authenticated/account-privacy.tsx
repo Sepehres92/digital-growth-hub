@@ -31,7 +31,7 @@ function PrivacyAndDataPage() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `agency-os-export-${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = `agency-os-export-v${(data as { schema_version?: number }).schema_version ?? 1}-${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
       URL.revokeObjectURL(url);
       toast.success("Your data export has been downloaded.");
