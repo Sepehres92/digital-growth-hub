@@ -160,12 +160,18 @@ function OnboardingPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Smart Onboarding</h1>
+        <h1 className="text-2xl font-semibold">Set up your workspace</h1>
         <p className="text-sm text-muted-foreground">
-          Step {step + 1} of {TOTAL} · You can save & continue later
+          Setup in progress — step {step + 1} of {TOTAL}. Your answers are saved as you go,
+          and you can stop and come back at any time.
         </p>
-        <Progress value={progress} className="mt-3" />
+        <Progress
+          value={progress}
+          className="mt-3"
+          aria-label={`Setup progress: step ${step + 1} of ${TOTAL}`}
+        />
       </div>
+
 
       {step === 0 && (
         <Card>
