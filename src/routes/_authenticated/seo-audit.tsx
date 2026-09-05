@@ -86,7 +86,7 @@ function SeoAuditPage() {
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground px-6 py-3 text-xs font-bold uppercase tracking-widest rounded-sm transition-all shadow-lg shadow-primary/20"
+              className="min-h-11 bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground px-6 py-3 text-xs font-bold uppercase tracking-widest rounded-sm transition-all shadow-lg shadow-primary/20"
             >
               {mutation.isPending ? "Auditing..." : "Run Audit"}
             </button>

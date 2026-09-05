@@ -110,7 +110,7 @@ function SocialPage() {
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`px-4 py-2 text-xs font-bold uppercase tracking-widest border rounded-sm transition ${
+              className={`min-h-11 px-4 py-2 text-xs font-bold uppercase tracking-widest border rounded-sm transition ${
                 tab === t
                   ? "bg-primary text-primary-foreground border-primary"
                   : "border-border text-muted-foreground hover:text-foreground"
@@ -131,7 +131,7 @@ function SocialPage() {
                 value={siteUrl}
                 onChange={(e) => setSiteUrl(e.target.value)}
                 placeholder="https://example.com"
-                className="w-full bg-background border border-border rounded-sm px-3 py-2 text-sm"
+                className="min-h-11 w-full bg-background border border-border rounded-sm px-3 py-2 text-sm"
               />
             </div>
           )}
@@ -144,7 +144,7 @@ function SocialPage() {
                 value={profileUrl}
                 onChange={(e) => setProfileUrl(e.target.value)}
                 placeholder="https://www.tiktok.com/@username"
-                className="w-full bg-background border border-border rounded-sm px-3 py-2 text-sm"
+                className="min-h-11 w-full bg-background border border-border rounded-sm px-3 py-2 text-sm"
               />
             </div>
           )}
@@ -157,7 +157,7 @@ function SocialPage() {
                 value={twitchLogin}
                 onChange={(e) => setTwitchLogin(e.target.value)}
                 placeholder="twitchdev"
-                className="w-full bg-background border border-border rounded-sm px-3 py-2 text-sm"
+                className="min-h-11 w-full bg-background border border-border rounded-sm px-3 py-2 text-sm"
               />
             </div>
           )}
@@ -170,7 +170,7 @@ function SocialPage() {
             <button
               onClick={run}
               disabled={active.isPending}
-              className="px-5 py-2 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-widest rounded-sm disabled:opacity-50"
+              className="min-h-11 min-w-11 px-5 py-2 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-widest rounded-sm disabled:opacity-50"
             >
               {active.isPending ? "Loading…" : "Run"}
             </button>
