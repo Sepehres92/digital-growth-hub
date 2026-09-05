@@ -162,15 +162,18 @@ function AuthedLayout() {
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex h-16 items-center gap-3 border-b border-border bg-card px-4 md:px-6">
           <button
-            className="md:hidden"
+            className="-ml-2 grid size-11 shrink-0 place-items-center rounded-md text-foreground hover:bg-accent md:hidden"
             onClick={() => setOpen((o) => !o)}
-            aria-label="Toggle menu"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
           >
             {open ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
-          <h1 className="text-sm font-medium text-muted-foreground">
+          {/* Non-heading breadcrumb: each page owns the single <h1>. */}
+          <p className="text-sm font-medium text-muted-foreground">
             {nav.find((n) => n.to === pathname)?.label ?? ""}
-          </h1>
+          </p>
+
         </header>
         <DemoBanner />
         <main className="flex-1 overflow-auto p-4 md:p-8">
