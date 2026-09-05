@@ -175,11 +175,11 @@ function BlogPage() {
     <div className="min-h-dvh bg-surface">
       <header className="border-b border-border bg-card">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
-          <Link to="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+          <Link to="/" className="inline-flex min-h-11 min-w-11 items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
             <ArrowLeft className="size-4" /> Home
           </Link>
           <h1 className="text-lg font-semibold">Daily Blog</h1>
-          <Link to="/auth" className="text-sm text-primary hover:underline">
+          <Link to="/auth" className="inline-flex min-h-11 min-w-11 items-center justify-center text-sm text-primary hover:underline">
             Sign in
           </Link>
         </div>
