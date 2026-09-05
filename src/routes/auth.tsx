@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { setPendingConsent } from "@/lib/consent-pending";
 
 export const Route = createFileRoute("/auth")({
   validateSearch: z.object({
@@ -105,12 +106,28 @@ function AuthPage() {
               : "Get started in seconds"}
           </p>
 
+          <label className="mt-6 flex items-start gap-2 text-xs text-muted-foreground">
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              className="mt-0.5 size-4 rounded border-border"
+            />
+            <span>
+              I agree to the{" "}
+              <Link to="/terms" className="text-primary hover:underline">Terms</Link>{" "}
+              and{" "}
+              <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>.
+              Required to create an account, including with Google.
+            </span>
+          </label>
+
           <Button
             type="button"
             variant="outline"
-            className="mt-6 w-full"
+            className="mt-4 w-full"
             onClick={handleGoogle}
-            disabled={loading}
+            disabled={loading || !consent}
           >
             <svg className="size-4" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -151,24 +168,7 @@ function AuthPage() {
                 className="mt-1.5"
               />
             </div>
-            {mode === "signup" && (
-              <label className="flex items-start gap-2 text-xs text-muted-foreground">
-                <input
-                  type="checkbox"
-                  checked={consent}
-                  onChange={(e) => setConsent(e.target.checked)}
-                  className="mt-0.5 size-4 rounded border-border"
-                  required
-                />
-                <span>
-                  I agree to the{" "}
-                  <Link to="/terms" className="text-primary hover:underline">Terms</Link>{" "}
-                  and{" "}
-                  <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>.
-                </span>
-              </label>
-            )}
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full" disabled={loading || (mode === "signup" && !consent)}>
               {loading ? "..." : mode === "login" ? "Sign in" : "Create account"}
             </Button>
             {mode === "login" && (
