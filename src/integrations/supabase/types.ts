@@ -2976,6 +2976,42 @@ export type Database = {
           },
         ]
       }
+      user_consents: {
+        Row: {
+          accepted_at: string
+          consent_source: string
+          created_at: string
+          id: string
+          policy_version: string
+          privacy_accepted: boolean
+          terms_accepted: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accepted_at?: string
+          consent_source: string
+          created_at?: string
+          id?: string
+          policy_version: string
+          privacy_accepted?: boolean
+          terms_accepted?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accepted_at?: string
+          consent_source?: string
+          created_at?: string
+          id?: string
+          policy_version?: string
+          privacy_accepted?: boolean
+          terms_accepted?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -3359,6 +3395,7 @@ export type Database = {
         Args: { _meeting_id: string; _user_id: string }
         Returns: boolean
       }
+      count_user_records: { Args: { _user_id: string }; Returns: Json }
       export_my_storage_objects: {
         Args: never
         Returns: {
@@ -3389,6 +3426,15 @@ export type Database = {
       owns_seo_ppc_consultation: {
         Args: { _consultation_id: string; _user_id: string }
         Returns: boolean
+      }
+      purge_user_data: { Args: { _user_id: string }; Returns: Json }
+      user_data_tables: {
+        Args: never
+        Returns: {
+          delete_order: number
+          owner_column: string
+          table_name: string
+        }[]
       }
     }
     Enums: {
