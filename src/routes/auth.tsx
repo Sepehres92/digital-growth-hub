@@ -123,7 +123,7 @@ function AuthPage() {
   return (
     <div className="flex min-h-dvh items-center justify-center bg-surface px-4 py-12">
       <div className="w-full max-w-md">
-        <Link to="/" className="mb-8 flex items-center justify-center gap-2">
+        <Link to="/" className="mx-auto mb-8 flex min-h-11 w-fit items-center justify-center gap-2 px-3">
           <div className="size-7 rounded-md bg-primary" />
           <span className="font-semibold">Agency OS</span>
         </Link>
@@ -137,18 +137,18 @@ function AuthPage() {
               : "Get started in seconds"}
           </p>
 
-          <label className="mt-6 flex min-h-11 items-start gap-2 py-2 text-xs text-muted-foreground">
+          <label className="mt-6 flex min-h-11 items-start gap-4 py-2 text-xs text-muted-foreground">
             <input
               type="checkbox"
               checked={consent}
               onChange={(e) => setConsent(e.target.checked)}
-              className="mt-0.5 size-5 shrink-0 rounded border-border"
+              className="tap-checkbox mt-0.5"
             />
             <span>
               I agree to the{" "}
-              <Link to="/terms" className="text-primary hover:underline">Terms</Link>{" "}
+              <Link to="/terms" className="tap-link text-primary hover:underline">Terms</Link>{" "}
               and{" "}
-              <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>.
+              <Link to="/privacy" className="tap-link text-primary hover:underline">Privacy Policy</Link>.
               Required to create an account, including with Google.
             </span>
           </label>
