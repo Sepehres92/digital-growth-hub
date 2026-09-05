@@ -17,10 +17,10 @@ function DemoPage() {
     <div className="min-h-dvh bg-background text-foreground">
       <header className="border-b border-border/60">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <Link to="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+          <Link to="/" className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
             <ArrowLeft className="size-4" /> Back to home
           </Link>
-          <Link to="/book-demo" className="text-sm font-medium text-primary hover:underline">Book a live demo</Link>
+          <Link to="/book-demo" className="inline-flex min-h-11 items-center text-sm font-medium text-primary hover:underline">Book a live demo</Link>
         </div>
       </header>
       <main className="mx-auto max-w-5xl px-6 py-12">

@@ -59,7 +59,7 @@ function BookDemoPage() {
     <div className="min-h-dvh bg-background text-foreground">
       <header className="border-b border-border/60">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4">
-          <Link to="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+          <Link to="/" className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
             <ArrowLeft className="size-4" /> Back to home
           </Link>
           <Link to="/auth" className="inline-flex min-h-11 items-center text-sm font-medium">Sign in</Link>
@@ -80,27 +80,27 @@ function BookDemoPage() {
           <div className="rounded-xl border border-border bg-card p-8 text-center">
             <h2 className="text-xl font-semibold">Thanks — request received</h2>
             <p className="mt-2 text-sm text-muted-foreground">We'll email you shortly to schedule a time.</p>
-            <Link to="/" className="mt-6 inline-flex text-sm font-medium text-primary hover:underline">Back to home</Link>
+            <Link to="/" className="mt-6 inline-flex min-h-11 items-center text-sm font-medium text-primary hover:underline">Back to home</Link>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4 rounded-xl border border-border bg-card p-8">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <Label htmlFor="name">Full name</Label>
-                <Input id="name" name="name" required minLength={2} maxLength={120} className="mt-1.5" />
+                <Input id="name" name="name" required minLength={2} maxLength={120} className="mt-1.5 min-h-11" />
               </div>
               <div>
                 <Label htmlFor="company">Company</Label>
-                <Input id="company" name="company" required maxLength={160} className="mt-1.5" />
+                <Input id="company" name="company" required maxLength={160} className="mt-1.5 min-h-11" />
               </div>
             </div>
             <div>
               <Label htmlFor="email">Work email</Label>
-              <Input id="email" name="email" type="email" required maxLength={200} className="mt-1.5" />
+              <Input id="email" name="email" type="email" required maxLength={200} className="mt-1.5 min-h-11" />
             </div>
             <div>
               <Label htmlFor="message">What would you like to see?</Label>
-              <Textarea id="message" name="message" rows={4} maxLength={2000} className="mt-1.5" />
+              <Textarea id="message" name="message" rows={4} maxLength={2000} className="mt-1.5 min-h-11" />
             </div>
             <div aria-hidden="true" className="absolute left-[-9999px] h-0 w-0 overflow-hidden">
               <label htmlFor="website">Leave this field empty</label>
