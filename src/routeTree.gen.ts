@@ -16,7 +16,6 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SecurityRouteImport } from './routes/security'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as DemoRouteImport } from './routes/demo'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BookDemoRouteImport } from './routes/book-demo'
@@ -90,11 +89,6 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoRoute = DemoRouteImport.update({
-  id: '/demo',
-  path: '/demo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CookiesRoute = CookiesRouteImport.update({
@@ -315,7 +309,6 @@ export interface FileRoutesByFullPath {
   '/book-demo': typeof BookDemoRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
-  '/demo': typeof DemoRoute
   '/index': typeof Char91indexChar93Route
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -363,7 +356,6 @@ export interface FileRoutesByTo {
   '/book-demo': typeof BookDemoRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
-  '/demo': typeof DemoRoute
   '/index': typeof Char91indexChar93Route
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -413,7 +405,6 @@ export interface FileRoutesById {
   '/book-demo': typeof BookDemoRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
-  '/demo': typeof DemoRoute
   '/index': typeof Char91indexChar93Route
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -463,7 +454,6 @@ export interface FileRouteTypes {
     | '/book-demo'
     | '/contact'
     | '/cookies'
-    | '/demo'
     | '/index'
     | '/privacy'
     | '/reset-password'
@@ -511,7 +501,6 @@ export interface FileRouteTypes {
     | '/book-demo'
     | '/contact'
     | '/cookies'
-    | '/demo'
     | '/index'
     | '/privacy'
     | '/reset-password'
@@ -560,7 +549,6 @@ export interface FileRouteTypes {
     | '/book-demo'
     | '/contact'
     | '/cookies'
-    | '/demo'
     | '/index'
     | '/privacy'
     | '/reset-password'
@@ -610,7 +598,6 @@ export interface RootRouteChildren {
   BookDemoRoute: typeof BookDemoRoute
   ContactRoute: typeof ContactRoute
   CookiesRoute: typeof CookiesRoute
-  DemoRoute: typeof DemoRoute
   Char91indexChar93Route: typeof Char91indexChar93Route
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -670,13 +657,6 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo': {
-      id: '/demo'
-      path: '/demo'
-      fullPath: '/demo'
-      preLoaderRoute: typeof DemoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cookies': {
@@ -1042,7 +1022,6 @@ const rootRouteChildren: RootRouteChildren = {
   BookDemoRoute: BookDemoRoute,
   ContactRoute: ContactRoute,
   CookiesRoute: CookiesRoute,
-  DemoRoute: DemoRoute,
   Char91indexChar93Route: Char91indexChar93Route,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
