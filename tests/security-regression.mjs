@@ -69,7 +69,7 @@ check(
 
 // 4. service role still works
 if (serviceKey) {
-  const svc = await rest("social_account_tokens?select=id&limit=1", serviceKey);
+  const svc = await rest("social_account_tokens?select=account_id&limit=1", serviceKey);
   check("service role can read social_account_tokens", svc.status === 200, `status ${svc.status}`);
 } else {
   check("service role check skipped (no key in env)", true);
