@@ -33,15 +33,22 @@ function AuthedLayout() {
         return;
       }
       setChecking(false);
-      // Auto-redirect to onboarding if profile not completed
-      if (pathname !== "/onboarding" && pathname !== "/demo-templates") {
+      // Single source of truth for setup state: the persisted profile flag.
+      if (pathname !== "/demo-templates") {
         getProfile({})
           .then((r) => {
             const completed = (r.profile as { onboarding_completed?: boolean } | null)?.onboarding_completed;
-            if (!completed) navigate({ to: "/onboarding" });
+            if (!completed && pathname !== "/onboarding") {
+              navigate({ to: "/onboarding" });
+            } else if (completed && pathname === "/onboarding") {
+              // Setup is already finished — send them to the editable profile
+              // instead of resuming a wizard at "Step 5 of 5".
+              navigate({ to: "/business-profile" });
+            }
           })
           .catch(() => {});
       }
+
     });
     return () => sub.subscription.unsubscribe();
   }, [navigate, getProfile, pathname]);
