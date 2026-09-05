@@ -159,7 +159,7 @@ function ClientsPage() {
                 {c.website && (
                   <div className="flex justify-between gap-2">
                     <dt className="text-muted-foreground">Website</dt>
-                    <dd className="truncate"><a href={c.website} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-primary hover:underline"><Globe className="size-3" />{c.website.replace(/^https?:\/\//, "")}</a></dd>
+                    <dd className="truncate"><a href={c.website} target="_blank" rel="noreferrer" className="tap-link items-center gap-1 text-primary hover:underline"><Globe className="size-3" />{c.website.replace(/^https?:\/\//, "")}</a></dd>
                   </div>
                 )}
                 <div className="flex justify-between"><dt className="text-muted-foreground">Monthly</dt><dd className="font-medium tabular-nums">${Number(c.monthly_budget ?? 0).toLocaleString()}</dd></div>

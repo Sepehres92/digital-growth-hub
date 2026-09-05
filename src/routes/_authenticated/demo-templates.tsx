@@ -66,7 +66,7 @@ function DemoTemplates() {
         ))}
       </div>
       <div className="text-center text-sm">
-        <Link to="/onboarding" className="text-muted-foreground underline">
+        <Link to="/onboarding" className="tap-link text-muted-foreground underline">
           ← Back to onboarding
         </Link>
       </div>

@@ -40,7 +40,7 @@ export function RoleGuard({ role, anyOf, children, fallback }: RoleGuardProps) {
               you access, or head back to your dashboard.
             </p>
           </div>
-          <Button asChild variant="outline">
+          <Button asChild variant="outline" className="min-h-11">
             <Link to="/dashboard">Back to dashboard</Link>
           </Button>
         </div>
