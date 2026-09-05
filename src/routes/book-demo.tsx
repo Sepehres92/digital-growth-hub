@@ -72,7 +72,7 @@ function BookDemoPage() {
           </div>
           <div>
             <h1 className="text-3xl font-semibold tracking-tight">Book a demo</h1>
-            <p className="text-sm text-muted-foreground">Tell us about your agency and we'll reach out within 1 business day.</p>
+            <p className="text-sm text-muted-foreground">Tell us about your agency and we'll get back to you by email.</p>
           </div>
         </div>
 

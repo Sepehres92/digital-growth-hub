@@ -379,10 +379,10 @@ const features = [
   { icon: Film, title: "AI Video Studio", desc: "Scripts, voiceovers, subtitles, and renders — fully automated.", color: "from-orange-500 to-red-500", anchor: "#video-studio" },
   { icon: Users, title: "CRM & Leads", desc: "Capture, qualify, and convert leads in a unified pipeline.", color: "from-emerald-500 to-teal-500", anchor: "#automation" },
   { icon: CalendarDays, title: "Content Calendar", desc: "Plan months ahead with drag-and-drop scheduling.", color: "from-blue-500 to-cyan-500", anchor: "#calendar" },
-  { icon: Send, title: "Social Scheduler", desc: "Publish to every platform with one click and approval flows.", color: "from-indigo-500 to-blue-500", anchor: "#calendar" },
+  { icon: Send, title: "Social Scheduler", desc: "Schedule posts to your connected social accounts from one calendar.", color: "from-indigo-500 to-blue-500", anchor: "#calendar" },
   { icon: MessagesSquare, title: "Team Collaboration", desc: "Chat, meetings, tasks, and shared notes in one workspace.", color: "from-amber-500 to-orange-500", anchor: "#team" },
-  { icon: UserCircle2, title: "Client Portal", desc: "White-label portal for approvals, reports, and updates.", color: "from-fuchsia-500 to-pink-500", anchor: "#portal" },
-  { icon: Bot, title: "AI Chatbot", desc: "24/7 client assistant trained on each client's data safely.", color: "from-cyan-500 to-sky-500", anchor: "#portal" },
+  { icon: UserCircle2, title: "Client Portal", desc: "Client portal for approvals, reports, and updates.", color: "from-fuchsia-500 to-pink-500", anchor: "#portal" },
+  { icon: Bot, title: "AI Chatbot", desc: "Client assistant that answers from the knowledge base you publish.", color: "from-cyan-500 to-sky-500", anchor: "#portal" },
 ];
 
 function CoreFeatures() {
@@ -651,13 +651,13 @@ function CalendarShowcase() {
             Plan a month of content in an afternoon.
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Drag, drop, schedule. Approval workflows built-in. Publish to every platform automatically.
+            Drag, drop, schedule. Approval workflows built-in, with publishing to your connected accounts.
           </p>
           <ul className="mt-6 space-y-3">
             {[
               "Drag-and-drop scheduling across platforms",
               "Multi-platform publishing (Instagram, Facebook, TikTok, X, YouTube)",
-              "Client approval workflows with one-click sign-off",
+              "Client approval workflow for content sign-off",
               "Recurring content templates and bulk scheduling",
             ].map((x) => (
               <li key={x} className="flex items-start gap-2 text-sm">
@@ -764,14 +764,14 @@ function ClientPortal() {
             Give your clients a world-class experience.
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            A white-label portal where clients track campaigns, approve content, read meeting summaries, and get instant AI support.
+            A client portal where clients track campaigns, approve content, read meeting summaries, and ask questions of an AI assistant.
           </p>
           <ul className="mt-6 space-y-3">
             {[
               "Live campaign tracking and reports",
-              "One-click content approvals",
+              "Content approvals",
               "Auto-generated meeting summaries",
-              "24/7 AI chatbot support trained on their data",
+              "AI chatbot that answers from the knowledge base you publish",
             ].map((x) => (
               <li key={x} className="flex items-start gap-2 text-sm">
                 <Check className="mt-0.5 size-4 shrink-0 text-primary" /> {x}
@@ -1032,7 +1032,6 @@ function Footer() {
       { label: "Features", href: "#features" },
       { label: "AI Studio", href: "#showcase" },
       { label: "Pricing", href: "#pricing" },
-      { label: "Watch demo", to: "/demo" },
       { label: "Book demo", to: "/book-demo" },
     ]},
     { h: "Company", l: [
