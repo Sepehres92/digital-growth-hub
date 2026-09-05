@@ -149,26 +149,38 @@ function AuthPage() {
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
+                name="email"
                 type="email"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="mt-1.5"
+                className="mt-1.5 min-h-11"
               />
             </div>
             <div>
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
+                name="password"
                 type="password"
+                autoComplete={mode === "login" ? "current-password" : "new-password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                minLength={6}
-                className="mt-1.5"
+                minLength={mode === "signup" ? 12 : 6}
+                aria-describedby={mode === "signup" ? "password-help" : undefined}
+                className="mt-1.5 min-h-11"
               />
+              {mode === "signup" && (
+                <p id="password-help" className="mt-1.5 text-xs text-muted-foreground">
+                  Use at least 12 characters. A passphrase of three or four unrelated
+                  words (for example “amber-harbour-drift-92”) is easier to remember and
+                  much harder to guess than a short password.
+                </p>
+              )}
             </div>
-            <Button type="submit" className="w-full" disabled={loading || (mode === "signup" && !consent)}>
+            <Button type="submit" className="min-h-11 w-full" disabled={loading || (mode === "signup" && !consent)}>
               {loading ? "..." : mode === "login" ? "Sign in" : "Create account"}
             </Button>
             {mode === "login" && (
@@ -182,12 +194,13 @@ function AuthPage() {
                   if (error) toast.error(error.message);
                   else toast.success("Password reset email sent");
                 }}
-                className="block w-full text-center text-xs text-muted-foreground hover:text-primary"
+                className="flex min-h-11 w-full items-center justify-center text-center text-xs text-muted-foreground hover:text-primary"
               >
                 Forgot password?
               </button>
             )}
           </form>
+
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
             {mode === "login" ? "New here?" : "Already have an account?"}{" "}
