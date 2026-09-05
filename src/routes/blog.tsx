@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
+import { sanitizeRichText } from "@/lib/sanitize";
+import { createBlogPost, deleteBlogPost } from "@/lib/blog.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -208,7 +211,7 @@ function BlogPage() {
           <CardHeader>
             <CardTitle className="text-base">Write a post</CardTitle>
             <p className="text-xs text-muted-foreground">
-              Open to everyone — no account required.
+              Sign in to publish a post. Posts are checked for unsafe content before they're saved.
             </p>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -323,8 +326,8 @@ function BlogPage() {
               data-placeholder="What's on your mind?"
             />
 
-            <Button onClick={submit} disabled={loading}>
-              {loading ? "Posting…" : "Publish"}
+            <Button onClick={submit} disabled={loading || !userId}>
+              {loading ? "Posting…" : userId ? "Publish" : "Sign in to publish"}
             </Button>
           </CardContent>
         </Card>
@@ -352,7 +355,7 @@ function BlogPage() {
               <CardContent>
                 <div
                   className="prose prose-sm max-w-none text-sm"
-                  dangerouslySetInnerHTML={{ __html: sanitize(p.content) }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeRichText(p.content) }}
                 />
 
               </CardContent>
