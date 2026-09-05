@@ -2,11 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight, Sparkles, Wand2, Image as ImageIcon, Film, Users, CalendarDays,
   Send, MessagesSquare, UserCircle2, Bot, ShieldCheck, FolderKanban, UsersRound,
-  Check, Play, Workflow, Zap, Lock, FileCheck2, Eye, ChevronDown, Twitter,
-  Linkedin, Github, Instagram, Building2, Home, Megaphone, Store, BarChart3,
+  Check, Play, Workflow, Zap, Lock, FileCheck2, Eye, ChevronDown, Building2, Home, Megaphone, Store, BarChart3,
   PenLine, Mic2, Captions, Smartphone, ListChecks, GitBranch, BellRing,
 } from "lucide-react";
 import { useState } from "react";
+import { pageHead } from "@/lib/seo";
 
 const faqs = [
   { q: "How does AI content work?", a: "Our AI Copywriter, Image Generator, and Video Studio are trained on each client's brand voice, audience, and assets. You describe what you need; we generate on-brand variants in seconds. You stay in full creative control." },
@@ -19,19 +19,12 @@ const faqs = [
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    meta: [
-      { title: "Digital Agency OS — AI-Powered Marketing Agency Platform" },
-      {
-        name: "description",
-        content:
-          "Run your entire digital marketing agency from one AI-powered platform. CRM, AI content, video studio, scheduling, team chat, and client portal.",
-      },
-      { property: "og:title", content: "Digital Agency OS — AI-Powered Marketing Platform" },
-      { property: "og:description", content: "All-in-one AI platform for modern marketing agencies. Clients, content, video, scheduling, automation." },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: "/" },
-    ],
-    links: [{ rel: "canonical", href: "/" }],
+    ...pageHead({
+      path: "/",
+      title: "Digital Agency OS — AI-Powered Marketing Agency Platform",
+      description:
+        "Run your entire digital marketing agency from one AI-powered platform: CRM, AI content, video studio, scheduling, team chat, and a client portal.",
+    }),
     scripts: [
       {
         type: "application/ld+json",
@@ -101,24 +94,25 @@ function GlassCard({
 function AnnouncementBar() {
   return (
     <div className="relative z-50 border-b border-border/60 bg-navy text-navy-foreground">
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-6 py-2.5 text-sm md:flex-row">
+      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-1 px-6 py-1.5 text-sm md:flex-row">
         <div className="flex items-center gap-2">
           <Sparkles className="size-4 text-primary" />
-          <span className="opacity-90">
+          <span className="hidden opacity-90 sm:inline">
             Now powered by AI Content, AI Video, and Social Automation
           </span>
+          <span className="opacity-90 sm:hidden">AI content, video &amp; social automation</span>
         </div>
         <div className="flex items-center gap-2">
           <Link
             to="/auth"
             search={{ mode: "signup" }}
-            className="rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+            className="inline-flex min-h-11 items-center rounded-md bg-primary px-4 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
           >
             Start Free
           </Link>
           <Link
             to="/book-demo"
-            className="rounded-md border border-white/20 px-3 py-1.5 text-xs font-semibold hover:bg-white/10"
+            className="inline-flex min-h-11 items-center rounded-md border border-white/20 px-4 text-xs font-semibold hover:bg-white/10"
           >
             Book Demo
           </Link>
@@ -132,26 +126,26 @@ function TopNav() {
   return (
     <nav className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
-        <Link to="/" className="flex items-center gap-2">
+        <Link to="/" className="flex min-h-11 items-center gap-2">
           <div className="relative size-8 rounded-lg bg-gradient-to-br from-primary to-navy shadow-lg shadow-primary/30">
             <Sparkles className="absolute inset-0 m-auto size-4 text-white" />
           </div>
           <span className="text-base font-semibold tracking-tight">Agency OS</span>
         </Link>
         <div className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
-          <a href="#features" className="hover:text-foreground">Features</a>
-          <a href="#showcase" className="hover:text-foreground">AI Studio</a>
-          <a href="#pricing" className="hover:text-foreground">Pricing</a>
-          <a href="#faq" className="hover:text-foreground">FAQ</a>
+          <a href="#features" className="inline-flex min-h-11 items-center hover:text-foreground">Features</a>
+          <a href="#showcase" className="inline-flex min-h-11 items-center hover:text-foreground">AI Studio</a>
+          <a href="#pricing" className="inline-flex min-h-11 items-center hover:text-foreground">Pricing</a>
+          <a href="#faq" className="inline-flex min-h-11 items-center hover:text-foreground">FAQ</a>
         </div>
         <div className="flex items-center gap-2">
-          <Link to="/auth" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground sm:inline-flex">
+          <Link to="/auth" className="hidden min-h-11 items-center rounded-md px-3 text-sm font-medium text-muted-foreground hover:text-foreground sm:inline-flex">
             Sign in
           </Link>
           <Link
             to="/auth"
             search={{ mode: "signup" }}
-            className="inline-flex items-center gap-1.5 rounded-md bg-foreground px-4 py-2 text-sm font-semibold text-background hover:opacity-90"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-md bg-foreground px-4 text-sm font-semibold text-background hover:opacity-90"
           >
             Get started <ArrowRight className="size-3.5" />
           </Link>
@@ -167,31 +161,31 @@ function Hero() {
   return (
     <header id="demo" className="relative overflow-hidden">
       <GradientBg />
-      <div className="mx-auto max-w-7xl px-6 pt-16 pb-24 md:pt-24">
+      <div className="mx-auto max-w-7xl px-5 pb-12 pt-8 sm:px-6 md:pb-24 md:pt-24">
         <div className="mx-auto max-w-4xl text-center">
           <SectionLabel>Includes the AI Video Studio</SectionLabel>
-          <h1 className="mt-6 bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-5xl font-bold tracking-tight text-transparent md:text-7xl">
-            Run Your Entire Digital Marketing Agency From One{" "}
+          <h1 className="mt-4 text-balance bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-[2rem] font-bold leading-[1.1] tracking-tight text-transparent sm:text-5xl md:mt-6 md:text-7xl">
+            Run Your Entire Marketing Agency From One{" "}
             <span className="bg-gradient-to-r from-primary to-[oklch(0.6_0.18_220)] bg-clip-text text-transparent">
               AI-Powered Platform
             </span>
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
+          <p className="mx-auto mt-4 max-w-2xl text-pretty text-base text-muted-foreground sm:text-lg md:mt-6 md:text-xl">
             Manage clients, create AI content, generate videos, schedule posts,
             collaborate with your team, and automate campaigns — all from one dashboard.
           </p>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3 md:mt-10">
             <Link
               to="/auth"
               search={{ mode: "signup" }}
-              className="group inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/30 hover:bg-primary/90"
+              className="group inline-flex min-h-12 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/30 hover:bg-primary/90"
             >
               Start Free
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <Link
               to="/demo"
-              className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/60 px-6 py-3.5 text-sm font-semibold backdrop-blur hover:bg-card"
+              className="inline-flex min-h-12 items-center gap-2 rounded-xl border border-border bg-card/60 px-6 text-sm font-semibold backdrop-blur hover:bg-card"
             >
               <Play className="size-4" /> Watch Demo
             </Link>
@@ -202,7 +196,7 @@ function Hero() {
         </div>
 
         {/* Dashboard mockup */}
-        <div className="relative mx-auto mt-16 max-w-6xl">
+        <div className="relative mx-auto mt-8 hidden max-w-6xl sm:block md:mt-16">
           <div className="absolute -inset-x-20 -inset-y-10 -z-10 rounded-[3rem] bg-gradient-to-r from-primary/30 via-transparent to-[oklch(0.55_0.2_220)]/30 blur-3xl" />
           <DashboardMockup />
         </div>
@@ -1058,7 +1052,7 @@ function Footer() {
       <div className="mx-auto max-w-7xl px-6 py-16">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-5">
           <div className="col-span-2">
-            <Link to="/" className="flex items-center gap-2">
+            <Link to="/" className="flex min-h-11 items-center gap-2">
               <div className="relative size-8 rounded-lg bg-gradient-to-br from-primary to-navy">
                 <Sparkles className="absolute inset-0 m-auto size-4 text-white" />
               </div>
@@ -1067,24 +1061,25 @@ function Footer() {
             <p className="mt-4 max-w-sm text-sm text-muted-foreground">
               The AI-powered platform for modern digital marketing agencies.
             </p>
-            <div className="mt-5 flex gap-2">
-              {[Twitter, Linkedin, Github, Instagram].map((I, i) => (
-                <Link key={i} to="/contact" aria-label="Contact us on social" className="grid size-9 place-items-center rounded-lg border border-border text-muted-foreground hover:text-foreground">
-                  <I className="size-4" />
-                </Link>
-              ))}
+            <div className="mt-5">
+              <Link
+                to="/contact"
+                className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border px-4 text-sm font-medium text-muted-foreground hover:text-foreground"
+              >
+                Contact the team
+              </Link>
             </div>
           </div>
           {cols.map((c) => (
             <div key={c.h}>
               <div className="text-sm font-semibold">{c.h}</div>
-              <ul className="mt-4 space-y-2">
+              <ul className="mt-2 space-y-0">
                 {c.l.map((x) => (
                   <li key={x.label}>
                     {x.to ? (
-                      <Link to={x.to} className="text-sm text-muted-foreground hover:text-foreground">{x.label}</Link>
+                      <Link to={x.to} className="inline-flex min-h-11 items-center text-sm text-muted-foreground hover:text-foreground">{x.label}</Link>
                     ) : (
-                      <a href={x.href} className="text-sm text-muted-foreground hover:text-foreground">{x.label}</a>
+                      <a href={x.href} className="inline-flex min-h-11 items-center text-sm text-muted-foreground hover:text-foreground">{x.label}</a>
                     )}
                   </li>
                 ))}

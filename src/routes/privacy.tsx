@@ -1,15 +1,14 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { LegalLayout } from "@/components/LegalLayout";
 
 export const Route = createFileRoute("/privacy")({
-  head: () => ({
-    meta: [
-      { title: "Privacy Policy — Digital Agency OS" },
-      { name: "description", content: "How Digital Agency OS collects, uses, and protects your personal data." },
-      { property: "og:title", content: "Privacy Policy — Digital Agency OS" },
-      { property: "og:description", content: "How Digital Agency OS collects, uses, and protects your personal data under GDPR, PIPEDA, and CCPA." },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/privacy",
+      title: "Privacy Policy — Digital Agency OS",
+      description: "How Digital Agency OS collects, uses, and protects your personal data under GDPR, PIPEDA, and CCPA.",
+    }),
   component: PrivacyPage,
 });
 

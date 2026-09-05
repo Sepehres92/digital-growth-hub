@@ -1,16 +1,14 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Inbox, ShieldCheck, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({
-    meta: [
-      { title: "Contact — Digital Agency OS" },
-      { name: "description", content: "Get in touch with the Digital Agency OS team. Send a request through our contact form and we will reply." },
-      { property: "og:title", content: "Contact — Digital Agency OS" },
-      { property: "og:description", content: "Send the Digital Agency OS team a message about the product, pricing, or your data." },
-      { property: "og:type", content: "website" },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/contact",
+      title: "Contact — Digital Agency OS",
+      description: "Send the Digital Agency OS team a message about the product, pricing, or your data. We reply from the contact form.",
+    }),
   component: ContactPage,
 });
 

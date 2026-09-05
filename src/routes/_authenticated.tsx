@@ -33,15 +33,22 @@ function AuthedLayout() {
         return;
       }
       setChecking(false);
-      // Auto-redirect to onboarding if profile not completed
-      if (pathname !== "/onboarding" && pathname !== "/demo-templates") {
+      // Single source of truth for setup state: the persisted profile flag.
+      if (pathname !== "/demo-templates") {
         getProfile({})
           .then((r) => {
             const completed = (r.profile as { onboarding_completed?: boolean } | null)?.onboarding_completed;
-            if (!completed) navigate({ to: "/onboarding" });
+            if (!completed && pathname !== "/onboarding") {
+              navigate({ to: "/onboarding" });
+            } else if (completed && pathname === "/onboarding") {
+              // Setup is already finished — send them to the editable profile
+              // instead of resuming a wizard at "Step 5 of 5".
+              navigate({ to: "/business-profile" });
+            }
           })
           .catch(() => {});
       }
+
     });
     return () => sub.subscription.unsubscribe();
   }, [navigate, getProfile, pathname]);
@@ -110,11 +117,12 @@ function AuthedLayout() {
                     to={item.to as "/dashboard"}
                     onClick={() => setOpen(false)}
                     className={cn(
-                      "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                      "flex min-h-11 items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors md:min-h-9",
                       active
                         ? "bg-primary/10 text-primary"
                         : "text-muted-foreground hover:bg-accent hover:text-foreground",
                     )}
+
                   >
                     <item.icon className="size-4" />
                     {item.label}
@@ -162,15 +170,18 @@ function AuthedLayout() {
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex h-16 items-center gap-3 border-b border-border bg-card px-4 md:px-6">
           <button
-            className="md:hidden"
+            className="-ml-2 grid size-11 shrink-0 place-items-center rounded-md text-foreground hover:bg-accent md:hidden"
             onClick={() => setOpen((o) => !o)}
-            aria-label="Toggle menu"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
           >
             {open ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
-          <h1 className="text-sm font-medium text-muted-foreground">
+          {/* Non-heading breadcrumb: each page owns the single <h1>. */}
+          <p className="text-sm font-medium text-muted-foreground">
             {nav.find((n) => n.to === pathname)?.label ?? ""}
-          </h1>
+          </p>
+
         </header>
         <DemoBanner />
         <main className="flex-1 overflow-auto p-4 md:p-8">

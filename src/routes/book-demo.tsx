@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
@@ -10,16 +11,12 @@ import { ArrowLeft, Calendar } from "lucide-react";
 import { submitDemoRequest } from "@/lib/demo-requests.functions";
 
 export const Route = createFileRoute("/book-demo")({
-  head: () => ({
-    meta: [
-      { title: "Book a Demo — Digital Agency OS" },
-      { name: "description", content: "Book a personalized walkthrough of Digital Agency OS." },
-      { property: "og:title", content: "Book a Demo — Digital Agency OS" },
-      { property: "og:description", content: "Book a personalized walkthrough of Digital Agency OS." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/book-demo",
+      title: "Book a Demo — Digital Agency OS",
+      description: "Book a personalised walkthrough of Digital Agency OS with our team and see the platform on your own use case.",
+    }),
   component: BookDemoPage,
 });
 

@@ -8,20 +8,44 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { setPendingConsent } from "@/lib/consent-pending";
+import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/auth")({
   validateSearch: z.object({
     mode: z.enum(["login", "signup"]).optional(),
     plan: z.string().optional(),
   }),
-  head: () => ({
-    meta: [
-      { title: "Sign in — Digital Agency OS" },
-      { name: "description", content: "Sign in or create your Digital Agency OS account." },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/auth",
+      title: "Sign in — Digital Agency OS",
+      description: "Sign in to your Digital Agency OS workspace, or create a new account.",
+      noindex: true,
+    }),
   component: AuthPage,
 });
+
+/**
+ * Sign-up password policy. Login is deliberately unaffected so existing
+ * accounts with older, shorter passwords keep working.
+ */
+function passwordProblem(pw: string, email: string): string | null {
+  if (pw.length < 12) return "Use at least 12 characters — a short passphrase works well.";
+  if (/^(.)\1+$/.test(pw)) return "That password is a single repeated character. Try a passphrase.";
+  const local = email.split("@")[0]?.toLowerCase();
+  if (local && local.length > 2 && pw.toLowerCase().includes(local)) {
+    return "Your password should not contain your email address.";
+  }
+  const common = ["password", "12345678", "qwerty", "letmein", "welcome", "agencyos"];
+  if (common.some((c) => pw.toLowerCase().includes(c))) {
+    return "That password contains a very common word. Try unrelated words instead.";
+  }
+  const variety = [/[a-z]/, /[A-Z]/, /\d/, /[^A-Za-z0-9]/].filter((r) => r.test(pw)).length;
+  if (pw.length < 16 && variety < 2) {
+    return "Mix in numbers, capitals or symbols — or use a longer passphrase (16+ characters).";
+  }
+  return null;
+}
 
 function AuthPage() {
   const navigate = useNavigate();
@@ -43,6 +67,13 @@ function AuthPage() {
     if (mode === "signup" && !consent) {
       toast.error("Please agree to the Terms and Privacy Policy.");
       return;
+    }
+    if (mode === "signup") {
+      const weak = passwordProblem(password, email);
+      if (weak) {
+        toast.error(weak);
+        return;
+      }
     }
     setLoading(true);
     try {
@@ -106,12 +137,12 @@ function AuthPage() {
               : "Get started in seconds"}
           </p>
 
-          <label className="mt-6 flex items-start gap-2 text-xs text-muted-foreground">
+          <label className="mt-6 flex min-h-11 items-start gap-2 py-2 text-xs text-muted-foreground">
             <input
               type="checkbox"
               checked={consent}
               onChange={(e) => setConsent(e.target.checked)}
-              className="mt-0.5 size-4 rounded border-border"
+              className="mt-0.5 size-5 shrink-0 rounded border-border"
             />
             <span>
               I agree to the{" "}
@@ -125,7 +156,7 @@ function AuthPage() {
           <Button
             type="button"
             variant="outline"
-            className="mt-4 w-full"
+            className="mt-4 min-h-11 w-full"
             onClick={handleGoogle}
             disabled={loading || !consent}
           >
@@ -149,26 +180,38 @@ function AuthPage() {
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
+                name="email"
                 type="email"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="mt-1.5"
+                className="mt-1.5 min-h-11"
               />
             </div>
             <div>
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
+                name="password"
                 type="password"
+                autoComplete={mode === "login" ? "current-password" : "new-password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                minLength={6}
-                className="mt-1.5"
+                minLength={mode === "signup" ? 12 : 6}
+                aria-describedby={mode === "signup" ? "password-help" : undefined}
+                className="mt-1.5 min-h-11"
               />
+              {mode === "signup" && (
+                <p id="password-help" className="mt-1.5 text-xs text-muted-foreground">
+                  Use at least 12 characters. A passphrase of three or four unrelated
+                  words (for example “amber-harbour-drift-92”) is easier to remember and
+                  much harder to guess than a short password.
+                </p>
+              )}
             </div>
-            <Button type="submit" className="w-full" disabled={loading || (mode === "signup" && !consent)}>
+            <Button type="submit" className="min-h-11 w-full" disabled={loading || (mode === "signup" && !consent)}>
               {loading ? "..." : mode === "login" ? "Sign in" : "Create account"}
             </Button>
             {mode === "login" && (
@@ -182,28 +225,29 @@ function AuthPage() {
                   if (error) toast.error(error.message);
                   else toast.success("Password reset email sent");
                 }}
-                className="block w-full text-center text-xs text-muted-foreground hover:text-primary"
+                className="flex min-h-11 w-full items-center justify-center text-center text-xs text-muted-foreground hover:text-primary"
               >
                 Forgot password?
               </button>
             )}
           </form>
 
+
           <p className="mt-6 text-center text-sm text-muted-foreground">
             {mode === "login" ? "New here?" : "Already have an account?"}{" "}
             <button
               type="button"
               onClick={() => setMode(mode === "login" ? "signup" : "login")}
-              className="font-medium text-primary hover:underline"
+              className="min-h-11 px-2 font-medium text-primary hover:underline"
             >
               {mode === "login" ? "Create account" : "Sign in"}
             </button>
           </p>
 
-          <div className="mt-6 flex justify-center gap-4 text-xs text-muted-foreground">
-            <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
-            <Link to="/terms" className="hover:text-foreground">Terms</Link>
-            <Link to="/cookies" className="hover:text-foreground">Cookies</Link>
+          <div className="mt-4 flex justify-center gap-2 text-xs text-muted-foreground">
+            <Link to="/privacy" className="inline-flex min-h-11 items-center px-3 hover:text-foreground">Privacy</Link>
+            <Link to="/terms" className="inline-flex min-h-11 items-center px-3 hover:text-foreground">Terms</Link>
+            <Link to="/cookies" className="inline-flex min-h-11 items-center px-3 hover:text-foreground">Cookies</Link>
           </div>
         </div>
       </div>

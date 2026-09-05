@@ -35,21 +35,33 @@ function OnboardingPage() {
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [completed, setCompleted] = useState(false);
   const [p, setP] = useState<ProfileState>({});
 
   useEffect(() => {
     getProfile({})
       .then((r) => {
         if (r.profile) {
-          setP(r.profile as ProfileState);
-          if ((r.profile as { onboarding_step?: number }).onboarding_step != null) {
-            setStep((r.profile as { onboarding_step: number }).onboarding_step);
+          const prof = r.profile as ProfileState & {
+            onboarding_step?: number;
+            onboarding_completed?: boolean;
+          };
+          setP(prof);
+          if (prof.onboarding_completed) {
+            // Setup already finished — the wizard is not the place to land.
+            setCompleted(true);
+            navigate({ to: "/business-profile" });
+            return;
+          }
+          if (prof.onboarding_step != null) {
+            setStep(Math.min(prof.onboarding_step, 4));
             setChose("real");
           }
         }
       })
       .finally(() => setLoading(false));
-  }, [getProfile]);
+  }, [getProfile, navigate]);
+
 
   const set = (k: string, v: unknown) => setP((prev) => ({ ...prev, [k]: v }));
   const toggleArr = (k: string, v: string) => {
@@ -91,13 +103,14 @@ function OnboardingPage() {
     }
   }
 
-  if (loading) {
+  if (loading || completed) {
     return (
       <div className="flex min-h-[40vh] items-center justify-center">
         <div className="size-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
       </div>
     );
   }
+
 
   // Entry choice
   if (!chose) {
@@ -147,12 +160,18 @@ function OnboardingPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Smart Onboarding</h1>
+        <h1 className="text-2xl font-semibold">Set up your workspace</h1>
         <p className="text-sm text-muted-foreground">
-          Step {step + 1} of {TOTAL} · You can save & continue later
+          Setup in progress — step {step + 1} of {TOTAL}. Your answers are saved as you go,
+          and you can stop and come back at any time.
         </p>
-        <Progress value={progress} className="mt-3" />
+        <Progress
+          value={progress}
+          className="mt-3"
+          aria-label={`Setup progress: step ${step + 1} of ${TOTAL}`}
+        />
       </div>
+
 
       {step === 0 && (
         <Card>

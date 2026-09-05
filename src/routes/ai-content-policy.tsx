@@ -1,13 +1,14 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { LegalLayout } from "@/components/LegalLayout";
 
 export const Route = createFileRoute("/ai-content-policy")({
-  head: () => ({
-    meta: [
-      { title: "AI Content Policy — Digital Agency OS" },
-      { name: "description", content: "Rules for using AI-generated content on Digital Agency OS." },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/ai-content-policy",
+      title: "AI Content Policy — Digital Agency OS",
+      description: "Rules and responsibilities for content generated with the Digital Agency OS AI writer, image, and video tools.",
+    }),
   component: AIPolicyPage,
 });
 
