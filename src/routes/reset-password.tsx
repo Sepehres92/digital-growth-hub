@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,7 +8,13 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/reset-password")({
-  head: () => ({ meta: [{ title: "Reset password — Digital Agency OS" }] }),
+  head: () =>
+    pageHead({
+      path: "/reset-password",
+      title: "Reset password — Digital Agency OS",
+      description: "Choose a new password for your Digital Agency OS account.",
+      noindex: true,
+    }),
   component: ResetPasswordPage,
 });
 
@@ -35,6 +42,7 @@ function ResetPasswordPage() {
           <Input
             id="password"
             type="password"
+          autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             minLength={6}

@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -5,13 +6,13 @@ import { cleanAuthUrl } from "@/lib/clean-auth-url";
 
 export const Route = createFileRoute("/auth/callback")({
   ssr: false,
-  head: () => ({
-    meta: [
-      { title: "Signing you in — Digital Agency OS" },
-      { name: "description", content: "Completing your Digital Agency OS sign-in." },
-      { name: "robots", content: "noindex" },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/auth/callback",
+      title: "Signing you in — Digital Agency OS",
+      description: "Completing your Digital Agency OS sign-in.",
+      noindex: true,
+    }),
   component: AuthCallback,
 });
 
