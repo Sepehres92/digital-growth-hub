@@ -1,8 +1,9 @@
 import { pageHead } from "@/lib/seo";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { cleanAuthUrl } from "@/lib/clean-auth-url";
+import { completeAuthCallback } from "@/lib/auth-callback-response";
 
 export const Route = createFileRoute("/auth/callback")({
   ssr: false,
@@ -18,43 +19,31 @@ export const Route = createFileRoute("/auth/callback")({
 
 function AuthCallback() {
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    const go = (to: "/dashboard" | "/auth") => {
-      if (!cancelled) navigate({ to, replace: true });
-    };
 
     const start = async () => {
-      // Complete a PKCE exchange if the provider returned a code, then strip
-      // every token/code fragment from the address bar and history.
-      const url = new URL(window.location.href);
-      const code = url.searchParams.get("code");
-      if (code) {
-        try {
-          await supabase.auth.exchangeCodeForSession(code);
-        } catch {
-          /* falls through to the session checks below */
-        }
+      const result = await completeAuthCallback({
+        href: window.location.href,
+        auth: {
+          setSession: (tokens) => supabase.auth.setSession(tokens),
+          exchangeCodeForSession: (code) => supabase.auth.exchangeCodeForSession(code),
+          getSession: () => supabase.auth.getSession(),
+        },
+        cleanup: cleanAuthUrl,
+      });
+
+      if (cancelled) return;
+      if (result.ok) {
+        navigate({ to: "/dashboard", replace: true });
+      } else {
+        setErrorMessage(result.message);
       }
-      cleanAuthUrl();
-      return supabase.auth.getSession();
     };
 
-    start().then(({ data }) => {
-      if (data.session) return go("/dashboard");
-      // The session may land a tick later via the auth listener.
-      const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-        if (session) {
-          sub.subscription.unsubscribe();
-          go("/dashboard");
-        }
-      });
-      setTimeout(() => {
-        sub.subscription.unsubscribe();
-        supabase.auth.getSession().then(({ data: d }) => go(d.session ? "/dashboard" : "/auth"));
-      }, 4000);
-    });
+    void start();
 
     return () => {
       cancelled = true;
@@ -63,7 +52,21 @@ function AuthCallback() {
 
   return (
     <div className="flex min-h-dvh items-center justify-center bg-surface px-4">
-      <p className="text-sm text-muted-foreground">Signing you in…</p>
+      {errorMessage ? (
+        <div className="max-w-md text-center" role="alert">
+          <h1 className="text-xl font-semibold text-foreground">Google sign-in failed</h1>
+          <p className="mt-2 text-sm text-muted-foreground">{errorMessage}</p>
+          <button
+            type="button"
+            className="mt-6 min-h-11 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground"
+            onClick={() => navigate({ to: "/auth", replace: true })}
+          >
+            Return to sign in
+          </button>
+        </div>
+      ) : (
+        <p className="text-sm text-muted-foreground">Signing you in…</p>
+      )}
     </div>
   );
 }
