@@ -11,6 +11,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { cleanAuthUrl } from "@/lib/clean-auth-url";
+import { shouldDeferAuthUrlCleanup } from "@/lib/auth-callback-response";
 import { consumePendingConsent } from "@/lib/consent-pending";
 import { recordConsent } from "@/lib/consent.functions";
 
@@ -38,7 +39,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: { error: unknown; reset: () => void }) {
   console.error(error);
   const router = useRouter();
 
@@ -81,7 +82,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       // Fallbacks only — every route sets its own title/description and a
       // complete social card via pageHead() in src/lib/seo.ts.
       { title: "Digital Agency OS" },
-      { name: "description", content: "AI-powered platform for modern marketing agencies — clients, content, video, scheduling, automation." },
+      {
+        name: "description",
+        content:
+          "AI-powered platform for modern marketing agencies — clients, content, video, scheduling, automation.",
+      },
       { name: "author", content: "Digital Agency OS" },
     ],
 
@@ -142,11 +147,14 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   useEffect(() => {
-    // Strip any OAuth/recovery credentials from the address bar + history
-    // as soon as the app mounts, and again once the session is established.
-    cleanAuthUrl();
+    const cleanUnlessCallbackIsProcessing = () => {
+      if (!shouldDeferAuthUrlCleanup(window.location.pathname)) cleanAuthUrl();
+    };
+
+    // The callback route owns credential consumption and cleanup ordering.
+    cleanUnlessCallbackIsProcessing();
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
-      cleanAuthUrl();
+      cleanUnlessCallbackIsProcessing();
       // Persist the agreement captured on the sign-up screen once the session exists.
       if (session && (event === "SIGNED_IN" || event === "INITIAL_SESSION")) {
         const pending = consumePendingConsent();

@@ -1,16 +1,22 @@
-const TOKEN_HASH_KEYS = [
+const AUTH_CALLBACK_KEYS = [
+  "code",
   "access_token",
   "refresh_token",
   "provider_token",
   "provider_refresh_token",
   "id_token",
+  "token",
+  "token_hash",
   "expires_in",
   "expires_at",
   "token_type",
   "type",
+  "error",
+  "error_code",
+  "error_description",
+  "error_uri",
+  "state",
 ];
-
-const TOKEN_QUERY_KEYS = ["code", "access_token", "refresh_token", "id_token", "token", "token_hash"];
 
 /**
  * Removes any OAuth / recovery credential material from the address bar and
@@ -24,19 +30,21 @@ export function cleanAuthUrl(): void {
 
   if (url.hash && url.hash.length > 1) {
     const params = new URLSearchParams(url.hash.replace(/^#/, ""));
-    for (const key of TOKEN_HASH_KEYS) {
+    let hashDirty = false;
+    for (const key of AUTH_CALLBACK_KEYS) {
       if (params.has(key)) {
         params.delete(key);
         dirty = true;
+        hashDirty = true;
       }
     }
-    if (dirty) {
+    if (hashDirty) {
       const rest = params.toString();
       url.hash = rest ? `#${rest}` : "";
     }
   }
 
-  for (const key of TOKEN_QUERY_KEYS) {
+  for (const key of AUTH_CALLBACK_KEYS) {
     if (url.searchParams.has(key)) {
       url.searchParams.delete(key);
       dirty = true;
