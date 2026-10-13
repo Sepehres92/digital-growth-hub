@@ -1,0 +1,28 @@
+{
+  "status": "ready-for-approval-not-deployed",
+  "verified_at": "2026-10-13",
+  "taxonomy": "product_cat",
+  "primary": {
+    "term_id": 422,
+    "slug": "stirrups",
+    "parent_term_id": 57,
+    "url": "https://www.rebar.shop/product-category/rebar-products/prefabricated-rebars/stirrups/",
+    "live_product_count": 12,
+    "sitemap_listed": true
+  },
+  "duplicate": {
+    "term_id": 572,
+    "slug": "rebar-stirrups",
+    "parent_term_id": 0,
+    "url": "https://www.rebar.shop/product-category/rebar-stirrups/",
+    "live_product_count": 10,
+    "sitemap_listed": false,
+    "product_ids": [2735, 2737, 2739, 2741, 2743, 21279, 21283, 21284, 21285, 21286]
+  },
+  "change": {
+    "redirect_status": 301,
+    "remove_duplicate_term_assignments": true,
+    "delete_duplicate_term": false,
+    "change_primary_url": false
+  }
+}
